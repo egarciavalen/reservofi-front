@@ -7,7 +7,7 @@ export class UsuarioDTO {
     public segundoApellido: string,
     public correoCorporativo: string,
     public activo: boolean,
-    public roles: string[],
+    public idsRoles: string[],
   ) {}
 
 }

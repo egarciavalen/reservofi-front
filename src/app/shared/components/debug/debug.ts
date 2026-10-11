@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { RolService } from '../../../rol/services/rol-service';
 import { UsuarioService } from '../../../usuario/services/usuario-service';
 import { PuestoService } from '../../../puesto/services/puesto-service';
@@ -27,20 +27,22 @@ export class Debug implements OnInit {
   private readonly reservaService = inject(ReservaService);
 
   // Propiedades
-  rolDTOList: RolDTO[] = [];
-  usuarioDTOList: UsuarioDTO[] = [];
-  salaDTOList: SalaDTO[] = [];
-  puestoDTOList: PuestoDTO[] = [];
-  reservaDTOList: ReservaDTO[] = [];
+  rolDTOList: WritableSignal<RolDTO[]> =  signal([]);
+  usuarioDTOList: WritableSignal<UsuarioDTO[]> = signal([]);
+  salaDTOList: WritableSignal<SalaDTO[]> = signal([]);
+  puestoDTOList: WritableSignal<PuestoDTO[]> = signal([]);
+  reservaDTOList: WritableSignal<ReservaDTO[]> = signal([]);
 
   async ngOnInit(): Promise<void> {
 
     // Cargar los valores en la aplicación
-    this.rolDTOList = await firstValueFrom(this.rolService.findAll());
-    this.usuarioDTOList = await firstValueFrom(this.usuarioService.findAll());
-    this.salaDTOList = await firstValueFrom(this.salaService.findAll());
-    this.puestoDTOList = await firstValueFrom(this.puestoService.findAll());
-    this.reservaDTOList = await firstValueFrom(this.reservaService.findAll());
+    this.rolDTOList.set(await firstValueFrom(this.rolService.findAll()));
+    this.usuarioDTOList.set(await firstValueFrom(this.usuarioService.findAll()));
+    
+    console.log(this.usuarioDTOList());
+    this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
+    this.puestoDTOList.set(await firstValueFrom(this.puestoService.findAll()));
+    this.reservaDTOList.set(await firstValueFrom(this.reservaService.findAll()));
 
   }
 

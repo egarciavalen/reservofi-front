@@ -1,15 +1,17 @@
-<h3>Pantalla debug para visualizar los elementos de la aplicación</h3>
+<h2>Pantalla debug para visualizar los elementos de la aplicación</h2>
 
 <div>
 
   <!-- Roles -->
   <div>
-    <p><strong>Roles</strong></p>
-    @if(rolDTOList) {
+    <h3>Roles</h3>
+    @if(rolDTOList()) {
       <ul>
-      @for (rol of rolDTOList; track rol.id) {
-        <li>Identificador: {{rol.id}}</li>
-        <li>Nombre: {{rol.nombre}}</li>
+      @for (rol of rolDTOList(); track rol.id) {
+        <li><strong>Identificador: </strong>{{rol.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{rol.nombre}}</li>          
+        </ul>
       }
       </ul>
     }
@@ -17,17 +19,19 @@
 
   <!-- Usuarios -->
   <div>
-    <p><strong>Usuarios</strong></p>
-    @if(usuarioDTOList) {
+    <h3>Usuarios</h3>
+    @if(usuarioDTOList()) {
       <ul>
-      @for (usuario of usuarioDTOList; track usuario.id) {
-        <li>Identificador: {{usuario.id}}</li>
-        <li>Nombre: {{usuario.nombre}}</li>
-        <li>Primer apellido: {{usuario.primerApellido}}</li>
-        <li>Segundo apellido: {{usuario.segundoApellido}}</li>
-        <li>Correo corporativo: {{usuario.correoCorporativo}}</li>
-        <li>Activo: {{usuario.activo}}</li>
-        <li>Identificador de los roles: {{usuario.roles}}</li>
+      @for (usuario of usuarioDTOList(); track usuario.id) {
+        <li><strong>Identificador:</strong> {{usuario.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{usuario.nombre}}</li>
+          <li><strong>Primer apellido: </strong>{{usuario.primerApellido}}</li>
+          <li><strong>Segundo apellido: </strong>{{usuario.segundoApellido}}</li>
+          <li><strong>Correo corporativo: </strong>{{usuario.correoCorporativo}}</li>
+          <li><strong>Activo: </strong>{{usuario.activo}}</li>
+          <li><strong>Identificador de los roles: </strong> {{usuario.idsRoles}} </li>
+        </ul>
       }
       </ul>
     }
@@ -35,28 +39,32 @@
 
   <!-- Sala -->
   <div>
-    <p><strong>Salas</strong></p>
-    @if(salaDTOList) {
+    <h3><strong>Salas</strong></h3>
+    @if(salaDTOList()) {
       <ul>
-      @for (sala of salaDTOList; track sala.id) {
-        <li>Identificador: {{sala.id}}</li>
-        <li>Nombre: {{sala.nombre}}</li>
-      }
+      @for (sala of salaDTOList(); track sala.id) {
+        <li><strong>Identificador: </strong>{{sala.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{sala.nombre}}</li>
+        </ul>
+        }
       </ul>
     }
   </div>
  
   <!-- Puesto -->
   <div>
-    <p><strong>Puestos</strong></p>
-    @if(salaDTOList) {
+    <h3><strong>Puestos</strong></h3>
+    @if(salaDTOList()) {
       <ul>
-      @for (puesto of puestoDTOList; track puesto.id) {
-        <li>Identificador: {{puesto.id}}</li>
-        <li>Identificador de la sala asociada: {{puesto.idSala}}</li>
-        <li>Nombre: {{puesto.nombre}}</li>
-        <li>Coordenada X: {{puesto.coordenadaX}}</li>
-        <li>Coordenada Y: {{puesto.coordenadaY}}</li>
+      @for (puesto of puestoDTOList(); track puesto.id) {
+        <li><strong>Identificador: </strong>{{puesto.id}}</li>
+        <ul>
+          <li><strong>Identificador sala: </strong>{{puesto.idSala}}</li>
+          <li><strong>Nombre: </strong>{{puesto.nombre}}</li>
+          <li><strong>Coordenada X: </strong>{{puesto.coordenadaX}}</li>
+          <li><strong>Coordenada Y: </strong>{{puesto.coordenadaY}}</li>
+        </ul>
       }
       </ul>
     }
@@ -64,15 +72,17 @@
 
   <!-- Reserva-->
   <div>
-    <p><strong>Reservas</strong></p>
-    @if(reservaDTOList) {
+    <h3><strong>Reservas</strong></h3>
+    @if(reservaDTOList()) {
       <ul>
-      @for (reserva of reservaDTOList; track reserva.id) {
-        <li>Identificador: {{reserva.id}}</li>
-        <li>Identificador del usuario asociado: {{reserva.idUsuario}}</li>
-        <li>Identificador del puesto asociado: {{reserva.idPuesto}}</li>
-        <li>Fecha de inicio: {{reserva.fechaInicio}}</li>
-        <li>Fecha de fin X: {{reserva.fechaFin}}</li>
+      @for (reserva of reservaDTOList(); track reserva.id) {
+        <li><strong>Identificador: </strong>{{reserva.id}}</li>
+        <ul>
+          <li><strong>Identificador usuario: </strong>{{reserva.idUsuario}}</li>
+          <li><strong>Identificador puesto: </strong>{{reserva.idPuesto}}</li>
+          <li><strong>Fecha de inicio: </strong>{{reserva.fechaInicio}}</li>
+          <li><strong>Fecha de fin: </strong>{{reserva.fechaFin}}</li>
+        </ul>
       }
       </ul>
     }
