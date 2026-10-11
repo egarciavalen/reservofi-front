@@ -4,6 +4,8 @@ import { LoginRequestDTO } from '../../models/login-request.dto';
 import { AuthService } from '../../services/auth-service';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { LocalStorageService } from '../../services/local-storage-service';
+import { Router } from '@angular/router';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -22,6 +24,8 @@ export class Login {
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly router = inject(Router);
 
   private readonly loginUser: LoginRequestDTO = new LoginRequestDTO('', '');
   isValidForm: boolean | null = null;
@@ -62,7 +66,17 @@ export class Login {
     // Primera versión: verificar que se comunica correctamente
     try {
       const loginResponse = await firstValueFrom(this.authService.login(this.loginUser));
+      
+      // Debug 
       console.log(loginResponse);
+
+      // Se guarda en el local storage el token de autenticación
+      this.localStorageService.set('idUsuario', loginResponse.idUsuario);
+      this.localStorageService.set('token', loginResponse.token);
+
+      // Redirección
+      this.router.navigateByUrl('home');
+
     } catch (error: any) {
       console.log(error);
     }

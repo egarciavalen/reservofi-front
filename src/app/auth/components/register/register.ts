@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth-service';
 import { UsuarioRegistroRequestDTO } from '../../models/usuario-registro-request';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -25,6 +26,7 @@ export class Register {
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   // Datos iniciales
   registerValue: UsuarioRegistroRequestDTO = new UsuarioRegistroRequestDTO('', '', '', '', '', false);
@@ -115,7 +117,12 @@ export class Register {
     // Primera versión: verificar que se comunica correctamente
     try {
       const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
+      
+      // Debug
       console.log(registerResponse);
+
+      // Redirección 
+      this.router.navigateByUrl('login');
     } catch (error: any) {
       console.log(error);
     }  
