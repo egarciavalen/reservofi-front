@@ -1,7 +1,15 @@
-<div>
-  <button (click)="home()">Home</button>
-  <button (click)="login()">Login</button>
-  <button (click)="register()">Registro</button>
-  <button (click)="debug()">Debug</button>
-  <button (click)="logout()">Logout</button>
-</div>
+@if(!autenticado()) {
+  <div>
+    <button (click)="home()">Home</button>
+    <button (click)="login()">Login</button>
+    <button (click)="register()">Registro</button>
+  </div>
+}
+
+@if(autenticado()) {
+  <div>
+    <button (click)="home()">Home</button>
+    <button (click)="debug()">Debug</button>
+    <button (click)="logout()">Logout</button>
+  </div>
+}

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage-service';
 import { Router } from '@angular/router';
+import { Header } from '../../../shared/components/header/header';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -73,6 +74,9 @@ export class Login {
       // Se guarda en el local storage el token de autenticación
       this.localStorageService.set('idUsuario', loginResponse.idUsuario);
       this.localStorageService.set('token', loginResponse.token);
+
+      // Opciones de menú para el usuario autenticado 
+      Header.usuarioAutenticado.set(true);
 
       // Redirección
       this.router.navigateByUrl('home');

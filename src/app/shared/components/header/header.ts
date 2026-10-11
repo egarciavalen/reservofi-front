@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,11 @@ export class Header {
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
 
-  
+  // De forma estática para que puedan cambiarlo otros componentes
+  // Esto cambiará con una implementación con Redux
+  static usuarioAutenticado: WritableSignal<boolean> = signal(false);
+  autenticado = Header.usuarioAutenticado;
+
   home(): void {
     this.router.navigateByUrl('home');
   }
@@ -34,8 +38,12 @@ export class Header {
     this.localStorageService.remove('idUsuario');
     this.localStorageService.remove('token');
     
+    // Se cambian las opciones del menú
+    Header.usuarioAutenticado.set(false);
+
     // Navegación al login
     this.router.navigateByUrl('login');
   }
+
 
 }
