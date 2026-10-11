@@ -31,8 +31,8 @@ export class Login {
   isValidForm: boolean | null = null;
 
   // Propiedades adicionales
-  public readonly contraseniaMin = 5;
-  public readonly contraseniaMax = 15;
+  readonly contraseniaMin = 5;
+  readonly contraseniaMax = 15;
 
   readonly correoCorporativo = new FormControl(this.loginUser.correoCorporativo, {
     nonNullable: true,

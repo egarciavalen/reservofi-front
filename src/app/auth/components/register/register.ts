@@ -34,17 +34,17 @@ export class Register {
 
   // Propiedades adicionales
 
-  public readonly nombreMin = 3;
-  public readonly nombreMax = 20;
+  readonly nombreMin = 3;
+  readonly nombreMax = 20;
 
-  public readonly primerApellidoMin = 5;
-  public readonly primerApellidoMax = 25;
+  readonly primerApellidoMin = 5;
+  readonly primerApellidoMax = 25;
 
-  public readonly segundoApellidoMin = 5;
-  public readonly segundoApellidoMax = 25;
+  readonly segundoApellidoMin = 5;
+  readonly segundoApellidoMax = 25;
 
-  public readonly contraseniaMin = 5;
-  public readonly contraseniaMax = 15;
+  readonly contraseniaMin = 5;
+  readonly contraseniaMax = 15;
 
   // Declaración e inicialización de FormControls
 
