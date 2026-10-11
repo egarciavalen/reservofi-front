@@ -1,0 +1,81 @@
+<h3>Pantalla debug para visualizar los elementos de la aplicación</h3>
+
+<div>
+
+  <!-- Roles -->
+  <div>
+    <p><strong>Roles</strong></p>
+    @if(rolDTOList) {
+      <ul>
+      @for (rol of rolDTOList; track rol.id) {
+        <li>Identificador: {{rol.id}}</li>
+        <li>Nombre: {{rol.nombre}}</li>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Usuarios -->
+  <div>
+    <p><strong>Usuarios</strong></p>
+    @if(usuarioDTOList) {
+      <ul>
+      @for (usuario of usuarioDTOList; track usuario.id) {
+        <li>Identificador: {{usuario.id}}</li>
+        <li>Nombre: {{usuario.nombre}}</li>
+        <li>Primer apellido: {{usuario.primerApellido}}</li>
+        <li>Segundo apellido: {{usuario.segundoApellido}}</li>
+        <li>Correo corporativo: {{usuario.correoCorporativo}}</li>
+        <li>Activo: {{usuario.activo}}</li>
+        <li>Identificador de los roles: {{usuario.roles}}</li>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Sala -->
+  <div>
+    <p><strong>Salas</strong></p>
+    @if(salaDTOList) {
+      <ul>
+      @for (sala of salaDTOList; track sala.id) {
+        <li>Identificador: {{sala.id}}</li>
+        <li>Nombre: {{sala.nombre}}</li>
+      }
+      </ul>
+    }
+  </div>
+ 
+  <!-- Puesto -->
+  <div>
+    <p><strong>Puestos</strong></p>
+    @if(salaDTOList) {
+      <ul>
+      @for (puesto of puestoDTOList; track puesto.id) {
+        <li>Identificador: {{puesto.id}}</li>
+        <li>Identificador de la sala asociada: {{puesto.idSala}}</li>
+        <li>Nombre: {{puesto.nombre}}</li>
+        <li>Coordenada X: {{puesto.coordenadaX}}</li>
+        <li>Coordenada Y: {{puesto.coordenadaY}}</li>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Reserva-->
+  <div>
+    <p><strong>Reservas</strong></p>
+    @if(reservaDTOList) {
+      <ul>
+      @for (reserva of reservaDTOList; track reserva.id) {
+        <li>Identificador: {{reserva.id}}</li>
+        <li>Identificador del usuario asociado: {{reserva.idUsuario}}</li>
+        <li>Identificador del puesto asociado: {{reserva.idPuesto}}</li>
+        <li>Fecha de inicio: {{reserva.fechaInicio}}</li>
+        <li>Fecha de fin X: {{reserva.fechaFin}}</li>
+      }
+      </ul>
+    }
+  </div>
+
+</div>

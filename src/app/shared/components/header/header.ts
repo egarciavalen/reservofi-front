@@ -26,6 +26,10 @@ export class Header {
     this.router.navigateByUrl('register');
   }
 
+  debug(): void {
+    this.router.navigateByUrl('debug');
+  }
+
   logout(): void {
     this.localStorageService.remove('idUsuario');
     this.localStorageService.remove('token');
