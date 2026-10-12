@@ -4,6 +4,7 @@ import { Register } from './auth/components/register/register';
 import { Home } from './home/components/home';
 import { Debug } from './shared/components/debug/debug';
 import { authGuard } from './shared/guards/auth-guard';
+import { SalaForm } from './sala/components/sala-form/sala-form';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,11 @@ export const routes: Routes = [
   {
     path: 'debug',
     component: Debug,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'sala/form',
+    component: SalaForm,
     canActivate: [authGuard],
   }
 ];

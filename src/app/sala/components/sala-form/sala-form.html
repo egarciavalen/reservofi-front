@@ -1,1 +1,17 @@
-<p>sala-form works!</p>
+<h3>Creación de salas</h3>
+<p>Por favor, rellene la información para crear una nueva sala.</p>
+<p>Es necesario introducir una imagen en formato png o jpeg.</p>
+
+
+<div>  
+  <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
+  <input type="file" class="ocultar"
+       (change)="onFileSelected($event)" #fileUpload>
+
+  <div>
+    {{fileName || "No file uploaded yet."}}
+      <button (click)="fileUpload.click()"> Subir imagen </button>
+
+  </div>
+
+</div>

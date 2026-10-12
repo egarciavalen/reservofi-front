@@ -34,6 +34,10 @@ export class Header {
     this.router.navigateByUrl('debug');
   }
 
+  salaForm(): void {
+    this.router.navigateByUrl('sala/form');
+  }
+
   logout(): void {
     this.localStorageService.remove('idUsuario');
     this.localStorageService.remove('token');
