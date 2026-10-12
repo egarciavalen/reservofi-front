@@ -64,7 +64,6 @@ export class Login {
     this.loginUser.correoCorporativo = correoCorporativo;
     this.loginUser.contrasenia = contrasenia;
 
-    // Primera versión: verificar que se comunica correctamente
     try {
       const loginResponse = await firstValueFrom(this.authService.login(this.loginUser));
       

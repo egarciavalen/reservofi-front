@@ -114,7 +114,6 @@ export class Register {
       true
     );
 
-    // Primera versión: verificar que se comunica correctamente
     try {
       const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
       

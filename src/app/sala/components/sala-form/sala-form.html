@@ -1,17 +1,59 @@
-<h3>Creación de salas</h3>
-<p>Por favor, rellene la información para crear una nueva sala.</p>
-<p>Es necesario introducir una imagen en formato png o jpeg.</p>
+<div>
+  <h3>Creación de salas</h3>
+  <p>Por favor, rellene la información para crear una nueva sala.</p>
+  <p>Es necesario introducir una imagen en formato png o jpeg.</p>
 
+  @if(salaForm) {
 
-<div>  
-  <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
-  <input type="file" class="ocultar"
-       (change)="onFileSelected($event)" #fileUpload>
+    <form [formGroup]="salaForm" (ngSubmit)="create()">
 
-  <div>
-    {{fileName || "No file uploaded yet."}}
-      <button (click)="fileUpload.click()"> Subir imagen </button>
+      <!-- Nombre -->
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" type="text" [formControl]="nombre" />
 
-  </div>
+        @if(nombre.errors) {
+          @if (nombre.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (nombre.errors['required']) {
+                <div>El nombre es obligatorio</div> 
+              }
+              @if (nombre.errors['minlength']) {
+                <div>El nombre ha de tener al menos {{ nombreMin }} caracteres</div> 
+              }
+              @if (nombre.errors['maxlength']) {
+                  <div>El nombre no ha de superar los {{ nombreMax }} caracteres.</div> 
+                }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Imagen -->
+      <div>  
+        <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
+        <!-- Se incluye un evento para poder mostrar el nombre del fichero al usuario y guardar el fichero -->
+        <input type="file" class="ocultar" (change)="mostrarNombreFichero($event)" #ficheroSubida>
+
+        <!-- Bloque para marcar la subida de imagen; sustituye al input de arriba permitiendo una mejor personalización-->
+        <!-- OJO: el button tiene que ser type="button" porque si no provocará que se envíe el formulario -->
+        <div>
+          {{nombreFichero || "No se ha subido una imagen todavía."}}
+            <button type="button" (click)="ficheroSubida.click()">Subir imagen</button>
+        </div>
+
+        @if(fichero.errors) {
+           @if (fichero.errors && isValidForm != null && !isValidForm) {
+              <div [ngClass]="'validacion'">
+                @if (fichero.errors['required']) {
+                  <div>El fichero es obligatorio</div> 
+                }
+              </div>
+          }
+        }
+      </div>
+    <button type="submit">Crear sala</button>
+    </form>
+  }
 
 </div>
