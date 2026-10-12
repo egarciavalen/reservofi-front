@@ -12,13 +12,22 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) 
 
   // Si el token existe se intercepta la petición y se incluye en la cabecera
   if (token) {
-    req = req.clone({
-      setHeaders: {
-        'Content-Type': 'application/json; charset=utf-8',
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    if (req.body instanceof FormData) {
+      // Si se manda una imagen al backend, no se manda en formato JSON
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      }); 
+    } else {
+        req = req.clone({
+        setHeaders: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }); 
+    }
   }
   
   // Continúa con la petición

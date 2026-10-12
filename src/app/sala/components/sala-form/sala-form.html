@@ -38,15 +38,15 @@
         <!-- Bloque para marcar la subida de imagen; sustituye al input de arriba permitiendo una mejor personalización-->
         <!-- OJO: el button tiene que ser type="button" porque si no provocará que se envíe el formulario -->
         <div>
-          {{nombreFichero || "No se ha subido una imagen todavía."}}
+          {{nombreImagen || "No se ha subido una imagen todavía."}}
             <button type="button" (click)="ficheroSubida.click()">Subir imagen</button>
         </div>
 
-        @if(fichero.errors) {
-           @if (fichero.errors && isValidForm != null && !isValidForm) {
+        @if(imagen.errors) {
+           @if (imagen.errors && isValidForm != null && !isValidForm) {
               <div [ngClass]="'validacion'">
-                @if (fichero.errors['required']) {
-                  <div>El fichero es obligatorio</div> 
+                @if (imagen.errors['required']) {
+                  <div>La imagen es obligatoria</div> 
                 }
               </div>
           }
