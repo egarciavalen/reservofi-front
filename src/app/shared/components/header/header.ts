@@ -34,10 +34,6 @@ export class Header {
     this.router.navigateByUrl('debug');
   }
 
-  salaForm(): void {
-    this.router.navigateByUrl('sala/form');
-  }
-
   salaList(): void {
     this.router.navigateByUrl('sala/list');
   }

@@ -1,4 +1,4 @@
-export class SalaCreacionDTO {
+export class SalaGuardadoDTO {
 
   constructor(
     public nombre: string,

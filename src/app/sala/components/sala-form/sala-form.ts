@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SalaService } from '../../services/sala-service';
-import { SalaCreacionDTO } from '../../models/sala.creacion.dto';
+import { SalaGuardadoDTO } from '../../models/sala.guardado.dto';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 type SalaFormModel = {
   nombre: FormControl<string>;
@@ -15,13 +16,15 @@ type SalaFormModel = {
   templateUrl: './sala-form.html',
   styleUrl: './sala-form.scss',
 })
-export class SalaForm {
+export class SalaForm implements OnInit {
 
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly salaService = inject(SalaService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  private readonly salaCreacion: SalaCreacionDTO = new SalaCreacionDTO('', null);
+  private readonly salaGuardadoDTO: SalaGuardadoDTO = new SalaGuardadoDTO('', null);
   isValidForm: boolean | null = null;
 
   // Propiedades adicionales
@@ -29,12 +32,15 @@ export class SalaForm {
   readonly nombreMax = 30;
   nombreImagen = '';
 
-  readonly nombre = new FormControl(this.salaCreacion.nombre, {
+  // Para determinar si se edita o crea una sala nueva
+  idSala = this.activatedRoute.snapshot.paramMap.get('id');
+
+  nombre = new FormControl(this.salaGuardadoDTO.nombre, {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(this.nombreMin), Validators.maxLength(this.nombreMax)],
   });
 
-  readonly imagen = new FormControl(this.salaCreacion.imagen, {
+  readonly imagen = new FormControl(this.salaGuardadoDTO.imagen, {
     nonNullable: true,
     validators: [Validators.required],
   });
@@ -43,6 +49,19 @@ export class SalaForm {
     nombre: this.nombre,
     imagen: this.imagen,
   });
+
+  async ngOnInit(): Promise<void> {
+
+    // Si es una actualización, se rellenan los campos correspondientes
+    if (this.idSala) {
+      const salaCreada = await firstValueFrom(this.salaService.findById(this.idSala));
+      // Debug 
+      console.log(salaCreada);
+      this.salaForm.controls.nombre.setValue(salaCreada.nombre);
+      this.nombreImagen = salaCreada.rutaImagen;
+    }
+  }
+
 
   async create(): Promise<void> {
 
@@ -55,15 +74,15 @@ export class SalaForm {
 
     // Obtención de valores y asignación al DTO
     const { nombre, imagen } = this.salaForm.getRawValue();
-    this.salaCreacion.nombre = nombre;
-    this.salaCreacion.imagen = imagen;
+    this.salaGuardadoDTO.nombre = nombre;
+    this.salaGuardadoDTO.imagen = imagen;
 
     // Creación de un FormData para poder mandar MultipartFile
     // Con un DTO normal se mandaría un JSON
     const formData = new FormData();
-    formData.append("nombre", this.salaCreacion.nombre);
-    if (this.salaCreacion.imagen != null) {
-      formData.append("imagen", this.salaCreacion.imagen);
+    formData.append("nombre", this.salaGuardadoDTO.nombre);
+    if (this.salaGuardadoDTO.imagen != null) {
+      formData.append("imagen", this.salaGuardadoDTO.imagen);
     }
 
     try {
@@ -84,6 +103,16 @@ export class SalaForm {
       this.nombreImagen = file.name; // Marcar el nombre del fichero para aportar feedback
       this.imagen.setValue(file); // Desde formControl da problemas; se guarda el fichero en el evento
     }
-
   }
+
+
+  async borrarSala(): Promise<void> {
+    if (this.idSala) {
+      await firstValueFrom(this.salaService.delete(this.idSala));
+      // Debug
+      console.log('Sala borrada!');
+      this.router.navigateByUrl('/sala/list');
+    }
+  }
+ 
 }

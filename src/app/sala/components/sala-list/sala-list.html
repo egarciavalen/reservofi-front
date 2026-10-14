@@ -12,7 +12,13 @@
       <tr>
          <td>{{ salaDTO.id }}</td>
          <td>{{ salaDTO.nombre }}</td>     
+         <td>
+            <button (click)="editarSala(salaDTO.id)">Actualizar</button>
+         </td>
       </tr>
     } 
   </tbody>
 </table>
+
+
+<button (click)="crearSala()">Crear sala</button>

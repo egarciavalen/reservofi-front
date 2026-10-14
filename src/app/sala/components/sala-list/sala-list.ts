@@ -14,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
 export class SalaList implements OnInit {
 
   // Inyección de servicios
+  private readonly router = inject(Router);
   private readonly salaService = inject(SalaService);
 
   salaDTOList: WritableSignal<SalaDTO[]> = signal([]);
@@ -35,8 +36,12 @@ export class SalaList implements OnInit {
     
   }
 
+  crearSala(): void {
+    this.router.navigateByUrl('/sala/form');
+  }
 
-
-
-
+  editarSala(id: string): void {
+    // TODO 8
+    this.router.navigateByUrl('/sala/form/' + id);
+  }
 }

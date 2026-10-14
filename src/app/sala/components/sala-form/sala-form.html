@@ -52,8 +52,14 @@
           }
         }
       </div>
-    <button type="submit">Crear sala</button>
+    <button type="submit">Guardar sala</button>
     </form>
   }
+
+  <!-- Para borrar la sala -->
+  @if (idSala) {  
+    <button (click)="borrarSala()">Borrar sala</button>
+  }
+
 
 </div>
