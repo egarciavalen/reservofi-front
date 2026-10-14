@@ -11,9 +11,9 @@ export class UsuarioService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   findAll(): Observable<UsuarioDTO[]> {
-    return this.http.get<UsuarioDTO[]>(this.urlBlogUocApi + "/usuario");
+    return this.http.get<UsuarioDTO[]>(this.urlApi + "/usuario");
   }
 }

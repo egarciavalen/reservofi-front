@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SalaDTO } from '../models/sala.dto';
+import { SalaGuardadoDTO } from '../models/sala.guardado.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -10,22 +11,26 @@ export class SalaService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   create(sala: FormData): Observable<SalaDTO> {
-    return this.http.post<SalaDTO>(this.urlBlogUocApi + '/sala', sala);
+    return this.http.post<SalaDTO>(this.urlApi + '/sala', sala);
   }
 
-  findAll(): Observable<SalaDTO[]> {
-    return this.http.get<SalaDTO[]>(this.urlBlogUocApi + '/sala');
-  }
-
-  findById(id: string): Observable<SalaDTO> {
-    return this.http.get<SalaDTO>(this.urlBlogUocApi + '/sala/' + id);
+  update(idSala: string, sala: FormData): Observable<SalaDTO> {
+    return this.http.put<SalaDTO>(this.urlApi + '/' + idSala, sala);
   }
 
   delete(id: string): Observable<void> {
     // TODO: ¿MANEJO DE EXCEPCIONES?
-    return this.http.delete<void>(this.urlBlogUocApi + '/sala/' + id);
+    return this.http.delete<void>(this.urlApi + '/sala/' + id);
+  }
+
+  findAll(): Observable<SalaDTO[]> {
+    return this.http.get<SalaDTO[]>(this.urlApi + '/sala');
+  }
+
+  findById(id: string): Observable<SalaDTO> {
+    return this.http.get<SalaDTO>(this.urlApi + '/sala/' + id);
   }
 }

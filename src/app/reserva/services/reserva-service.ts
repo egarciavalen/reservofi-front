@@ -11,9 +11,9 @@ export class ReservaService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   findAll(): Observable<ReservaDTO[]> {
-    return this.http.get<ReservaDTO[]>(this.urlBlogUocApi + "/reserva");
+    return this.http.get<ReservaDTO[]>(this.urlApi + "/reserva");
   }
 }

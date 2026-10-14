@@ -11,10 +11,10 @@ export class PuestoService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   findAll(): Observable<PuestoDTO[]> {
-    return this.http.get<PuestoDTO[]>(this.urlBlogUocApi + "/puesto");
+    return this.http.get<PuestoDTO[]>(this.urlApi + "/puesto");
   }
 
 }

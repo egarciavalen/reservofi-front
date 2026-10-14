@@ -30,6 +30,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'sala/form',
+    component: SalaForm,
+    canActivate: [authGuard],
+  },
+  {
     path: 'sala/form/:id',
     component: SalaForm,
     canActivate: [authGuard],

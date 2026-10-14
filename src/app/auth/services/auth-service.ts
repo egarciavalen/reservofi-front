@@ -13,15 +13,15 @@ export class AuthService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api/auth';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   // Registro del usuario
   register(register: UsuarioRegistroRequestDTO): Observable<UsuarioRegistroResponseDTO> {
-    return this.http.post<UsuarioRegistroResponseDTO>(this.urlBlogUocApi + "/register", register);
+    return this.http.post<UsuarioRegistroResponseDTO>(this.urlApi + "/register", register);
   }
 
   // Autenticación del usuario
   login(login: LoginRequestDTO): Observable<LoginResponseDTO> {
-    return this.http.post<LoginResponseDTO>(this.urlBlogUocApi + "/login", login);
+    return this.http.post<LoginResponseDTO>(this.urlApi + "/login", login);
   }
 }

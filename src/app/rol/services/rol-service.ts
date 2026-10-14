@@ -12,10 +12,10 @@ export class RolService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlBlogUocApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
   findAll(): Observable<RolDTO[]> {
-    return this.http.get<RolDTO[]>(this.urlBlogUocApi + "/rol");
+    return this.http.get<RolDTO[]>(this.urlApi + "/rol");
   }
 
 }

@@ -62,8 +62,7 @@ export class SalaForm implements OnInit {
     }
   }
 
-
-  async create(): Promise<void> {
+  async guardar(): Promise<void> {
 
     // Validación de los campos
     this.isValidForm = false;
@@ -72,27 +71,31 @@ export class SalaForm implements OnInit {
     }
     this.isValidForm = true;
 
-    // Obtención de valores y asignación al DTO
-    const { nombre, imagen } = this.salaForm.getRawValue();
-    this.salaGuardadoDTO.nombre = nombre;
-    this.salaGuardadoDTO.imagen = imagen;
+    // Creación de un FormData con la información necesaria
+    const formData: FormData = this.getFormData();
 
-    // Creación de un FormData para poder mandar MultipartFile
-    // Con un DTO normal se mandaría un JSON
-    const formData = new FormData();
-    formData.append("nombre", this.salaGuardadoDTO.nombre);
-    if (this.salaGuardadoDTO.imagen != null) {
-      formData.append("imagen", this.salaGuardadoDTO.imagen);
+    if (this.idSala) {
+      // Actualización
+      try {
+        const salaResponse = await firstValueFrom(this.salaService.update(this.idSala, formData));
+        // Debug 
+        console.log(salaResponse);
+      } catch (error: any) {
+        console.log(error);
+      }
+    } else {
+      // Creación
+      try{
+        const salaResponse = await firstValueFrom(this.salaService.create(formData));
+        // Debug 
+        console.log(salaResponse);
+      } catch (error: any) {
+        console.log(error);
+      }
     }
 
-    try {
-      const salaResponse = await firstValueFrom(this.salaService.create(formData));
-      // Debug 
-      console.log(salaResponse);
-    } catch (error: any) {
-      console.log(error);
-    }
-
+    // Regreso al listado de salas
+    this.router.navigateByUrl('sala/list');
   }
 
   mostrarNombreFichero(event: Event) {
@@ -105,7 +108,6 @@ export class SalaForm implements OnInit {
     }
   }
 
-
   async borrarSala(): Promise<void> {
     if (this.idSala) {
       await firstValueFrom(this.salaService.delete(this.idSala));
@@ -113,6 +115,21 @@ export class SalaForm implements OnInit {
       console.log('Sala borrada!');
       this.router.navigateByUrl('/sala/list');
     }
+  }
+
+  private getFormData(): FormData {
+    // Obtención de valores y asignación al DTO
+    const { nombre, imagen } = this.salaForm.getRawValue();
+    this.salaGuardadoDTO.nombre = nombre;
+    this.salaGuardadoDTO.imagen = imagen;
+
+    // Creación de un FormData para poder mandar MultipartFile
+    const formData: FormData = new FormData();
+    formData.append("nombre", this.salaGuardadoDTO.nombre);
+    if (this.salaGuardadoDTO.imagen != null) {
+      formData.append("imagen", this.salaGuardadoDTO.imagen);
+    }
+    return formData;
   }
  
 }
