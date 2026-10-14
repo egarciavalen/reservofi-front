@@ -1,0 +1,18 @@
+<h2>Lista de salas</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Identificador</th>
+      <th>Nombre</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (salaDTO of salaDTOList(); track salaDTO.id) {
+      <tr>
+         <td>{{ salaDTO.id }}</td>
+         <td>{{ salaDTO.nombre }}</td>     
+      </tr>
+    } 
+  </tbody>
+</table>

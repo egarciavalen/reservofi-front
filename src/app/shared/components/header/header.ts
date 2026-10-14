@@ -38,6 +38,10 @@ export class Header {
     this.router.navigateByUrl('sala/form');
   }
 
+  salaList(): void {
+    this.router.navigateByUrl('sala/list');
+  }
+
   logout(): void {
     this.localStorageService.remove('idUsuario');
     this.localStorageService.remove('token');

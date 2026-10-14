@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SalaManagement } from './sala-management';
+import { SalaList } from './sala-list';
 
-describe('SalaManagement', () => {
-  let component: SalaManagement;
-  let fixture: ComponentFixture<SalaManagement>;
+describe('SalaList', () => {
+  let component: SalaList;
+  let fixture: ComponentFixture<SalaList>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SalaManagement],
+      imports: [SalaList],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SalaManagement);
+    fixture = TestBed.createComponent(SalaList);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
