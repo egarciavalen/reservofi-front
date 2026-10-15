@@ -1,10 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SalaService } from '../../services/sala-service';
-import { SalaGuardadoDTO } from '../../models/sala.guardado.dto';
 import { CommonModule } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { SalaGuardadoDTO } from '../../models/sala.guardado.dto';
+import { SalaService } from '../../services/sala-service';
 
 type SalaFormModel = {
   nombre: FormControl<string>;
@@ -17,7 +23,6 @@ type SalaFormModel = {
   styleUrl: './sala-form.scss',
 })
 export class SalaForm implements OnInit {
-
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly salaService = inject(SalaService);
@@ -37,12 +42,17 @@ export class SalaForm implements OnInit {
 
   nombre = new FormControl(this.salaGuardadoDTO.nombre, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.nombreMin), Validators.maxLength(this.nombreMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.nombreMin),
+      Validators.maxLength(this.nombreMax),
+    ],
   });
 
+  // Si ya existe la sala, entonces la validación deja de ser obligatoria y se oculta del formulario
   readonly imagen = new FormControl(this.salaGuardadoDTO.imagen, {
     nonNullable: true,
-    validators: [Validators.required],
+    validators: this.idSala != null ? [] : [Validators.required],
   });
 
   readonly salaForm: FormGroup<SalaFormModel> = this.formBuilder.group({
@@ -51,19 +61,17 @@ export class SalaForm implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
-
     // Si es una actualización, se rellenan los campos correspondientes
     if (this.idSala) {
       const salaCreada = await firstValueFrom(this.salaService.findById(this.idSala));
-      // Debug 
+      // Debug
       console.log(salaCreada);
       this.salaForm.controls.nombre.setValue(salaCreada.nombre);
-      this.nombreImagen = salaCreada.rutaImagen;
+      this.nombreImagen = salaCreada.nombreImagen;
     }
   }
 
   async guardar(): Promise<void> {
-
     // Validación de los campos
     this.isValidForm = false;
     if (this.salaForm.invalid) {
@@ -78,16 +86,16 @@ export class SalaForm implements OnInit {
       // Actualización
       try {
         const salaResponse = await firstValueFrom(this.salaService.update(this.idSala, formData));
-        // Debug 
+        // Debug
         console.log(salaResponse);
       } catch (error: any) {
         console.log(error);
       }
     } else {
       // Creación
-      try{
+      try {
         const salaResponse = await firstValueFrom(this.salaService.create(formData));
-        // Debug 
+        // Debug
         console.log(salaResponse);
       } catch (error: any) {
         console.log(error);
@@ -100,7 +108,7 @@ export class SalaForm implements OnInit {
 
   mostrarNombreFichero(event: Event) {
     const input = event.target as HTMLInputElement;
-    const file:File | undefined= input.files?.[0];
+    const file: File | undefined = input.files?.[0];
 
     if (file) {
       this.nombreImagen = file.name; // Marcar el nombre del fichero para aportar feedback
@@ -125,11 +133,10 @@ export class SalaForm implements OnInit {
 
     // Creación de un FormData para poder mandar MultipartFile
     const formData: FormData = new FormData();
-    formData.append("nombre", this.salaGuardadoDTO.nombre);
+    formData.append('nombre', this.salaGuardadoDTO.nombre);
     if (this.salaGuardadoDTO.imagen != null) {
-      formData.append("imagen", this.salaGuardadoDTO.imagen);
+      formData.append('imagen', this.salaGuardadoDTO.imagen);
     }
     return formData;
   }
- 
 }

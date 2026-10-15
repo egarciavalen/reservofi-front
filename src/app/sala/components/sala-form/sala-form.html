@@ -30,29 +30,33 @@
       </div>
 
       <!-- Imagen -->
-      <div>  
-        <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
-        <!-- Se incluye un evento para poder mostrar el nombre del fichero al usuario y guardar el fichero -->
-        <input type="file" class="ocultar" (change)="mostrarNombreFichero($event)" #ficheroSubida>
+      <!-- En la actualización de una sala se permite cambiar su nombre, no la imagen asociada (afectaría a las posibles reservas) -->
+       @if (idSala) {
+        <div>  
+          <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
+          <!-- Se incluye un evento para poder mostrar el nombre del fichero al usuario y guardar el fichero -->
+          <input type="file" class="ocultar" (change)="mostrarNombreFichero($event)" #ficheroSubida>
 
-        <!-- Bloque para marcar la subida de imagen; sustituye al input de arriba permitiendo una mejor personalización-->
-        <!-- OJO: el button tiene que ser type="button" porque si no provocará que se envíe el formulario -->
-        <div>
-          {{nombreImagen || "No se ha subido una imagen todavía."}}
-            <button type="button" (click)="ficheroSubida.click()">Subir imagen</button>
-        </div>
+          <!-- Bloque para marcar la subida de imagen; sustituye al input de arriba permitiendo una mejor personalización-->
+          <!-- OJO: el button tiene que ser type="button" porque si no provocará que se envíe el formulario -->
+          <div>
+            {{nombreImagen || "No se ha subido una imagen todavía."}}
+              <button type="button" (click)="ficheroSubida.click()">Subir imagen</button>
+          </div>
 
-        @if(imagen.errors) {
-           @if (imagen.errors && isValidForm != null && !isValidForm) {
-              <div [ngClass]="'validacion'">
-                @if (imagen.errors['required']) {
-                  <div>La imagen es obligatoria</div> 
-                }
-              </div>
+          @if(imagen.errors) {
+            @if (imagen.errors && isValidForm != null && !isValidForm) {
+                <div [ngClass]="'validacion'">
+                  @if (imagen.errors['required']) {
+                    <div>La imagen es obligatoria</div> 
+                  }
+                </div>
+            }
           }
-        }
-      </div>
-    <button type="submit">Guardar sala</button>
+        </div>
+      }
+
+      <button type="submit">Guardar sala</button>
     </form>
   }
 

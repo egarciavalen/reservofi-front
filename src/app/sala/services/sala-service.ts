@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SalaDTO } from '../models/sala.dto';
-import { SalaGuardadoDTO } from '../models/sala.guardado.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +17,7 @@ export class SalaService {
   }
 
   update(idSala: string, sala: FormData): Observable<SalaDTO> {
-    return this.http.put<SalaDTO>(this.urlApi + '/' + idSala, sala);
+    return this.http.put<SalaDTO>(this.urlApi + '/sala/' + idSala, sala);
   }
 
   delete(id: string): Observable<void> {
