@@ -6,7 +6,7 @@ import { Debug } from './shared/components/debug/debug';
 import { authGuard } from './shared/guards/auth-guard';
 import { SalaForm } from './sala/components/sala-form/sala-form';
 import { SalaList } from './sala/components/sala-list/sala-list';
-import { MapViewfinder } from './map/components/map-viewfinder/map-viewfinder';
+import { MapaVisor } from './mapa/components/mapa-visor/mapa-visor';
 
 export const routes: Routes = [
   {
@@ -45,10 +45,9 @@ export const routes: Routes = [
     component: SalaList,
     canActivate: [authGuard],
   },
-  ,
   {
-    path: 'map/viewfinder',
-    component: MapViewfinder,
+    path: 'mapa/visor',
+    component: MapaVisor,
     canActivate: [authGuard],
   }
 ];

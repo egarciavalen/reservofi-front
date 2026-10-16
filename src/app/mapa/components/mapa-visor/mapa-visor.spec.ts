@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MapViewfinder } from './map-viewfinder';
+import { MapaVisor } from './mapa-visor';
 
-describe('MapViewfinder', () => {
-  let component: MapViewfinder;
-  let fixture: ComponentFixture<MapViewfinder>;
+describe('MapaVisor', () => {
+  let component: MapaVisor;
+  let fixture: ComponentFixture<MapaVisor>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MapViewfinder],
+      imports: [MapaVisor],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MapViewfinder);
+    fixture = TestBed.createComponent(MapaVisor);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

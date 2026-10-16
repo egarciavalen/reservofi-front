@@ -1,0 +1,20 @@
+<h2>Mapa</h2>
+<p>Mapa donde se procede a la visualización de las salas, puestos y reservas</p>
+
+<div class="map">
+
+  <div class="selector">
+    @for(salaDTO of salaDTOList(); track salaDTO.id) {
+      <button (click)="establecerSala(salaDTO.id)">{{salaDTO.nombre}}</button>
+
+    }
+  </div>
+
+  <div class="viewfinder">
+    @if(mapaDTO.salaDTO) {
+          <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada">
+    }
+
+  </div>
+
+</div>

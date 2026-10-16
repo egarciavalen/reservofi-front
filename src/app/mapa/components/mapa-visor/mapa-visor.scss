@@ -1,0 +1,17 @@
+.map {
+  display: flex;
+  flex-direction: column;
+}
+
+.selector {
+  flex: 1;
+}
+
+.viewfinder {
+  flex: 3;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
