@@ -10,9 +10,12 @@
     }
   </div>
 
-  <div class="viewfinder">
+  <div class="visor"
+    (mousedown)="pulsarRaton($event)"
+    (mousemove)="moverRaton($event)"
+    (mouseup)="finalizarRaton()">
     @if(mapaDTO.salaDTO) {
-          <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada">
+          <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada" draggable="false">
     }
 
   </div>
