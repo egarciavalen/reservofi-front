@@ -34,6 +34,10 @@ export class Header {
     this.router.navigateByUrl('debug');
   }
 
+  map(): void {
+    this.router.navigateByUrl('map/viewfinder');
+  }
+
   salaList(): void {
     this.router.navigateByUrl('sala/list');
   }
