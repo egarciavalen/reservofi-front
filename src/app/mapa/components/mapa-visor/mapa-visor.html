@@ -13,7 +13,7 @@
   <div class="contenedor">
 
     <!-- Si NO hay una sala seleccionada, no se muestra nada -->
-    @if (mapaDTO.salaDTO) {
+    @if (mapaDTO.idSala) {
       <div class="visor"
         (mousedown)="pulsarRaton($event)"
         (mousemove)="moverRaton($event)"
@@ -25,7 +25,7 @@
 
         <!-- Visualización de los puestos ya introducidos -->
         <!-- Uso de % para marcar la unidad con la que se está trabajando -->
-        @for (mapaPuestoDTO of mapaPuestoDTOList(); track mapaPuestoDTO.nombre) {
+        @for (mapaPuestoDTO of mapaPuestoDTOFiltradoList(); track mapaPuestoDTO.coordenadaX) {
           <div class="puesto" [style.left.%]="mapaPuestoDTO.coordenadaX" [style.top.%]="mapaPuestoDTO.coordenadaY"
           [style.width.%]="mapaPuestoDTO.ancho" [style.height.%]="mapaPuestoDTO.alto"></div>   
         }

@@ -1,8 +1,8 @@
 export class MapaPuestoDTO {
 
   constructor(
-    public nombre: string | undefined,
-    public idSala: string | undefined,
+    public nombre: string | null,
+    public idSala: string | null,
     public coordenadaX: number,
     public coordenadaY: number,
     public ancho: number,

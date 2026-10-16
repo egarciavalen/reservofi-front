@@ -23,11 +23,10 @@ export class MapaVisor implements OnInit {
   // Listado de salas
   salaDTOList: WritableSignal<SalaDTO[]> = signal([]);
   // Listado de puestos sobre las salas
-  mapaPuestoDTOList: WritableSignal<MapaPuestoDTO[]> = signal([]);
-  // Puesto actual que se que quiere incluir
+  mapaPuestoDTOTotalList: MapaPuestoDTO[] = [];
+  mapaPuestoDTOFiltradoList: WritableSignal<MapaPuestoDTO[]> = signal([]);
+  // Puesto actual que se que quiere incluir (signal puesto que se irá actualizando en la pantalla)
   puestoActualDTO: WritableSignal<MapaPuestoDTO | null> = signal(null);
-
-
   // Mapa sobre el que se va a cargar la sala
   mapaDTO: MapaDTO = new MapaDTO(null, null);
   // Punto de origen sobre el cual empezamos a crear el puesto
@@ -56,10 +55,19 @@ export class MapaVisor implements OnInit {
       // Debug
       console.log('HUBO UN PROBLEMA AL SELECCIONAR LA SALA');
     } else {
-      this.mapaDTO.salaDTO = salaDTO;
+      this.mapaDTO.idSala = salaDTO.id;
       // Cambiar localhost al actualizar a servidor en producción
       this.mapaDTO.rutaImagenSala = "http://localhost:3000/" + salaDTO.rutaImagen;
+      // Actualiza los puestos actuales a mostrar
+      this.actualizarPuestosSala();
     }
+  }
+
+  actualizarPuestosSala() {
+    console.log(this.mapaDTO.idSala);
+    // Actualiza los puestos filtrados
+    this.mapaPuestoDTOFiltradoList.set(this.mapaPuestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
+    console.log(this.mapaPuestoDTOFiltradoList());
   }
 
   // *** EVENTOS ASOCIADOS AL RATÓN ***
@@ -71,8 +79,8 @@ export class MapaVisor implements OnInit {
     // Es necesario marcar cual sería la coordenada de origen
     this.origenDTO = this.ubicacionActual(e);
     // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
-    if (this.mapaDTO.salaDTO) {
-      this.puestoActualDTO.set(new MapaPuestoDTO( "", this.mapaDTO.salaDTO.id, this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
+    if (this.mapaDTO.idSala) {
+      this.puestoActualDTO.set(new MapaPuestoDTO( "", this.mapaDTO.idSala, this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
     } else {
       // Debug
       console.log("Ha ocurrido un error al crear el puesto");
@@ -97,7 +105,7 @@ export class MapaVisor implements OnInit {
         // Uso de Math.abs porque si no, si se arrastra a la derecha toma valores negativos y no lo registra bien
         const nuevoAncho = Math.abs(this.origenDTO.coordenadaX - ubicacionActual.coordenadaX);
         const nuevoAlto = Math.abs(this.origenDTO.coordenadaY - ubicacionActual.coordenadaY);
-        this.puestoActualDTO.update(puesto => ({...puesto, idSala: puesto?.idSala, nombre: puesto?.nombre, coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
+        this.puestoActualDTO.update(puesto => ({...puesto, idSala: puesto !== null ? puesto.idSala : null, nombre: puesto !== null ? puesto.nombre: null, coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
       }
     }
   }
@@ -106,19 +114,12 @@ export class MapaVisor implements OnInit {
     // Se desactiva el modo creación y se deja el elemento creado como está
     this.creacion = false;
     console.log('he finalizado moviendo el ratón');
+    this.mapaPuestoDTOTotalList.push(this.puestoActualDTO()!);
+    this.puestoActualDTO.set(null);
+    this.origenDTO = new MapaPuntoDTO(0, 0);
 
-    console.log(this.puestoActualDTO());
-    if (this.puestoActualDTO() !== null) {
-      this.mapaPuestoDTOList().push(this.puestoActualDTO()!);
-      this.puestoActualDTO.set(null);
-      this.origenDTO = new MapaPuntoDTO(0, 0);
-      // Debug
-      console.log(this.mapaPuestoDTOList());
-    } else {
-      // Debug
-      console.log("Ha ocurrido un problema al finalizar la creación del elemento");
-    }
-
+    // Actualiza los puestos actuales a mostrar
+    this.actualizarPuestosSala();
   }
 
   private ubicacionActual(e: MouseEvent): MapaPuntoDTO {
