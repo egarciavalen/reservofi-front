@@ -36,6 +36,7 @@ export class SalaForm implements OnInit {
   readonly nombreMin = 5;
   readonly nombreMax = 30;
   nombreImagen = '';
+  rutaMostrarImagen = '';
 
   // Para determinar si se edita o crea una sala nueva
   idSala = this.activatedRoute.snapshot.paramMap.get('id');
@@ -68,6 +69,8 @@ export class SalaForm implements OnInit {
       console.log(salaCreada);
       this.salaForm.controls.nombre.setValue(salaCreada.nombre);
       this.nombreImagen = salaCreada.nombreImagen;
+      // TODO: CAMBIAR POR PARÁMETRO CUANDO NO ESTÉS EN LOCAL
+      this.rutaMostrarImagen = "http://localhost:3000/" + salaCreada.rutaImagen;
     }
   }
 

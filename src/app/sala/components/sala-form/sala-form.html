@@ -1,7 +1,10 @@
 <div>
-  <h3>Creación de salas</h3>
-  <p>Por favor, rellene la información para crear una nueva sala.</p>
-  <p>Es necesario introducir una imagen en formato png o jpeg.</p>
+  <h3>Guardado de salas</h3>
+
+  @if (!idSala) {
+    <p>Por favor, rellene la información para crear una nueva sala.</p>
+    <p>Es necesario introducir una imagen en formato png o jpeg.</p>
+  }
 
   @if(salaForm) {
 
@@ -31,7 +34,7 @@
 
       <!-- Imagen -->
       <!-- En la actualización de una sala se permite cambiar su nombre, no la imagen asociada (afectaría a las posibles reservas) -->
-       @if (idSala) {
+       @if (!idSala) {
         <div>  
           <!-- Input para subir la imagen, se oculta porque es difícil de marcar con estilo -->
           <!-- Se incluye un evento para poder mostrar el nombre del fichero al usuario y guardar el fichero -->
@@ -55,13 +58,13 @@
           }
         </div>
       }
-
       <button type="submit">Guardar sala</button>
     </form>
   }
 
   <!-- Para borrar la sala -->
   @if (idSala) {  
+    <img src= {{rutaMostrarImagen}} alt="Sala guardada">
     <button (click)="borrarSala()">Borrar sala</button>
   }
 

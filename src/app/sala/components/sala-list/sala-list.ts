@@ -31,7 +31,7 @@ export class SalaList implements OnInit {
       // Debug 
       console.log(this.salaDTOList);
     } catch (error: any) {
-      console.log(error);
+      console.log("No hay salas que cargar");
     }
     
   }
