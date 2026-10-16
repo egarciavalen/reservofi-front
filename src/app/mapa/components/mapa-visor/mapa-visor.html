@@ -1,7 +1,7 @@
 <h2>Mapa</h2>
 <p>Mapa donde se procede a la visualización de las salas, puestos y reservas</p>
 
-<div class="map">
+<div class="mapa">
 
   <div class="selector">
     @for(salaDTO of salaDTOList(); track salaDTO.id) {
@@ -10,14 +10,34 @@
     }
   </div>
 
-  <div class="visor"
-    (mousedown)="pulsarRaton($event)"
-    (mousemove)="moverRaton($event)"
-    (mouseup)="finalizarRaton()">
-    @if(mapaDTO.salaDTO) {
-          <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada" draggable="false">
+  <div class="contenedor">
+
+    <!-- Si NO hay una sala seleccionada, no se muestra nada -->
+    @if (mapaDTO.salaDTO) {
+      <div class="visor"
+        (mousedown)="pulsarRaton($event)"
+        (mousemove)="moverRaton($event)"
+        (mouseup)="finalizarRaton()">
+
+        <!-- Imagen sobre la cual se van a crear elementos, la cual ocupará todo el contenedor -->
+        <!-- draggable="false" para evitar arrastrar la imagen -->
+        <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada" draggable="false">
+
+        <!-- Visualización de los puestos ya introducidos -->
+        <!-- Uso de % para marcar la unidad con la que se está trabajando -->
+        @for (mapaPuestoDTO of mapaPuestoDTOList(); track mapaPuestoDTO.nombre) {
+          <div class="puesto" [style.left.%]="mapaPuestoDTO.coordenadaX" [style.top.%]="mapaPuestoDTO.coordenadaY"
+          [style.width.%]="mapaPuestoDTO.ancho" [style.height.%]="mapaPuestoDTO.alto"></div>   
+        }
+       
+        <!-- Visualización del puesto a incluir -->
+        <!-- Uso de % para marcar la unidad con la que se está trabajando -->
+        @if (puestoActualDTO()) {
+          <div class="puesto" [style.left.%]="puestoActualDTO()!.coordenadaX" [style.top.%]="puestoActualDTO()!.coordenadaY"
+          [style.width.%]="puestoActualDTO()!.ancho" [style.height.%]="puestoActualDTO()!.alto"></div>
+        }
+
+      </div>
     }
-
   </div>
-
 </div>

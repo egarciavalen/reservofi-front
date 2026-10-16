@@ -1,4 +1,4 @@
-export class MapaPuntoOrigenDTO {
+export class MapaPuntoDTO {
 
   constructor(
     public coordenadaX: number,

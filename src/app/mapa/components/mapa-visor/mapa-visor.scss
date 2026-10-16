@@ -1,9 +1,23 @@
-.map {
+.mapa {
   display: flex;
+  // Los botones con las salas se mostrarán en una fila arriba
   flex-direction: column;
 }
 
 img {
+  // Se busca que la imagen ocupe todo el ancho del contenedor
   width: 100%;
   height: auto;
+}
+
+.visor {
+  // Position relative para tome como referencia de posicionamento el contenedor
+  position: relative;
+}
+
+.puesto {
+  // Posición absoluta para poder colocarse en base a sus coordenadas
+  position: absolute;
+  // Color de fondo
+  background-color: red;
 }
