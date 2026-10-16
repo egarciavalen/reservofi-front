@@ -7,6 +7,7 @@ import { authGuard } from './shared/guards/auth-guard';
 import { SalaForm } from './sala/components/sala-form/sala-form';
 import { SalaList } from './sala/components/sala-list/sala-list';
 import { MapaVisor } from './mapa/components/mapa-visor/mapa-visor';
+import { PuestoForm } from './puesto/components/puesto-form/puesto-form';
 
 export const routes: Routes = [
   {
@@ -48,6 +49,11 @@ export const routes: Routes = [
   {
     path: 'mapa/visor',
     component: MapaVisor,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'puesto/form',
+    component: PuestoForm,
     canActivate: [authGuard],
   }
 ];

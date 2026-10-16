@@ -6,6 +6,7 @@ import { MapaDTO } from '../../models/mapa.dto';
 import { MapaPuntoDTO } from '../../models/mapa.punto';
 import { PuestoDTO } from '../../../puesto/models/puesto.dto';
 import { MapaPuestoDTO } from '../../models/mapa.puesto.dto';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -17,6 +18,7 @@ export class MapaVisor implements OnInit {
 
   // Recuperación de las salas asociadas
   private readonly salaService = inject(SalaService);
+  private readonly router = inject(Router);
 
   // Propiedades
 
@@ -42,8 +44,6 @@ export class MapaVisor implements OnInit {
   private async cargarSalas(): Promise<void> {
     try {
       this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
-      // Debug 
-      console.log(this.salaDTOList);
     } catch (error: any) {
       console.log("No hay salas que cargar");
     }
@@ -64,62 +64,47 @@ export class MapaVisor implements OnInit {
   }
 
   actualizarPuestosSala() {
-    console.log(this.mapaDTO.idSala);
     // Actualiza los puestos filtrados
     this.mapaPuestoDTOFiltradoList.set(this.mapaPuestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
-    console.log(this.mapaPuestoDTOFiltradoList());
   }
 
   // *** EVENTOS ASOCIADOS AL RATÓN ***
 
   pulsarRaton(e: MouseEvent) {
-    console.log('estoy pulsando el ratón');
     // Se activa el modo creación
     this.creacion = true;
     // Es necesario marcar cual sería la coordenada de origen
     this.origenDTO = this.ubicacionActual(e);
     // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
-    if (this.mapaDTO.idSala) {
-      this.puestoActualDTO.set(new MapaPuestoDTO( "", this.mapaDTO.idSala, this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
-    } else {
-      // Debug
-      console.log("Ha ocurrido un error al crear el puesto");
-    }
+    this.puestoActualDTO.set(new MapaPuestoDTO( "", this.mapaDTO.idSala, this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
   }
 
   moverRaton(e: MouseEvent) {
     if (this.creacion){
-      console.log('estoy moviendo el ratón');
       // En este punto lo que hay que hacer es actualizar las coordenadas del puesto creado
       const ubicacionActual = this.ubicacionActual(e);
 
-      if (this.puestoActualDTO() === null) {
-        // Debug
-        console.log("Ha ocurrido un problema al recuperar el puesto que se quiere modificar")
-      } else {
-        // Primero se revisan las coordenadas X e Y para determinar cuál es el origen real
-        // Esto es porque si coges el ratón y arrastras por encima del punto de origen, debería poder crearte el rectángulo
-        const nuevaCoordenadaX = Math.min(this.origenDTO.coordenadaX, ubicacionActual.coordenadaX);
-        const nuevaCoordenadaY = Math.min(this.origenDTO.coordenadaY, ubicacionActual.coordenadaY);
-        // Se obtiene el ancho y alto comparando con el punto de origen
-        // Uso de Math.abs porque si no, si se arrastra a la derecha toma valores negativos y no lo registra bien
-        const nuevoAncho = Math.abs(this.origenDTO.coordenadaX - ubicacionActual.coordenadaX);
-        const nuevoAlto = Math.abs(this.origenDTO.coordenadaY - ubicacionActual.coordenadaY);
-        this.puestoActualDTO.update(puesto => ({...puesto, idSala: puesto !== null ? puesto.idSala : null, nombre: puesto !== null ? puesto.nombre: null, coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
-      }
+      // Primero se revisan las coordenadas X e Y para determinar cuál es el origen real
+      // Esto es porque si coges el ratón y arrastras por encima del punto de origen, debería poder crearte el rectángulo
+      const nuevaCoordenadaX = Math.min(this.origenDTO.coordenadaX, ubicacionActual.coordenadaX);
+      const nuevaCoordenadaY = Math.min(this.origenDTO.coordenadaY, ubicacionActual.coordenadaY);
+      // Se obtiene el ancho y alto comparando con el punto de origen
+      // Uso de Math.abs porque si no, si se arrastra a la derecha toma valores negativos y no lo registra bien
+      const nuevoAncho = Math.abs(this.origenDTO.coordenadaX - ubicacionActual.coordenadaX);
+      const nuevoAlto = Math.abs(this.origenDTO.coordenadaY - ubicacionActual.coordenadaY);
+      this.puestoActualDTO.update(puesto => ({...puesto, idSala: puesto !== null ? puesto.idSala : null, nombre: puesto !== null ? puesto.nombre: null, coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
     }
   }
 
   finalizarRaton() {
     // Se desactiva el modo creación y se deja el elemento creado como está
     this.creacion = false;
-    console.log('he finalizado moviendo el ratón');
     this.mapaPuestoDTOTotalList.push(this.puestoActualDTO()!);
-    this.puestoActualDTO.set(null);
-    this.origenDTO = new MapaPuntoDTO(0, 0);
+    //this.puestoActualDTO.set(null);
+    //this.origenDTO = new MapaPuntoDTO(0, 0);
 
-    // Actualiza los puestos actuales a mostrar
-    this.actualizarPuestosSala();
+    // Redirección a la creación del puesto con la información necesaria
+    this.router.navigateByUrl("puesto/form", { state: { puesto: this.puestoActualDTO() }});
   }
 
   private ubicacionActual(e: MouseEvent): MapaPuntoDTO {
