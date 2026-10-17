@@ -1,0 +1,48 @@
+<div>
+  <h3>Creación de reservas</h3>
+  
+  <form [formGroup]="reservaForm" (ngSubmit)="guardar()">
+    <!-- Fecha inicio -->
+    <div>
+      <label for="fechaInicio">Fecha de inicio:</label>
+      <input id="fechaInicio" type="text" [formControl]="fechaInicio" />
+
+      @if(fechaInicio.errors) {
+        @if (fechaInicio.errors && isValidForm != null && !isValidForm) {
+          <div [ngClass]="'validacion'">
+            @if (fechaInicio.errors['required']) {
+              <div>La fecha de inicio es obligatoria</div> 
+            }
+          </div>
+          }
+        }
+      </div>
+
+      <!-- Fecha de fin -->
+      <div>
+        <label for="fechaFin">Fecha de fin:</label>
+        <input id="fechaFin" type="text" [formControl]="fechaFin" />
+
+        @if(fechaFin.errors) {
+          @if (fechaFin.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (fechaFin.errors['required']) {
+                <div>La fecha de fin es obligatoris</div> 
+              }
+            </div>
+            }
+          }
+      </div>
+
+      @if(idReserva) {
+        <!-- Deja guardar una reserva que no se haya creado previamente -->
+        <button type="submit">Guardar reserva</button>
+      }
+
+    </form>
+
+    <!-- Para borrar la reserva -->
+    @if (idReserva) {  
+      <button (click)="borrarReserva()">Borrar reserva</button>
+    }
+</div>

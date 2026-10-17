@@ -13,7 +13,20 @@ export class ReservaService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
+  create(reserva: ReservaDTO): Observable<ReservaDTO> {
+    return this.http.post<ReservaDTO>(this.urlApi + '/reserva', reserva);
+  }
+
+  findById(id: string): Observable<ReservaDTO> {
+    return this.http.get<ReservaDTO>(this.urlApi + '/reserva/' + id);
+  }
+
   findAll(): Observable<ReservaDTO[]> {
     return this.http.get<ReservaDTO[]>(this.urlApi + "/reserva");
+  }
+
+  delete(id: string): Observable<void> {
+    // TODO: ¿MANEJO DE EXCEPCIONES?
+    return this.http.delete<void>(this.urlApi + '/reserva/' + id);
   }
 }
