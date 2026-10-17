@@ -34,8 +34,9 @@ export class MapaVisor implements OnInit {
   mapaDTO: MapaDTO = new MapaDTO(null, null);
   // Punto de origen sobre el cual empezamos a crear el puesto
   origenDTO: MapaPuntoDTO = new MapaPuntoDTO(0, 0);
-  // Determina si se está en modo creación de puesto o no al arrastrar el ratón
-  creacion: boolean = false;
+  // Campos booleanos que limitarán el alcance de los eventos MouseX
+  ratonPulsado: boolean = false;
+  modoEdicion: boolean = false;
 
 
   ngOnInit(): void {
@@ -50,7 +51,6 @@ export class MapaVisor implements OnInit {
       console.log("No hay salas que cargar");
     }
   }
-
     private async cargarPuestos(): Promise<void> {
     try {
       this.puestoDTOTotalList = await firstValueFrom(this.puestoService.findAll());
@@ -78,19 +78,30 @@ export class MapaVisor implements OnInit {
     this.puestoDTOFiltradoList.set(this.puestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
   }
 
+  crearReserva(idPuesto: string) {
+    this.router.navigateByUrl("reserva/form", { state: { idPuesto: idPuesto }});
+  }
+
+  alternarModoEdicion(): void {
+    this.modoEdicion = !this.modoEdicion;
+  }
+
   // *** EVENTOS ASOCIADOS AL RATÓN ***
 
   pulsarRaton(e: MouseEvent) {
-    // Se activa el modo creación
-    this.creacion = true;
-    // Es necesario marcar cual sería la coordenada de origen
-    this.origenDTO = this.ubicacionActual(e);
-    // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
-    this.puestoActualDTO.set(new PuestoDTO("", this.mapaDTO.idSala !== null ? this.mapaDTO.idSala : "", "", this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
+
+    if (this.modoEdicion) {
+      // Se activa el modo creación
+      this.ratonPulsado = true;
+      // Es necesario marcar cual sería la coordenada de origen
+      this.origenDTO = this.ubicacionActual(e);
+      // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
+      this.puestoActualDTO.set(new PuestoDTO("", this.mapaDTO.idSala !== null ? this.mapaDTO.idSala : "", "", this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
+    }
   }
 
   moverRaton(e: MouseEvent) {
-    if (this.creacion){
+    if (this.modoEdicion && this.ratonPulsado){
       // En este punto lo que hay que hacer es actualizar las coordenadas del puesto creado
       const ubicacionActual = this.ubicacionActual(e);
 
@@ -107,16 +118,18 @@ export class MapaVisor implements OnInit {
   }
 
   finalizarRaton() {
-    // Se desactiva el modo creación y se deja el elemento creado como está
-    
-    // Si se implementa una ventana emergente, recuperar este código
-    // this.creacion = false;
-    // this.puestoDTOTotalList.push(this.puestoActualDTO()!);
-    // this.puestoActualDTO.set(null);
-    // this.origenDTO = new MapaPuntoDTO(0, 0);
 
-    // Redirección a la creación del puesto con la información necesaria
-    this.router.navigateByUrl("puesto/form", { state: { puesto: this.puestoActualDTO() }});
+    if (this.modoEdicion) {
+      // Se desactiva el modo creación y se deja el elemento creado como está
+      this.ratonPulsado = false;    
+      // Si se implementa una ventana emergente, recuperar este código
+      // this.puestoDTOTotalList.push(this.puestoActualDTO()!);
+      // this.puestoActualDTO.set(null);
+      // this.origenDTO = new MapaPuntoDTO(0, 0);
+
+      // Redirección a la creación del puesto con la información necesaria
+      this.router.navigateByUrl("puesto/form", { state: { puesto: this.puestoActualDTO() }});
+    }
   }
 
   private ubicacionActual(e: MouseEvent): MapaPuntoDTO {

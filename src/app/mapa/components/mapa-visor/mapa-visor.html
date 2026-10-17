@@ -14,6 +14,11 @@
 
     <!-- Si NO hay una sala seleccionada, no se muestra nada -->
     @if (mapaDTO.idSala) {
+
+      <!-- Botón para establecer el modo edición -->
+      <button (click)="alternarModoEdicion()">Modo edición</button>
+
+
       <div class="visor"
         (mousedown)="pulsarRaton($event)"
         (mousemove)="moverRaton($event)"
@@ -26,8 +31,8 @@
         <!-- Visualización de los puestos ya introducidos -->
         <!-- Uso de % para marcar la unidad con la que se está trabajando -->
         @for (puestoDTO of puestoDTOFiltradoList(); track puestoDTO.coordenadaX) {
-          <div class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
-          [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</div>
+          <button (click)="crearReserva(puestoDTO.id)" class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
+          [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</button>
         }
        
         <!-- Visualización del puesto a incluir -->

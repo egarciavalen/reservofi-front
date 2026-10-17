@@ -5,7 +5,7 @@
     <!-- Fecha inicio -->
     <div>
       <label for="fechaInicio">Fecha de inicio:</label>
-      <input id="fechaInicio" type="text" [formControl]="fechaInicio" />
+      <input id="fechaInicio" type="datetime-local" [formControl]="fechaInicio" />
 
       @if(fechaInicio.errors) {
         @if (fechaInicio.errors && isValidForm != null && !isValidForm) {
@@ -21,20 +21,20 @@
       <!-- Fecha de fin -->
       <div>
         <label for="fechaFin">Fecha de fin:</label>
-        <input id="fechaFin" type="text" [formControl]="fechaFin" />
+        <input id="fechaFin" type="datetime-local" [formControl]="fechaFin" />
 
         @if(fechaFin.errors) {
           @if (fechaFin.errors && isValidForm != null && !isValidForm) {
             <div [ngClass]="'validacion'">
               @if (fechaFin.errors['required']) {
-                <div>La fecha de fin es obligatoris</div> 
+                <div>La fecha de fin es obligatoria</div> 
               }
             </div>
             }
           }
       </div>
 
-      @if(idReserva) {
+      @if(!idReserva) {
         <!-- Deja guardar una reserva que no se haya creado previamente -->
         <button type="submit">Guardar reserva</button>
       }

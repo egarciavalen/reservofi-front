@@ -8,6 +8,7 @@ import { SalaForm } from './sala/components/sala-form/sala-form';
 import { SalaList } from './sala/components/sala-list/sala-list';
 import { MapaVisor } from './mapa/components/mapa-visor/mapa-visor';
 import { PuestoForm } from './puesto/components/puesto-form/puesto-form';
+import { ReservaForm } from './reserva/components/reserva-form/reserva-form';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,11 @@ export const routes: Routes = [
   {
     path: 'puesto/form',
     component: PuestoForm,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'reserva/form',
+    component: ReservaForm,
     canActivate: [authGuard],
   }
 ];

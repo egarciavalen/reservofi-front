@@ -4,7 +4,7 @@ import { ReservaService } from '../../services/reserva-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaDTO } from '../../models/reserva.dto';
 import { firstValueFrom } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 
 type ReservaFormModel = {
@@ -33,14 +33,14 @@ export class ReservaForm implements OnInit {
   // Para determinar si se edita o crea una sala nueva
   idReserva = this.activatedRoute.snapshot.paramMap.get('id');
 
-  fechaInicio = new FormControl(this.reservaDTO.fechaInicio, {
+  fechaInicio = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
     nonNullable: true,
     validators: [
       Validators.required
     ],
   });
 
-  fechaFin = new FormControl(this.reservaDTO.fechaFin, {
+  fechaFin = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
     nonNullable: true,
     validators: [
       Validators.required
@@ -95,6 +95,8 @@ export class ReservaForm implements OnInit {
     const { fechaInicio, fechaFin } = this.reservaForm.getRawValue();
     this.reservaDTO.fechaInicio = fechaInicio;
     this.reservaDTO.fechaFin = fechaFin;
+
+    console.log(this.reservaDTO);
     try {
       const reservaResponse = await firstValueFrom(this.reservaService.create(this.reservaDTO));
       // Debug 
