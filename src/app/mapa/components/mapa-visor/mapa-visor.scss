@@ -19,5 +19,15 @@ img {
   // Posición absoluta para poder colocarse en base a sus coordenadas
   position: absolute;
   // Color de fondo
-  background-color: red;
+  background-color: lightblue;
+}
+
+.btnEdicionNoMarcado {
+  background-color: white;
+  color: black;
+}
+
+.btnEdicionMarcado {
+  background-color: black;
+  color: white;
 }

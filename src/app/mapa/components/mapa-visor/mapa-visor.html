@@ -16,7 +16,7 @@
     @if (mapaDTO.idSala) {
 
       <!-- Botón para establecer el modo edición -->
-      <button (click)="alternarModoEdicion()">Modo edición</button>
+      <button [class]="modoEdicion ? 'btnEdicionMarcado' : 'btnEdicionNoMarcado'" (click)="alternarModoEdicion()">Modo edición</button>
 
 
       <div class="visor"
