@@ -5,6 +5,7 @@ import { UsuarioRegistroRequestDTO } from '../../models/usuario-registro-request
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../../services/local-storage-service';
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -27,6 +28,7 @@ export class Register {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly localStorageService = inject(LocalStorageService);
 
   // Datos iniciales
   registerValue: UsuarioRegistroRequestDTO = new UsuarioRegistroRequestDTO('', '', '', '', '', false);
@@ -115,6 +117,13 @@ export class Register {
     );
 
     try {
+
+      // Se elimina el contenido de localStorageService antes de registrar al usuario
+      // Esto se hace para evitar casos de tokens antiguos almacenados que puedan provocar errores
+      this.localStorageService.remove('idUsuario');
+      this.localStorageService.remove('token');
+
+
       const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
       
       // Debug
