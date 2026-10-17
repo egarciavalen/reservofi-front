@@ -25,9 +25,9 @@
 
         <!-- Visualización de los puestos ya introducidos -->
         <!-- Uso de % para marcar la unidad con la que se está trabajando -->
-        @for (mapaPuestoDTO of mapaPuestoDTOFiltradoList(); track mapaPuestoDTO.coordenadaX) {
-          <div class="puesto" [style.left.%]="mapaPuestoDTO.coordenadaX" [style.top.%]="mapaPuestoDTO.coordenadaY"
-          [style.width.%]="mapaPuestoDTO.ancho" [style.height.%]="mapaPuestoDTO.alto"></div>   
+        @for (puestoDTO of puestoDTOFiltradoList(); track puestoDTO.coordenadaX) {
+          <div class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
+          [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</div>
         }
        
         <!-- Visualización del puesto a incluir -->

@@ -4,9 +4,9 @@ import { SalaService } from '../../../sala/services/sala-service';
 import { firstValueFrom } from 'rxjs';
 import { MapaDTO } from '../../models/mapa.dto';
 import { MapaPuntoDTO } from '../../models/mapa.punto';
+import { Router } from '@angular/router';
 import { PuestoDTO } from '../../../puesto/models/puesto.dto';
-import { MapaPuestoDTO } from '../../models/mapa.puesto.dto';
-import { NavigationExtras, Router } from '@angular/router';
+import { PuestoService } from '../../../puesto/services/puesto-service';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -18,6 +18,7 @@ export class MapaVisor implements OnInit {
 
   // Recuperación de las salas asociadas
   private readonly salaService = inject(SalaService);
+  private readonly puestoService = inject(PuestoService);
   private readonly router = inject(Router);
 
   // Propiedades
@@ -25,10 +26,10 @@ export class MapaVisor implements OnInit {
   // Listado de salas
   salaDTOList: WritableSignal<SalaDTO[]> = signal([]);
   // Listado de puestos sobre las salas
-  mapaPuestoDTOTotalList: MapaPuestoDTO[] = [];
-  mapaPuestoDTOFiltradoList: WritableSignal<MapaPuestoDTO[]> = signal([]);
+  puestoDTOTotalList: PuestoDTO[] = [];
+  puestoDTOFiltradoList: WritableSignal<PuestoDTO[]> = signal([]);
   // Puesto actual que se que quiere incluir (signal puesto que se irá actualizando en la pantalla)
-  puestoActualDTO: WritableSignal<MapaPuestoDTO | null> = signal(null);
+  puestoActualDTO: WritableSignal<PuestoDTO | null> = signal(null);
   // Mapa sobre el que se va a cargar la sala
   mapaDTO: MapaDTO = new MapaDTO(null, null);
   // Punto de origen sobre el cual empezamos a crear el puesto
@@ -39,11 +40,20 @@ export class MapaVisor implements OnInit {
 
   ngOnInit(): void {
     this.cargarSalas();
+    this.cargarPuestos();
   }
 
   private async cargarSalas(): Promise<void> {
     try {
       this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
+    } catch (error: any) {
+      console.log("No hay salas que cargar");
+    }
+  }
+
+    private async cargarPuestos(): Promise<void> {
+    try {
+      this.puestoDTOTotalList = await firstValueFrom(this.puestoService.findAll());
     } catch (error: any) {
       console.log("No hay salas que cargar");
     }
@@ -65,7 +75,7 @@ export class MapaVisor implements OnInit {
 
   actualizarPuestosSala() {
     // Actualiza los puestos filtrados
-    this.mapaPuestoDTOFiltradoList.set(this.mapaPuestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
+    this.puestoDTOFiltradoList.set(this.puestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
   }
 
   // *** EVENTOS ASOCIADOS AL RATÓN ***
@@ -76,7 +86,7 @@ export class MapaVisor implements OnInit {
     // Es necesario marcar cual sería la coordenada de origen
     this.origenDTO = this.ubicacionActual(e);
     // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
-    this.puestoActualDTO.set(new MapaPuestoDTO( "", this.mapaDTO.idSala, this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
+    this.puestoActualDTO.set(new PuestoDTO("", this.mapaDTO.idSala !== null ? this.mapaDTO.idSala : "", "", this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
   }
 
   moverRaton(e: MouseEvent) {
@@ -92,16 +102,18 @@ export class MapaVisor implements OnInit {
       // Uso de Math.abs porque si no, si se arrastra a la derecha toma valores negativos y no lo registra bien
       const nuevoAncho = Math.abs(this.origenDTO.coordenadaX - ubicacionActual.coordenadaX);
       const nuevoAlto = Math.abs(this.origenDTO.coordenadaY - ubicacionActual.coordenadaY);
-      this.puestoActualDTO.update(puesto => ({...puesto, idSala: puesto !== null ? puesto.idSala : null, nombre: puesto !== null ? puesto.nombre: null, coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
+      this.puestoActualDTO.update(puesto => ({...puesto, id: "", idSala: puesto !== null && puesto.idSala !== null ? puesto.idSala : "", nombre: puesto !== null ? puesto.nombre: "", coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
     }
   }
 
   finalizarRaton() {
     // Se desactiva el modo creación y se deja el elemento creado como está
-    this.creacion = false;
-    this.mapaPuestoDTOTotalList.push(this.puestoActualDTO()!);
-    //this.puestoActualDTO.set(null);
-    //this.origenDTO = new MapaPuntoDTO(0, 0);
+    
+    // Si se implementa una ventana emergente, recuperar este código
+    // this.creacion = false;
+    // this.puestoDTOTotalList.push(this.puestoActualDTO()!);
+    // this.puestoActualDTO.set(null);
+    // this.origenDTO = new MapaPuntoDTO(0, 0);
 
     // Redirección a la creación del puesto con la información necesaria
     this.router.navigateByUrl("puesto/form", { state: { puesto: this.puestoActualDTO() }});

@@ -5,7 +5,6 @@ import { PuestoService } from '../../services/puesto-service';
 import { Router } from '@angular/router';
 import { PuestoDTO } from '../../models/puesto.dto';
 import { firstValueFrom } from 'rxjs';
-import { MapaPuestoDTO } from '../../../mapa/models/mapa.puesto.dto';
 
 type PuestoFormModel = {
   nombre: FormControl<string>;
@@ -46,7 +45,7 @@ export class PuestoForm {
   constructor() {
     // En OnInit currentNavigation pierde el valor
      // Recuperación de la información enviada por parámetros
-    const state = this.router.currentNavigation()?.extras.state?.['puesto'] as MapaPuestoDTO;
+    const state = this.router.currentNavigation()?.extras.state?.['puesto'] as PuestoDTO;
     this.puestoDTO.idSala = state.idSala === null ?  '' : state.idSala;
     this.puestoDTO.coordenadaX = state.coordenadaX;
     this.puestoDTO.coordenadaY = state.coordenadaY;

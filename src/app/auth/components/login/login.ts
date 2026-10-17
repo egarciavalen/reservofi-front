@@ -65,6 +65,12 @@ export class Login {
     this.loginUser.contrasenia = contrasenia;
 
     try {
+
+      // Se elimina el contenido de localStorageService antes de solicitar un nuevo token
+      // Esto se hace para evitar casos de tokens caducados que provoquen excepciones
+      this.localStorageService.remove('idUsuario');
+      this.localStorageService.remove('token');
+
       const loginResponse = await firstValueFrom(this.authService.login(this.loginUser));
       
       // Debug 
