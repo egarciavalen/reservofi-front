@@ -21,6 +21,10 @@ export class ReservaService {
     return this.http.get<ReservaDTO>(this.urlApi + '/reserva/' + id);
   }
 
+  findByUsuarioId(idUsuario: string): Observable<ReservaDTO[]> {
+    return this.http.get<ReservaDTO[]>(this.urlApi + '/reserva/usuario/' + idUsuario);
+  }
+
   findAll(): Observable<ReservaDTO[]> {
     return this.http.get<ReservaDTO[]>(this.urlApi + "/reserva");
   }

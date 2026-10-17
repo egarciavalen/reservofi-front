@@ -41,7 +41,6 @@ export class SalaList implements OnInit {
   }
 
   editarSala(id: string): void {
-    // TODO 8
     this.router.navigateByUrl('/sala/form/' + id);
   }
 }

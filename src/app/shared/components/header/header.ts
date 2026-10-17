@@ -42,6 +42,10 @@ export class Header {
     this.router.navigateByUrl('sala/list');
   }
 
+  reservaList(): void {
+    this.router.navigateByUrl('reserva/list');
+  }
+
   logout(): void {
     this.localStorageService.remove('idUsuario');
     this.localStorageService.remove('token');
