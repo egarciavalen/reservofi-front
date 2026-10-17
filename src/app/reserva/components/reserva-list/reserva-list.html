@@ -1,9 +1,10 @@
-<h2>Lista de reservas</h2>
+<h2>Lista de reservas asociadas al usuario</h2>
 
 <table>
   <thead>
     <tr>
       <th>Identificador</th>
+      <th>Identificador del puesto</th>
       <th>Fecha de inicio</th>
       <th>Fecha de finalización</th>
     </tr>
@@ -12,6 +13,7 @@
     @for (reservaDTO of reservaDTOList(); track reservaDTO.id) {
       <tr>
          <td>{{ reservaDTO.id }}</td>
+         <td>{{ reservaDTO.idPuesto }}</td>
          <td>{{ reservaDTO.fechaInicio | formatDate }}</td>  
          <td>{{ reservaDTO.fechaFin | formatDate }}</td>        
          <td>
