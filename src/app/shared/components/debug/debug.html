@@ -1,0 +1,93 @@
+<h2>Pantalla debug para visualizar los elementos de la aplicación</h2>
+
+<div>
+
+  <!-- Roles -->
+  <div>
+    <h3>Roles</h3>
+    @if(rolDTOList()) {
+      <ul>
+      @for (rol of rolDTOList(); track rol.id) {
+        <li><strong>Identificador: </strong>{{rol.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{rol.nombre}}</li>          
+        </ul>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Usuarios -->
+  <div>
+    <h3>Usuarios</h3>
+    @if(usuarioDTOList()) {
+      <ul>
+      @for (usuario of usuarioDTOList(); track usuario.id) {
+        <li><strong>Identificador:</strong> {{usuario.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{usuario.nombre}}</li>
+          <li><strong>Primer apellido: </strong>{{usuario.primerApellido}}</li>
+          <li><strong>Segundo apellido: </strong>{{usuario.segundoApellido}}</li>
+          <li><strong>Correo corporativo: </strong>{{usuario.correoCorporativo}}</li>
+          <li><strong>Activo: </strong>{{usuario.activo}}</li>
+          <li><strong>Identificador de los roles: </strong> {{usuario.idsRoles}} </li>
+        </ul>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Sala -->
+  <div>
+    <h3><strong>Salas</strong></h3>
+    @if(salaDTOList()) {
+      <ul>
+      @for (sala of salaDTOList(); track sala.id) {
+        <li><strong>Identificador: </strong>{{sala.id}}</li>
+        <ul>
+          <li><strong>Nombre: </strong>{{sala.nombre}}</li>
+        </ul>
+        }
+      </ul>
+    }
+  </div>
+ 
+  <!-- Puesto -->
+  <div>
+    <h3><strong>Puestos</strong></h3>
+    @if(salaDTOList()) {
+      <ul>
+      @for (puesto of puestoDTOList(); track puesto.id) {
+        <li><strong>Identificador: </strong>{{puesto.id}}</li>
+        <ul>
+          <li><strong>Identificador sala: </strong>{{puesto.idSala}}</li>
+          <li><strong>Nombre: </strong>{{puesto.nombre}}</li>
+          <li><strong>Coordenada X: </strong>{{puesto.coordenadaX}}</li>
+          <li><strong>Coordenada Y: </strong>{{puesto.coordenadaY}}</li>
+          <li><strong>Ancho: </strong>{{puesto.ancho}}</li>
+          <li><strong>Alto: </strong>{{puesto.alto}}</li>
+        </ul>
+      }
+      </ul>
+    }
+  </div>
+
+  <!-- Reserva-->
+  <div>
+    <h3><strong>Reservas</strong></h3>
+    @if(reservaDTOList()) {
+      <ul>
+      @for (reserva of reservaDTOList(); track reserva.id) {
+        <li><strong>Identificador: </strong>{{reserva.id}}</li>
+        <ul>
+          <li><strong>Identificador usuario: </strong>{{reserva.idUsuario}}</li>
+          <li><strong>Identificador puesto: </strong>{{reserva.idPuesto}}</li>
+          <li><strong>Fecha de inicio: </strong>{{reserva.fechaInicio}}</li>
+          <li><strong>Fecha de fin: </strong>{{reserva.fechaFin}}</li>
+        </ul>
+      }
+      </ul>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,30 @@
+<div>
+  <h3>Creación de puestos</h3>
+  
+  <form [formGroup]="puestoForm" (ngSubmit)="guardar()">
+
+    <!-- Nombre -->
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" type="text" [formControl]="nombre" />
+
+      @if(nombre.errors) {
+        @if (nombre.errors && isValidForm != null && !isValidForm) {
+          <div [ngClass]="'validacion'">
+            @if (nombre.errors['required']) {
+              <div>El nombre es obligatorio</div> 
+            }
+            @if (nombre.errors['minlength']) {
+              <div>El nombre ha de tener al menos {{ nombreMin }} caracteres</div> 
+            }
+            @if (nombre.errors['maxlength']) {
+              <div>El nombre no ha de superar los {{ nombreMax }} caracteres.</div> 
+              }
+          </div>
+          }
+        }
+      </div>
+      
+      <button type="submit">Guardar puesto</button>
+    </form>
+</div>

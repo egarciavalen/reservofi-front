@@ -1,0 +1,117 @@
+<div>
+  <h1>Registro</h1>
+
+  @if(registerForm) {
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+   
+      <!-- Nombre -->
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" type="text" [formControl]="nombre" />
+
+        @if(nombre.errors) {
+          @if (nombre.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (nombre.errors['required']) {
+                <div>El nombre es obligatorio</div> 
+              }
+              @if (nombre.errors['minlength']) {
+                <div>El nombre ha de tener al menos {{ nombreMin }} caracteres</div> 
+              }
+              @if (nombre.errors['maxlength']) {
+                  <div>El nombre no ha de superar los {{ nombreMax }} caracteres.</div> 
+                }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Primer apellido -->
+      <div>
+        <label for="primerApellido">Primer apellido:</label>
+        <input id="primerApellido" type="text" [formControl]="primerApellido" />
+
+        @if(primerApellido.errors) {
+          @if (primerApellido.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (primerApellido.errors['required']) {
+                <div>El primer apellido es obligatorio</div> 
+              }
+              @if (primerApellido.errors['minlength']) {
+                <div>El primer apellido ha de tener al menos {{ primerApellidoMin }} caracteres</div> 
+              }
+              @if (primerApellido.errors['maxlength']) {
+                  <div>El primer apellido no ha de superar los {{ primerApellidoMax }} caracteres.</div> 
+                }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Segundo apellido -->
+      <div>
+        <label for="segundoApellido">Segundo apellido:</label>
+        <input id="segundoApellido" type="text" [formControl]="segundoApellido" />
+
+        @if(segundoApellido.errors) {
+          @if (segundoApellido.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (segundoApellido.errors['required']) {
+                <div>El Segundo apellido es obligatorio</div> 
+              }
+              @if (segundoApellido.errors['minlength']) {
+                <div>El Segundo apellido ha de tener al menos {{ segundoApellidoMin }} caracteres</div> 
+              }
+              @if (segundoApellido.errors['maxlength']) {
+                  <div>El Segundo apellido no ha de superar los {{ segundoApellidoMax }} caracteres.</div> 
+                }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Correo corporativo -->
+      <div>
+        <label for="correoCorporativo">Correo corporativo:</label>
+        <input id="correoCorporativo" type="email" [formControl]="correoCorporativo" />
+
+        @if(correoCorporativo.errors) {
+          @if (correoCorporativo.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (correoCorporativo.errors['required']) {
+                <div>El correo corporativo es obligatorio</div> 
+              }
+              @if (correoCorporativo.errors['email']) {
+                <div>El correo corporativo no tiene un formato válido</div> 
+              }
+            </div>
+          }
+        }
+      </div>
+
+      
+      <!-- Contraseña -->
+      <div>
+        <label for="contrasenia">Contraseña:</label>
+        <input id="contrasenia" type="password" [formControl]="contrasenia" />
+
+        @if(contrasenia.errors) {
+          @if (contrasenia.errors && isValidForm != null && !isValidForm) {
+            <div [ngClass]="'validacion'">
+              @if (contrasenia.errors['required']) {
+                <div>La contraseña es obligatoria</div> 
+               }
+              @if (contrasenia.errors['minlength']) {
+                <div>La contraseña ha de tener al menos {{ contraseniaMin }} caracteres.</div> 
+              }
+              @if (contrasenia.errors['maxlength']) {
+                <div>La contraseña no ha de superar los {{ contraseniaMax }} caracteres.</div> 
+              }
+            </div>
+          }
+        }
+      </div>
+      <button type="submit">Registro</button>
+    </form>
+  }
+</div>
