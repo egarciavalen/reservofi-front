@@ -1,10 +1,12 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { Router } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [MatToolbarModule, MatButtonModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

@@ -1,17 +1,17 @@
 @if(!autenticado()) {
-  <div>
-    <button (click)="home()">Home</button>
-    <button (click)="login()">Login</button>
-    <button (click)="register()">Registro</button>
-  </div>
+  <mat-toolbar>
+    <button matButton="filled" (click)="home()">Home</button>
+    <button matButton="filled" (click)="login()">Login</button>
+    <button matButton="filled" (click)="register()">Registro</button>
+  </mat-toolbar>
 }
 
 @if(autenticado()) {
-  <div>
-    <button (click)="home()">Home</button>
-    <button (click)="map()">Ver mapa</button>
-    <button (click)="salaList()">Ver listado de salas</button>
-    <button (click)="reservaList()">Ver reservas propias</button>
-    <button (click)="logout()">Logout</button>
-  </div>
+  <mat-toolbar>
+    <button matButton="filled" (click)="home()">Home</button>
+    <button matButton="filled" (click)="map()">Ver mapa</button>
+    <button matButton="filled" (click)="salaList()">Ver listado de salas</button>
+    <button matButton="filled" (click)="reservaList()">Ver reservas propias</button>
+    <button matButton="filled" (click)="logout()">Logout</button>
+  </mat-toolbar>
 }

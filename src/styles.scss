@@ -37,3 +37,9 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+.mat-mdc-button.activo {
+  background-color: white !important;
+}
+.mat-mdc-button.activo .mdc-button__label {
+  color: #3f51b5 !important;
+}
