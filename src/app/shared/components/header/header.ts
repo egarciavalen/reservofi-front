@@ -30,10 +30,6 @@ export class Header {
     this.router.navigateByUrl('register');
   }
 
-  debug(): void {
-    this.router.navigateByUrl('debug');
-  }
-
   map(): void {
     this.router.navigateByUrl('mapa/visor');
   }
