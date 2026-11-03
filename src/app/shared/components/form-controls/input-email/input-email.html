@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{ label }}: </mat-label>
+  <input
+    matInput
+    type="email"
+    [formControl]="control"
+    [placeholder]="placeholder || ''"
+    autocomplete="email"
+  />
+  <mat-error *ngIf="control.invalid && (control.dirty || control.touched)">
+    {{ errorMessageToShow || errorMessage }}
+  </mat-error>
+</mat-form-field>
