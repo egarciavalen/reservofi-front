@@ -1,3 +1,16 @@
+.validacion {
+  // Display flex para centrar el elemento
+  display: flex;
+  justify-content: center;
+  // Color de validación igual que en Material para que haya coherencia
+  color: var(--mat-sys-error);
+}
+
+div {
+  // Establecer el tamaño de letra de los textos
+  font-size: 1.2rem;
+}
+
 form {
   // Para centrar los elementos CSS
   align-items: center;
@@ -36,6 +49,7 @@ button {
 }
 
 .btn-container {
+  // Display flex para establecer gap entre elementos
   display: flex;
   gap: 2rem;
 }
@@ -49,5 +63,6 @@ button {
 }
 
 .btn-delete {
+  // Color de fondo para indicar que es la eliminación de un elemento
   background-color: #860404;
 }
