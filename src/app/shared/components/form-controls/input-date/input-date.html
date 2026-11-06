@@ -6,9 +6,15 @@
     [formControl]="control"
     [placeholder]="placeholder || ''"
   />
+
+  <!-- Es necesario definir un datepicker (calendario + input de texto) -->
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
-  <mat-error *ngIf="control.invalid && (control.dirty || control.touched)">
-      {{ errorMessageToShow || errorMessage }}
-  </mat-error>
+
+  @if (control.invalid && (control.dirty || control.touched)) {
+    <mat-error>
+        {{ errorMessageToShow || errorMessage }}
+    </mat-error>
+  }
+
 </mat-form-field>

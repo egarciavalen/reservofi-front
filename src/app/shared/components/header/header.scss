@@ -1,3 +1,4 @@
 mat-toolbar {
-  background-color: light-dark(#a900a9, #ffabf3);
+  // Cambio de color de fondo para que se adapte al estilo de Angular Material
+  background-color: var(--mat-sys-primary-container);
 }

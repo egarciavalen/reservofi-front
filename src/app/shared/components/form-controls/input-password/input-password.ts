@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-input-password',
-  imports: [MatFormFieldModule, ReactiveFormsModule],
+  imports: [MatInputModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './input-password.html',
   styleUrl: './input-password.scss',
 })

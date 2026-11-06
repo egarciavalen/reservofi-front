@@ -1,4 +1,5 @@
-<div>
+<div class="container">
+
   <h1>Inicio de sesión</h1>
 
   @if(loginForm) {
@@ -6,47 +7,28 @@
     <form [formGroup]="loginForm" (ngSubmit)="login()">
 
       <!-- Correo corporativo -->
-      <div>
-        <label for="correoCorporativo">Correo corporativo:</label>
-        <input id="correoCorporativo" type="email" [formControl]="correoCorporativo" />
-
-        @if(correoCorporativo.errors) {
-          @if (correoCorporativo.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (correoCorporativo.errors['required']) {
-                <div>El correo corporativo es obligatorio</div> 
-              }
-              @if (correoCorporativo.errors['email']) {
-                <div>El correo corporativo no tiene un formato válido</div> 
-              }
-            </div>
-          }
-        }
-      </div>
+      <section>
+        <app-input-email
+          label="Correo corporativo"
+          [control]="correoCorporativo"
+          placeholder="ejemplo@email.com"
+          errorMessage="El correo electrónico introducido no es válido"
+        ></app-input-email>
+      </section> 
 
       <!-- Contraseña -->
-      <div>
-          <label for="contrasenia">Contraseña:</label>
-          <input id="contrasenia" type="password" [formControl]="contrasenia" />
+      <section>
+        <app-input-password
+          label="Contraseña"
+          [control]="contrasenia"
+          errorMessage="La contraseña no tiene un formato válido"
+        ></app-input-password>
+      </section>
 
-          @if(contrasenia.errors) {
-            @if (contrasenia.errors && isValidForm != null && !isValidForm) {
-              <div [ngClass]="'validacion'">
-                @if (contrasenia.errors['required']) {
-                  <div>La contraseña es obligatoria</div> 
-                }
-                @if (contrasenia.errors['minlength']) {
-                  <div>La contraseña ha de tener al menos {{ contraseniaMin }} caracteres.</div> 
-                }
-                @if (contrasenia.errors['maxlength']) {
-                  <div>La contraseña no ha de superar los {{ contraseniaMax }} caracteres.</div> 
-                }
-              </div>
-            }
-          }
-      </div>
-
-    <button type="submit">Iniciar sesión</button>
+      <!-- Botón para enviar la información -->
+      <section>
+        <button matButton type="submit">Iniciar sesión</button>
+      </section>
   </form>
   }
 </div>

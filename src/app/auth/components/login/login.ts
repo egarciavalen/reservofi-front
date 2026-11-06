@@ -7,6 +7,9 @@ import { firstValueFrom } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage-service';
 import { Router } from '@angular/router';
 import { Header } from '../../../shared/components/header/header';
+import { InputEmail } from '../../../shared/components/form-controls/input-email/input-email';
+import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
+import {MatButtonModule} from '@angular/material/button';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -15,7 +18,7 @@ type LoginFormModel = {
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, InputEmail, InputPassword, MatButtonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-input-text',
-  imports: [MatFormFieldModule, ReactiveFormsModule],
+  imports: [MatInputModule, ReactiveFormsModule],
   templateUrl: './input-text.html',
   styleUrl: './input-text.scss',
 })

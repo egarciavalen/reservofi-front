@@ -7,7 +7,11 @@
     [placeholder]="placeholder || ''"
     autocomplete="email"
   />
-  <mat-error *ngIf="control.invalid && (control.dirty || control.touched)">
-    {{ errorMessageToShow || errorMessage }}
-  </mat-error>
+  
+  @if(control.invalid && (control.dirty || control.touched)) {
+    <mat-error>
+      {{ errorMessageToShow || errorMessage }}
+    </mat-error>
+  }
+
 </mat-form-field>
