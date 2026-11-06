@@ -1,24 +1,28 @@
-<h2>Lista de salas</h2>
+<div class="container">
+  
+  <h1>Lista de salas</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Identificador</th>
-      <th>Nombre</th>
-    </tr>
-  </thead>
-  <tbody>
+  <div class="sala-container">
     @for (salaDTO of salaDTOList(); track salaDTO.id) {
-      <tr>
-         <td>{{ salaDTO.id }}</td>
-         <td>{{ salaDTO.nombre }}</td>     
-         <td>
-            <button (click)="editarSala(salaDTO.id)">Actualizar</button>
-         </td>
-      </tr>
+
+      <!-- Creación de cards para la visualización de las salas-->
+      <mat-card class="sala-card">
+      <mat-card-header>
+        <mat-card-title><strong>{{salaDTO.nombre}}</strong></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Imagen de la sala -->
+        <img mat-card-image src="{{salaDTO.rutaImagen}}" alt="Fotografía de la sala {{salaDTO.nombre}}">
+      </mat-card-content>
+      <mat-card-actions>
+        <button matButton class="btn-edit" (click)="editarSala(salaDTO.id)"><mat-icon>edit</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
     } 
-  </tbody>
-</table>
+  </div>
 
+   <!-- Crear una sala nueva -->
+  <button matButton class="btn-create" (click)="crearSala()">Crear sala</button>
 
-<button (click)="crearSala()">Crear sala</button>
+</div>
+
