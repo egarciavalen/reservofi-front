@@ -1,4 +1,11 @@
 mat-toolbar {
   // Cambio de color de fondo para que se adapte al estilo de Angular Material
   background-color: var(--mat-sys-primary-container);
+  // Display flex para poder colocar el logout a la derecha
+  display: flex;
+}
+
+.logout {
+  // Logout a la derecha para diferenciarse
+  margin-left: auto;
 }
