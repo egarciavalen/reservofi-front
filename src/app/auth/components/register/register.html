@@ -1,117 +1,63 @@
-<div>
+<div class="container">
+  
   <h1>Registro</h1>
 
   @if(registerForm) {
     <form [formGroup]="registerForm" (ngSubmit)="register()">
    
       <!-- Nombre -->
-      <div>
-        <label for="nombre">Nombre:</label>
-        <input id="nombre" type="text" [formControl]="nombre" />
-
-        @if(nombre.errors) {
-          @if (nombre.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (nombre.errors['required']) {
-                <div>El nombre es obligatorio</div> 
-              }
-              @if (nombre.errors['minlength']) {
-                <div>El nombre ha de tener al menos {{ nombreMin }} caracteres</div> 
-              }
-              @if (nombre.errors['maxlength']) {
-                  <div>El nombre no ha de superar los {{ nombreMax }} caracteres.</div> 
-                }
-            </div>
-          }
-        }
-      </div>
+      <section>
+        <app-input-text
+          label="Nombre"
+          [control]="nombre"
+          type="text"
+          errorMessage="Nombre no es válido">
+        </app-input-text>
+      </section>
 
       <!-- Primer apellido -->
-      <div>
-        <label for="primerApellido">Primer apellido:</label>
-        <input id="primerApellido" type="text" [formControl]="primerApellido" />
-
-        @if(primerApellido.errors) {
-          @if (primerApellido.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (primerApellido.errors['required']) {
-                <div>El primer apellido es obligatorio</div> 
-              }
-              @if (primerApellido.errors['minlength']) {
-                <div>El primer apellido ha de tener al menos {{ primerApellidoMin }} caracteres</div> 
-              }
-              @if (primerApellido.errors['maxlength']) {
-                  <div>El primer apellido no ha de superar los {{ primerApellidoMax }} caracteres.</div> 
-                }
-            </div>
-          }
-        }
-      </div>
+      <section>
+        <app-input-text
+          label="Primer apellido"
+          [control]="primerApellido"
+          type="text"
+          errorMessage="Primer apellido no es válido">
+        </app-input-text>
+      </section>
 
       <!-- Segundo apellido -->
-      <div>
-        <label for="segundoApellido">Segundo apellido:</label>
-        <input id="segundoApellido" type="text" [formControl]="segundoApellido" />
-
-        @if(segundoApellido.errors) {
-          @if (segundoApellido.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (segundoApellido.errors['required']) {
-                <div>El Segundo apellido es obligatorio</div> 
-              }
-              @if (segundoApellido.errors['minlength']) {
-                <div>El Segundo apellido ha de tener al menos {{ segundoApellidoMin }} caracteres</div> 
-              }
-              @if (segundoApellido.errors['maxlength']) {
-                  <div>El Segundo apellido no ha de superar los {{ segundoApellidoMax }} caracteres.</div> 
-                }
-            </div>
-          }
-        }
-      </div>
+      <section>
+        <app-input-text
+          label="Segundo apellido"
+          [control]="segundoApellido"
+          type="text"
+          errorMessage="Segundo apellido no es válido">
+        </app-input-text>
+      </section>
 
       <!-- Correo corporativo -->
-      <div>
-        <label for="correoCorporativo">Correo corporativo:</label>
-        <input id="correoCorporativo" type="email" [formControl]="correoCorporativo" />
+      <section>
+        <app-input-email
+          label="Correo"
+          [control]="correoCorporativo"
+          placeholder="ejemplo@email.com"
+          errorMessage="El correo electrónico introducido no es válido"
+        ></app-input-email>
+      </section> 
 
-        @if(correoCorporativo.errors) {
-          @if (correoCorporativo.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (correoCorporativo.errors['required']) {
-                <div>El correo corporativo es obligatorio</div> 
-              }
-              @if (correoCorporativo.errors['email']) {
-                <div>El correo corporativo no tiene un formato válido</div> 
-              }
-            </div>
-          }
-        }
-      </div>
-
-      
       <!-- Contraseña -->
-      <div>
-        <label for="contrasenia">Contraseña:</label>
-        <input id="contrasenia" type="password" [formControl]="contrasenia" />
+      <section>
+        <app-input-password
+          label="Contraseña"
+          [control]="contrasenia"
+          errorMessage="La contraseña no tiene un formato válido"
+        ></app-input-password>
+      </section>
 
-        @if(contrasenia.errors) {
-          @if (contrasenia.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (contrasenia.errors['required']) {
-                <div>La contraseña es obligatoria</div> 
-               }
-              @if (contrasenia.errors['minlength']) {
-                <div>La contraseña ha de tener al menos {{ contraseniaMin }} caracteres.</div> 
-              }
-              @if (contrasenia.errors['maxlength']) {
-                <div>La contraseña no ha de superar los {{ contraseniaMax }} caracteres.</div> 
-              }
-            </div>
-          }
-        }
-      </div>
-      <button type="submit">Registro</button>
+      <!-- Botón para enviar la información -->
+      <section class="form-button-section">
+        <button matButton type="submit">Registrar usuario</button>
+      </section>
     </form>
   }
 </div>

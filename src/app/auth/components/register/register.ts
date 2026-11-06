@@ -6,6 +6,11 @@ import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage-service';
+import { InputEmail } from '../../../shared/components/form-controls/input-email/input-email';
+import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
+import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
+import {MatButtonModule} from '@angular/material/button';
+
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -17,7 +22,7 @@ type RegisterFormModel = {
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, InputEmail, InputPassword, InputText, MatButtonModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
