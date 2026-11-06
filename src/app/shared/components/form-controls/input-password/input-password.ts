@@ -26,7 +26,7 @@ export class InputPassword {
   get errorMessageToShow(): string | null {
 
     if (this.control.hasError('required')) {
-      return this.label + ' es obligatorio';
+      return this.label + ' es obligatoria';
     }
 
     if (this.control.hasError('minlength')) {

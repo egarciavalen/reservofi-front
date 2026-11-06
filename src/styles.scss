@@ -56,3 +56,41 @@ body {
   margin-top: 1rem;
   margin-inline: 5rem;
 }
+
+/* CSS relativo a los formularios */
+
+form {
+  /* Alineación de los campos */
+  display: flex;
+  flex-direction: column;
+}
+
+mat-form-field {
+  /* Margen entre los campos de un formulario*/
+  margin-top: 1.5rem;
+}
+
+.form-button-section {
+  /* Se aplica un display flex al contenedor del botón para poder centrarlo */
+  display: flex;
+  justify-content: center;
+}
+
+.form-button-section button {
+  /* CSS relativo al botón que envía la información del formulario */
+  margin-top: 2rem;
+  background-color: var(--mat-sys-primary-container);
+  padding: 1.5rem;
+}
+
+
+.mdc-button__label {
+  /* Cambio de color de fondo de los botones; principalmente para aquellos del formulario */
+  color: white;
+}
+
+.mat-mdc-form-field-icon-suffix {
+  /* Para que haya separación entre el icono del ojo con el borde del campo contraseña */
+  /* En el CSS propio del input-password no funciona bien */
+  margin-right: 1rem;
+}
