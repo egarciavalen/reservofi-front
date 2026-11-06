@@ -83,7 +83,6 @@ mat-form-field {
   padding: 1.5rem;
 }
 
-
 .mdc-button__label {
   /* Cambio de color de fondo de los botones; principalmente para aquellos del formulario */
   color: white;
@@ -93,4 +92,11 @@ mat-form-field {
   /* Para que haya separación entre el icono del ojo con el borde del campo contraseña */
   /* En el CSS propio del input-password no funciona bien */
   margin-right: 1rem;
+}
+
+.mat-mdc-button > .mat-icon {
+  // Para que el icono sea de color blanco
+  color: white;
+  // Para centrarlo dentro del botón
+  padding-left: 0.7rem;
 }

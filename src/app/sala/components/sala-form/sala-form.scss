@@ -1,12 +1,53 @@
-.validacion {
-  color: red;
+form {
+  // Para centrar los elementos CSS
+  align-items: center;
 }
 
 .ocultar {
+  // Ocultar el input real de la imagen
   display: none;
 }
 
 img {
-  max-width: 10rem;
+  // Ancho máximo admitido para la imagen
+  max-width: 20rem;
   height: auto;
+}
+
+button {
+  // Color de fondo de los botones
+  background-color: var(--mat-sys-primary-container);
+}
+
+.image-container {
+  // Display flex para el texto y el botón de la imagen
+  display: flex;
+  // Para que esté cada elemento en una esquina
+  justify-content: space-between;
+  // Para que el texto se mueva abajo
+  align-items: center;
+}
+
+.btn-image {
+  // Margen izquierdo con el texto cuando no se subió una imagen
+  margin-left: 1rem;
+  // Margen inferior para alinear mejor el texto
+  margin-bottom: 1rem;
+}
+
+.btn-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.btn-save, .btn-delete {
+  // Margen superior con el formulario
+  margin-top: 2rem;
+  // Tamaños relativos al botón de creación de sala
+  font-size: 1.3rem;
+  padding:1.8rem;
+}
+
+.btn-delete {
+  background-color: #860404;
 }

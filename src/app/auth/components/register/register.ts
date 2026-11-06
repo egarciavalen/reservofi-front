@@ -9,7 +9,7 @@ import { LocalStorageService } from '../../services/local-storage-service';
 import { InputEmail } from '../../../shared/components/form-controls/input-email/input-email';
 import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 
 
 type RegisterFormModel = {

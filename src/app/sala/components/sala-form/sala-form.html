@@ -1,5 +1,5 @@
-<div>
-  <h3>Guardado de salas</h3>
+<div class="container">
+  <h1>Edición de salas</h1>
 
   @if (!idSala) {
     <p>Por favor, rellene la información para crear una nueva sala.</p>
@@ -11,26 +11,16 @@
     <form [formGroup]="salaForm" (ngSubmit)="guardar()">
 
       <!-- Nombre -->
-      <div>
-        <label for="nombre">Nombre:</label>
-        <input id="nombre" type="text" [formControl]="nombre" />
+      <section>
+        <app-input-text
+          label="Nombre"
+          [control]="nombre"
+          type="text"
+          errorMessage="Nombre no es válido">
+        </app-input-text>
+      </section>
 
-        @if(nombre.errors) {
-          @if (nombre.errors && isValidForm != null && !isValidForm) {
-            <div [ngClass]="'validacion'">
-              @if (nombre.errors['required']) {
-                <div>El nombre es obligatorio</div> 
-              }
-              @if (nombre.errors['minlength']) {
-                <div>El nombre ha de tener al menos {{ nombreMin }} caracteres</div> 
-              }
-              @if (nombre.errors['maxlength']) {
-                  <div>El nombre no ha de superar los {{ nombreMax }} caracteres.</div> 
-                }
-            </div>
-          }
-        }
-      </div>
+
 
       <!-- Imagen -->
       <!-- En la actualización de una sala se permite cambiar su nombre, no la imagen asociada (afectaría a las posibles reservas) -->
@@ -42,9 +32,9 @@
 
           <!-- Bloque para marcar la subida de imagen; sustituye al input de arriba permitiendo una mejor personalización-->
           <!-- OJO: el button tiene que ser type="button" porque si no provocará que se envíe el formulario -->
-          <div>
+          <div class="image-container">
             {{nombreImagen || "No se ha subido una imagen todavía."}}
-              <button type="button" (click)="ficheroSubida.click()">Subir imagen</button>
+              <button matButton type="button" class="btn-image" (click)="ficheroSubida.click()"><mat-icon>image</mat-icon></button>
           </div>
 
           @if(imagen.errors) {
@@ -58,15 +48,20 @@
           }
         </div>
       }
-      <button type="submit">Guardar sala</button>
+
+      @if (idSala) {
+        <img src= {{rutaMostrarImagen}} alt="Sala guardada">
+      }
+
+      <div class="btn-container">
+        <button class="btn-save" matButton type="submit">Guardar sala</button>
+          <!-- Para borrar la sala -->
+        @if (idSala) {  
+          <button class="btn-delete" matButton (click)="borrarSala()">Borrar sala</button>
+        }
+      </div>
+
     </form>
   }
-
-  <!-- Para borrar la sala -->
-  @if (idSala) {  
-    <img src= {{rutaMostrarImagen}} alt="Sala guardada">
-    <button (click)="borrarSala()">Borrar sala</button>
-  }
-
 
 </div>

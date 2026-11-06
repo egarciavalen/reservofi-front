@@ -9,7 +9,7 @@
 
 img {
   // Definir el ancho máximo de las imágenes de las salas dentro de las cards
-  max-width: 15rem;
+  max-width: 20rem;
   height: auto;
 }
 
@@ -40,14 +40,6 @@ mat-card-actions button {
 button {
   // Color de fondo de los botones
   background-color: var(--mat-sys-primary-container);
-
-}
-
-.mat-mdc-button > .mat-icon {
-  // Para que el icono sea de color blanco
-  color: white;
-  // Para centrarlo dentro del botón
-  padding-left: 0.8rem;
 }
 
 .btn-create {
