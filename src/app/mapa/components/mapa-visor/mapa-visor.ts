@@ -7,10 +7,11 @@ import { MapaPuntoDTO } from '../../models/mapa.punto';
 import { Router } from '@angular/router';
 import { PuestoDTO } from '../../../puesto/models/puesto.dto';
 import { PuestoService } from '../../../puesto/services/puesto-service';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-mapa-visor',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './mapa-visor.html',
   styleUrl: './mapa-visor.scss',
 })

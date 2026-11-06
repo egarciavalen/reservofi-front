@@ -1,48 +1,57 @@
-<h2>Mapa</h2>
-<p>Mapa donde se procede a la visualización de las salas, puestos y reservas</p>
+<div class="container">
 
-<div class="mapa">
+  <h1>Mapa</h1>
 
-  <div class="selector">
-    @for(salaDTO of salaDTOList(); track salaDTO.id) {
-      <button (click)="establecerSala(salaDTO.id)">{{salaDTO.nombre}}</button>
+  <div class="map">
 
-    }
+    <div class="selector">
+      @for(salaDTO of salaDTOList(); track salaDTO.id) {
+        <button matButton (click)="establecerSala(salaDTO.id)">{{salaDTO.nombre}}</button>
+      }
+    </div>
+
+    <div class="map-container">
+
+      <!-- Si NO hay una sala seleccionada, no se muestra nada -->
+      @if (mapaDTO.idSala) {
+
+
+        <div class="image-container"
+          (mousedown)="pulsarRaton($event)"
+          (mousemove)="moverRaton($event)"
+          (mouseup)="finalizarRaton()">
+
+          <!-- Imagen sobre la cual se van a crear elementos, la cual ocupará todo el contenedor -->
+          <!-- draggable="false" para evitar arrastrar la imagen -->
+          <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada" draggable="false">
+
+          <!-- Visualización de los puestos ya introducidos -->
+          <!-- Uso de % para marcar la unidad con la que se está trabajando -->
+          @for (puestoDTO of puestoDTOFiltradoList(); track puestoDTO.coordenadaX) {
+            <button (click)="crearReserva(puestoDTO.id)" class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
+            [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</button>
+          }
+        
+          <!-- Visualización del puesto a incluir -->
+          <!-- Uso de % para marcar la unidad con la que se está trabajando -->
+          @if (puestoActualDTO()) {
+            <div class="puesto" [style.left.%]="puestoActualDTO()!.coordenadaX" [style.top.%]="puestoActualDTO()!.coordenadaY"
+            [style.width.%]="puestoActualDTO()!.ancho" [style.height.%]="puestoActualDTO()!.alto"></div>
+          }
+
+        </div>
+
+
+        <div class="btn-container">
+          <!-- Botón para establecer el modo edición -->
+          @if(!modoEdicion) {
+            <button matButton class="btn-no-edition" (click)="alternarModoEdicion()">Crear puestos</button>
+          } @else if (modoEdicion) {
+            <button matButton class="btn-edition" (click)="alternarModoEdicion()">Salir del modo edición</button>  
+          }
+        </div>
+      }
+    </div>
   </div>
 
-  <div class="contenedor">
-
-    <!-- Si NO hay una sala seleccionada, no se muestra nada -->
-    @if (mapaDTO.idSala) {
-
-      <!-- Botón para establecer el modo edición -->
-      <button [class]="modoEdicion ? 'btnEdicionMarcado' : 'btnEdicionNoMarcado'" (click)="alternarModoEdicion()">Modo edición</button>
-
-
-      <div class="visor"
-        (mousedown)="pulsarRaton($event)"
-        (mousemove)="moverRaton($event)"
-        (mouseup)="finalizarRaton()">
-
-        <!-- Imagen sobre la cual se van a crear elementos, la cual ocupará todo el contenedor -->
-        <!-- draggable="false" para evitar arrastrar la imagen -->
-        <img src= {{mapaDTO.rutaImagenSala}} alt="Sala seleccionada" draggable="false">
-
-        <!-- Visualización de los puestos ya introducidos -->
-        <!-- Uso de % para marcar la unidad con la que se está trabajando -->
-        @for (puestoDTO of puestoDTOFiltradoList(); track puestoDTO.coordenadaX) {
-          <button (click)="crearReserva(puestoDTO.id)" class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
-          [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</button>
-        }
-       
-        <!-- Visualización del puesto a incluir -->
-        <!-- Uso de % para marcar la unidad con la que se está trabajando -->
-        @if (puestoActualDTO()) {
-          <div class="puesto" [style.left.%]="puestoActualDTO()!.coordenadaX" [style.top.%]="puestoActualDTO()!.coordenadaY"
-          [style.width.%]="puestoActualDTO()!.ancho" [style.height.%]="puestoActualDTO()!.alto"></div>
-        }
-
-      </div>
-    }
-  </div>
 </div>

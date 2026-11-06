@@ -1,16 +1,42 @@
-.mapa {
+.map {
   display: flex;
-  // Los botones con las salas se mostrarán en una fila arriba
   flex-direction: column;
 }
 
-img {
-  // Se busca que la imagen ocupe todo el ancho del contenedor
-  width: 100%;
-  height: auto;
+.selector {
+  margin-block: 1rem;
+  display:flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
-.visor {
+.map-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.selector button {
+  background-color: var(--mat-sys-primary-container);
+}
+
+.map-container button {
+  margin-block: 1rem;
+}
+
+.selector button, .btn-container button {
+  font-size: 1.3rem;
+  padding:1.8rem;
+}
+
+img {
+  // Se busca que la imagen ocupe todo el ancho del contenedor de forma responsive
+  width: 100%;
+  height: auto;
+  border: 0.3rem solid var(--mat-sys-primary-container);
+}
+
+.image-container {
   // Position relative para tome como referencia de posicionamento el contenedor
   position: relative;
 }
@@ -19,15 +45,14 @@ img {
   // Posición absoluta para poder colocarse en base a sus coordenadas
   position: absolute;
   // Color de fondo
-  background-color: lightblue;
+  background-color: var(--mat-sys-primary-container);
+  border-radius: 0.5rem;
 }
 
-.btnEdicionNoMarcado {
-  background-color: white;
-  color: black;
+.btn-no-edition {
+  background-color: var(--mat-sys-primary-container);
 }
 
-.btnEdicionMarcado {
-  background-color: black;
-  color: white;
+.btn-edition {
+  background-color: #ff0000;
 }
