@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
 import { PuestoDTO } from '../../../puesto/models/puesto.dto';
 import { PuestoService } from '../../../puesto/services/puesto-service';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { PuestoForm } from '../../../puesto/components/puesto-form/puesto-form';
 
 @Component({
   selector: 'app-mapa-visor',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatDialogModule],
   templateUrl: './mapa-visor.html',
   styleUrl: './mapa-visor.scss',
 })
@@ -38,6 +40,9 @@ export class MapaVisor implements OnInit {
   // Campos booleanos que limitarán el alcance de los eventos MouseX
   ratonPulsado: boolean = false;
   modoEdicion: boolean = false;
+
+  // Referente a la gestión de diálogos
+  readonly dialog = inject(MatDialog);
 
 
   ngOnInit(): void {
@@ -123,13 +128,8 @@ export class MapaVisor implements OnInit {
     if (this.modoEdicion) {
       // Se desactiva el modo creación y se deja el elemento creado como está
       this.ratonPulsado = false;    
-      // Si se implementa una ventana emergente, recuperar este código
-      // this.puestoDTOTotalList.push(this.puestoActualDTO()!);
-      // this.puestoActualDTO.set(null);
-      // this.origenDTO = new MapaPuntoDTO(0, 0);
-
-      // Redirección a la creación del puesto con la información necesaria
-      this.router.navigateByUrl("puesto/form", { state: { puesto: this.puestoActualDTO() }});
+      // Se abre el diálogo para crear un puesto
+      this.abrirDialogoPuesto();
     }
   }
 
@@ -142,6 +142,28 @@ export class MapaVisor implements OnInit {
     const coordenadaX = ((e.clientX - elementoContenedor.left) / elementoContenedor.width) * 100; 
     const coordenadaY = ((e.clientY - elementoContenedor.top) / elementoContenedor.height) * 100;
     return new MapaPuntoDTO(coordenadaX, coordenadaY);
-}
+  }
+
+  // Código relativo a los diálogos
+
+  private abrirDialogoPuesto(): void {
+
+    const dialogRef = this.dialog.open(PuestoForm, {
+      data: this.puestoActualDTO(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // Se guarda el nuevo puesto
+      this.puestoDTOTotalList.push(this.puestoActualDTO()!);
+      // Se reinician los valores de la edición
+      this.puestoActualDTO.set(null);
+      this.origenDTO = new MapaPuntoDTO(0, 0);
+
+      // Actualiza los puestos a mostrar en función de la sala
+      this.actualizarPuestosSala();
+    });
+  
+  }
 
 }

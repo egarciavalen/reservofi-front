@@ -5,6 +5,10 @@ import { PuestoService } from '../../services/puesto-service';
 import { Router } from '@angular/router';
 import { PuestoDTO } from '../../models/puesto.dto';
 import { firstValueFrom } from 'rxjs';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
+import {MatButtonModule} from '@angular/material/button';
 
 type PuestoFormModel = {
   nombre: FormControl<string>;
@@ -12,7 +16,7 @@ type PuestoFormModel = {
 
 @Component({
   selector: 'app-puesto-form',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [MatButtonModule, ReactiveFormsModule, CommonModule, MatDialogModule, InputText],
   templateUrl: './puesto-form.html',
   styleUrl: './puesto-form.scss',
 })
@@ -22,12 +26,16 @@ export class PuestoForm {
   private readonly puestoService = inject(PuestoService);
   private readonly router = inject(Router);
 
+  // Referente a los diálogos
+  readonly data = inject<PuestoDTO>(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<PuestoForm>);
+
   private puestoDTO: PuestoDTO = new PuestoDTO('', '', '', 0, 0, 0, 0);
   isValidForm: boolean | null = null;
 
   // Propiedades adicionales
-  readonly nombreMin = 5;
-  readonly nombreMax = 30;
+  readonly nombreMin = 2;
+  readonly nombreMax = 5;
 
   nombre = new FormControl(this.puestoDTO.nombre, {
     nonNullable: true,
@@ -44,13 +52,7 @@ export class PuestoForm {
 
   constructor() {
     // En OnInit currentNavigation pierde el valor
-     // Recuperación de la información enviada por parámetros
-    const state = this.router.currentNavigation()?.extras.state?.['puesto'] as PuestoDTO;
-    this.puestoDTO.idSala = state.idSala === null ?  '' : state.idSala;
-    this.puestoDTO.coordenadaX = state.coordenadaX;
-    this.puestoDTO.coordenadaY = state.coordenadaY;
-    this.puestoDTO.ancho = state.ancho;
-    this.puestoDTO.alto = state.alto; 
+    this.puestoDTO = this.data;
   }
 
   async guardar(): Promise<void> {
@@ -63,6 +65,7 @@ export class PuestoForm {
 
     const { nombre } = this.puestoForm.getRawValue();
     this.puestoDTO.nombre = nombre;
+
     try {
       const puestoResponse = await firstValueFrom(this.puestoService.create(this.puestoDTO));
       // Debug 
@@ -72,6 +75,9 @@ export class PuestoForm {
     } catch (error: any) {
       console.log(error);
     }
+
+    // Cierre del diálogo
+    this.dialogRef.close();
   }
 
 }

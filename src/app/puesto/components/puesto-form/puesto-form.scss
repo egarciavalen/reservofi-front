@@ -1,3 +1,9 @@
-.validacion {
-  color: red;
+button {
+  // Color de fondo de los botones
+  background-color: var(--mat-sys-primary-container);
+  // Margen superior con el formulario
+  margin-top: 2rem;
+  // Tamaños relativos al botón de creación de puesto
+  font-size: 1.3rem;
+  padding:1.8rem;
 }
