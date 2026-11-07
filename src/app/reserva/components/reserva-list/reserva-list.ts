@@ -6,10 +6,14 @@ import { firstValueFrom } from 'rxjs';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { formatDate } from '@angular/common';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
+import { ReservaConsultaDTO } from '../../models/reserva-consulta.dto';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-reserva-list',
-  imports: [FormatDatePipe],
+  imports: [FormatDatePipe, MatIconModule, MatCardModule, MatButtonModule],
   templateUrl: './reserva-list.html',
   styleUrl: './reserva-list.scss',
 })
@@ -21,6 +25,9 @@ export class ReservaList {
   private readonly localStorageService = inject(LocalStorageService);
 
   reservaDTOList: WritableSignal<ReservaDTO[]> = signal([]);
+
+  reservaConsultaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
+
 
 
   ngOnInit(): void {
@@ -49,8 +56,8 @@ export class ReservaList {
     this.router.navigateByUrl('/reserva/form');
   }
 
-  editarReserva(id: string): void {
-    this.router.navigateByUrl('/reserva/form/' + id);
+  borrarReserva(idReserva: string): void {
+    // TODO: PENDIENTE
   }
 
 }

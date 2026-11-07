@@ -1,25 +1,29 @@
-<h2>Lista de reservas asociadas al usuario</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Identificador</th>
-      <th>Identificador del puesto</th>
-      <th>Fecha de inicio</th>
-      <th>Fecha de finalización</th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="container">
+  
+  <h1>Lista de reservas</h1>
+
+  <div class="reserva-container">
     @for (reservaDTO of reservaDTOList(); track reservaDTO.id) {
-      <tr>
-         <td>{{ reservaDTO.id }}</td>
-         <td>{{ reservaDTO.idPuesto }}</td>
-         <td>{{ reservaDTO.fechaInicio | formatDate }}</td>  
-         <td>{{ reservaDTO.fechaFin | formatDate }}</td>        
-         <td>
-            <button (click)="editarReserva(reservaDTO.id)">Actualizar</button>
-         </td>
-      </tr>
+      <!-- Creación de cards para la visualización de las salas-->
+      <mat-card class="reserva-card">
+      <mat-card-header>
+        <mat-card-title>{{reservaDTO.fechaInicio | formatDate}} - {{reservaDTO.fechaFin | formatDate}}</mat-card-title>
+        <!--
+          <mat-card-subtitle>{{reservaDTO.nombrePuesto}} - {{reservaDTO.nombreSala}}</mat-card-subtitle>
+        -->
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Imagen de la sala -->
+        <!--
+        <img mat-card-image src="{{reservaDTO.rutaImagen}}" alt="Fotografía de la sala {{reservaDTO.nombreSala}} asociada a la reserva">
+      -->
+      </mat-card-content>
+      <mat-card-actions>
+        <button matButton class="btn-edit" (click)="borrarReserva(reservaDTO.id)"><mat-icon>delete</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
     } 
-  </tbody>
-</table>
+  </div>
+</div>
+
