@@ -37,10 +37,6 @@ export class ReservaForm implements OnInit {
   readonly data = inject<string>(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<ReservaForm>);
 
-
-  // Para determinar si se edita o crea una reserva
-  idReserva = this.activatedRoute.snapshot.paramMap.get('id');
-
   fechaInicio = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
     nonNullable: true,
     validators: [
@@ -60,7 +56,6 @@ export class ReservaForm implements OnInit {
     fechaFin: this.fechaFin,
   });
   
-
   async ngOnInit(): Promise<void> {
     // Recuperación del identificador de la sala
     this.reservaDTO.idPuesto = this.data;
@@ -74,20 +69,7 @@ export class ReservaForm implements OnInit {
       console.log("ERROR AL RECUPERAR EL USUARIO");
     }
 
-    // Si es una actualización, se rellenan los campos correspondientes
-    if (this.idReserva) {
-      const reservaCreada = await firstValueFrom(this.reservaService.findById(this.idReserva));
-      // Debug
-      console.log(reservaCreada);
-      this.reservaForm.controls.fechaInicio.setValue(reservaCreada.fechaInicio);
-      this.reservaForm.controls.fechaFin.setValue(reservaCreada.fechaFin);
-
-      // Se desactivan los controles de formulario
-      this.fechaInicio.disable();
-      this.fechaFin.disable();
-    }
   }
-
 
   async guardar(): Promise<void> {
     // Si el formulario NO es válido, finaliza el proceso
