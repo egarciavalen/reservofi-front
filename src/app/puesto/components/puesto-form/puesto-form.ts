@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 
 type PuestoFormModel = {
   nombre: FormControl<string>;
@@ -20,7 +20,7 @@ type PuestoFormModel = {
   templateUrl: './puesto-form.html',
   styleUrl: './puesto-form.scss',
 })
-export class PuestoForm {
+export class PuestoForm implements OnInit {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly puestoService = inject(PuestoService);
@@ -50,9 +50,9 @@ export class PuestoForm {
     nombre: this.nombre
   });
 
-  constructor() {
-    // En OnInit currentNavigation pierde el valor
-    this.puestoDTO = this.data;
+
+  ngOnInit(): void {
+    this.puestoDTO = this.data; 
   }
 
   async guardar(): Promise<void> {

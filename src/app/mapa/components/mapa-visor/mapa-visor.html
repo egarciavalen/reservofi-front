@@ -28,7 +28,7 @@
           <!-- Visualización de los puestos ya introducidos -->
           <!-- Uso de % para marcar la unidad con la que se está trabajando -->
           @for (puestoDTO of puestoDTOFiltradoList(); track puestoDTO.coordenadaX) {
-            <button (click)="crearReserva(puestoDTO.id)" class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
+            <button (click)="abrirDialogoReserva(puestoDTO.id)" class="puesto" [style.left.%]="puestoDTO.coordenadaX" [style.top.%]="puestoDTO.coordenadaY"
             [style.width.%]="puestoDTO.ancho" [style.height.%]="puestoDTO.alto">{{puestoDTO.nombre}}</button>
           }
         

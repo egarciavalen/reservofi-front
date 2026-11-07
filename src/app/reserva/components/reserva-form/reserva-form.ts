@@ -6,6 +6,10 @@ import { ReservaDTO } from '../../models/reserva.dto';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule, formatDate } from '@angular/common';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InputDate } from '../../../shared/components/form-controls/input-date/input-date';
+import { MatButtonModule } from '@angular/material/button';
 
 type ReservaFormModel = {
   fechaInicio: FormControl<string>;
@@ -13,7 +17,7 @@ type ReservaFormModel = {
 };
 @Component({
   selector: 'app-reserva-form',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, InputDate, MatButtonModule],
   templateUrl: './reserva-form.html',
   styleUrl: './reserva-form.scss',
 })
@@ -29,8 +33,12 @@ export class ReservaForm implements OnInit {
   private readonly reservaDTO: ReservaDTO = new ReservaDTO("", "", "", "", "");
   isValidForm: boolean | null = null;
 
+  // Referente a los diálogos
+  readonly data = inject<string>(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<ReservaForm>);
 
-  // Para determinar si se edita o crea una sala nueva
+
+  // Para determinar si se edita o crea una reserva
   idReserva = this.activatedRoute.snapshot.paramMap.get('id');
 
   fechaInicio = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
@@ -53,12 +61,11 @@ export class ReservaForm implements OnInit {
   });
   
 
-  constructor() {
-    // En OnInit currentNavigation pierde el valor
-     // Recuperación de la información enviada por parámetros
-    const state = this.router.currentNavigation()?.extras.state?.['idPuesto'] as string;
-    this.reservaDTO.idPuesto = state;
+  async ngOnInit(): Promise<void> {
+    // Recuperación del identificador de la sala
+    this.reservaDTO.idPuesto = this.data;
 
+    // Recuperación del identificador del usuario
     const idUsuario = this.localStorageService.get("idUsuario");
     if (idUsuario) {
       this.reservaDTO.idUsuario = idUsuario;
@@ -66,9 +73,7 @@ export class ReservaForm implements OnInit {
       // Debug
       console.log("ERROR AL RECUPERAR EL USUARIO");
     }
-  }
 
-  async ngOnInit(): Promise<void> {
     // Si es una actualización, se rellenan los campos correspondientes
     if (this.idReserva) {
       const reservaCreada = await firstValueFrom(this.reservaService.findById(this.idReserva));
@@ -106,15 +111,8 @@ export class ReservaForm implements OnInit {
     } catch (error: any) {
       console.log(error);
     }
-  }
 
-
-  async borrarReserva(): Promise<void> {
-    if (this.idReserva) {
-      await firstValueFrom(this.reservaService.delete(this.idReserva));
-      // Debug
-      console.log('Reserva borrada!');
-      this.router.navigateByUrl('/mapa/visor');
-    }
+    // Cierre del diálogo
+    this.dialogRef.close();
   }
 }

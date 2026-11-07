@@ -10,6 +10,7 @@ import { PuestoService } from '../../../puesto/services/puesto-service';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { PuestoForm } from '../../../puesto/components/puesto-form/puesto-form';
+import { ReservaForm } from '../../../reserva/components/reserva-form/reserva-form';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -84,10 +85,6 @@ export class MapaVisor implements OnInit {
     this.puestoDTOFiltradoList.set(this.puestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
   }
 
-  crearReserva(idPuesto: string) {
-    this.router.navigateByUrl("reserva/form", { state: { idPuesto: idPuesto }});
-  }
-
   alternarModoEdicion(): void {
     this.modoEdicion = !this.modoEdicion;
   }
@@ -153,7 +150,6 @@ export class MapaVisor implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       // Se guarda el nuevo puesto
       this.puestoDTOTotalList.push(this.puestoActualDTO()!);
       // Se reinician los valores de la edición
@@ -163,7 +159,16 @@ export class MapaVisor implements OnInit {
       // Actualiza los puestos a mostrar en función de la sala
       this.actualizarPuestosSala();
     });
-  
   }
 
+  public abrirDialogoReserva(idPuesto: string): void {
+
+    const dialogRef = this.dialog.open(ReservaForm, {
+      data: idPuesto,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // No aplica ninguna acción adicional, se gestiona todo desde las reservas
+    });
+  }
 }
