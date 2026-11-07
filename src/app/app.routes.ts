@@ -9,6 +9,7 @@ import { MapaVisor } from './mapa/components/mapa-visor/mapa-visor';
 import { PuestoForm } from './puesto/components/puesto-form/puesto-form';
 import { ReservaForm } from './reserva/components/reserva-form/reserva-form';
 import { ReservaList } from './reserva/components/reserva-list/reserva-list';
+import { Profile } from './usuario/components/profile/profile';
 
 export const routes: Routes = [
   {
@@ -65,6 +66,11 @@ export const routes: Routes = [
   {
     path: 'reserva/list',
     component: ReservaList,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'usuario/profile',
+    component: Profile,
     canActivate: [authGuard],
   },
 ];

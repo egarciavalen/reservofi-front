@@ -1,0 +1,55 @@
+<div class="container">
+  
+  <h1>Perfil</h1>
+
+  @if(profileForm) {
+
+    <!-- NO se deja actualizar el correo electrónico al ser el identificador principal del usuario -->
+     
+    <form [formGroup]="profileForm" (ngSubmit)="save()">
+      <!-- Nombre -->
+      <section>
+        <app-input-text
+          label="Nombre"
+          [control]="nombre"
+          type="text"
+          errorMessage="Nombre no es válido">
+        </app-input-text>
+      </section>
+
+      <!-- Primer apellido -->
+      <section>
+        <app-input-text
+          label="Primer apellido"
+          [control]="primerApellido"
+          type="text"
+          errorMessage="Primer apellido no es válido">
+        </app-input-text>
+      </section>
+
+      <!-- Segundo apellido -->
+      <section>
+        <app-input-text
+          label="Segundo apellido"
+          [control]="segundoApellido"
+          type="text"
+          errorMessage="Segundo apellido no es válido">
+        </app-input-text>
+      </section>
+
+      <!-- Contraseña -->
+      <section>
+        <app-input-password
+          label="Contraseña"
+          [control]="contrasenia"
+          errorMessage="La contraseña no tiene un formato válido"
+        ></app-input-password>
+      </section>
+
+      <!-- Botón para enviar la información -->
+      <section class="form-button-section">
+        <button matButton type="submit">Actualizar</button>
+      </section>
+    </form>
+  }
+</div>
