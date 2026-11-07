@@ -150,18 +150,21 @@ export class MapaVisor implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // Se guarda el nuevo puesto
-      this.puestoDTOTotalList.push(this.puestoActualDTO()!);
+
+      // En el caso que se tenga un resultado con éxito
+      if (result) {
+        this.puestoDTOTotalList.push(this.puestoActualDTO()!);
+        // Actualiza los puestos a mostrar
+        this.actualizarPuestosSala();
+      }
       // Se reinician los valores de la edición
       this.puestoActualDTO.set(null);
       this.origenDTO = new MapaPuntoDTO(0, 0);
 
-      // Actualiza los puestos a mostrar en función de la sala
-      this.actualizarPuestosSala();
     });
   }
 
-  public abrirDialogoReserva(idPuesto: string): void {
+  abrirDialogoReserva(idPuesto: string): void {
 
     const dialogRef = this.dialog.open(ReservaForm, {
       data: idPuesto,

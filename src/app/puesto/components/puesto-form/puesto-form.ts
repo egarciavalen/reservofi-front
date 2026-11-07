@@ -70,14 +70,22 @@ export class PuestoForm implements OnInit {
       const puestoResponse = await firstValueFrom(this.puestoService.create(this.puestoDTO));
       // Debug 
       console.log(puestoResponse);
-      // Redirección al mapa
-      this.router.navigateByUrl('mapa/visor');
     } catch (error: any) {
       console.log(error);
     }
 
-    // Cierre del diálogo
-    this.dialogRef.close();
+    this.cerrarDialogo();
   }
 
+  cerrarDialogo(): void {
+
+    // Si se registra que se guarda el nombre, entonces se entiende que se crea el puesto correctamente
+    if (this.puestoDTO.nombre.length > 0) {
+      this.dialogRef.close(true);
+    } else {
+      // En caso contrario, indicamos false y NO se guardaría el puesto
+      this.dialogRef.close(false); 
+    }
+
+  }
 }

@@ -16,8 +16,10 @@
         </app-input-text>
       </section>
 
-      <!-- Botón de guardado -->
-      <button matButton type="submit">Guardar</button>
+      <div class="btn-form">
+        <button matButton type="submit">Guardar</button>
+        <button matButton class="cancelar" (click)="cerrarDialogo()">Cancelar</button>
+      </div>
     </form>
 
   </mat-dialog-content>

@@ -112,7 +112,10 @@ export class ReservaForm implements OnInit {
       console.log(error);
     }
 
-    // Cierre del diálogo
+    this.cerrarDialogo();
+  }
+
+  cerrarDialogo(): void {
     this.dialogRef.close();
   }
 }

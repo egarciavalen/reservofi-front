@@ -24,11 +24,13 @@
         ></app-input-date>
       </section>
 
-        @if(!idReserva) {
-        <!-- Botón de guardado -->
+  
+      <div class="btn-form">
         <button matButton type="submit">Guardar</button>
-        }
-      </form>
+        <button matButton class="cancelar" (click)="cerrarDialogo()">Cancelar</button>
+      </div>
+    
+    </form>
       
   </mat-dialog-content>
 </div>
