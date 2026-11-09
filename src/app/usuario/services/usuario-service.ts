@@ -27,6 +27,6 @@ export class UsuarioService {
 
   toggleActivo(idUsuario: string): Observable<UsuarioConsultaDTO> {
     // Únicamente se modifica un campo: activo
-    return this.http.post<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario + '/toggleActivo/', null);
+    return this.http.post<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario + '/toggleActivo', null);
   }
 }
