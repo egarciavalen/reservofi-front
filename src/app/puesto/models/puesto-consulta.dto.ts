@@ -7,7 +7,9 @@ export class PuestoConsultaDTO {
     public coordenadaX: number,
     public coordenadaY: number,
     public ancho: number,
-    public alto: number
+    public alto: number,
+    public nombreSala: string,
+    public rutaImagen: string
   ) {}
 
 }

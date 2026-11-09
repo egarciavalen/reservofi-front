@@ -10,6 +10,7 @@ import { PuestoForm } from './puesto/components/puesto-form/puesto-form';
 import { ReservaForm } from './reserva/components/reserva-form/reserva-form';
 import { ReservaList } from './reserva/components/reserva-list/reserva-list';
 import { Profile } from './usuario/components/profile/profile';
+import { PuestoList } from './puesto/components/puesto-list/puesto-list';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,11 @@ export const routes: Routes = [
   {
     path: 'puesto/form',
     component: PuestoForm,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'puesto/list',
+    component: PuestoList,
     canActivate: [authGuard],
   },
   {

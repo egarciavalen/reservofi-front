@@ -1,11 +1,10 @@
-
 <div class="container">
   
   <h1>Lista de reservas</h1>
 
   <div class="reserva-container">
     @for (reservaDTO of reservaConsultaDTOList(); track reservaDTO.id) {
-      <!-- Creación de cards para la visualización de las salas-->
+      <!-- Creación de cards para la visualización de las reservas-->
       <mat-card class="reserva-card">
       <mat-card-header>
         <mat-card-title>{{reservaDTO.nombreSala}} - {{reservaDTO.nombrePuesto}}</mat-card-title>

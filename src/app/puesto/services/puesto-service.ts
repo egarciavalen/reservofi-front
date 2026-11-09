@@ -13,11 +13,16 @@ export class PuestoService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(puesto: PuestoGuardadoDTO): Observable<PuestoConsultaDTO> {
+  create(puesto: PuestoGuardadoDTO): Observable<PuestoGuardadoDTO> {
     return this.http.post<PuestoGuardadoDTO>(this.urlApi + '/puesto', puesto);
   }
 
   findAll(): Observable<PuestoConsultaDTO[]> {
     return this.http.get<PuestoConsultaDTO[]>(this.urlApi + '/puesto');
+  }
+
+  delete(id: string): Observable<void> {
+    // TODO: ¿MANEJO DE EXCEPCIONES?
+    return this.http.delete<void>(this.urlApi + '/puesto/' + id);
   }
 }

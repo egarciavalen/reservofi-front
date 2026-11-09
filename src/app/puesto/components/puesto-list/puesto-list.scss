@@ -1,0 +1,40 @@
+.puesto-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  // Márgenes con el título y el botón de borrado de puestos
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+img {
+  // Definir el ancho máximo de las imágenes de las salas dentro de las cards
+  max-width: 10rem;
+  height: 10rem;
+}
+
+mat-card {
+  // Display flex para centrar los elementos
+  display: flex;
+  align-items: center;
+  // Borde de color para diferenciarse mejor del fondo
+  border: 0.3rem solid var(--mat-sys-primary-container);
+}
+
+mat-card-header {
+  // Margen entre el título y la fotografía
+  margin-bottom: 1rem;
+}
+
+mat-card-title {
+  // Tamaño de la fuente de letra
+  font-size: 1.4rem;
+}
+
+mat-card-actions button {
+  margin:1rem;
+  padding-inline:2rem;
+  // Color rojo para indicar que es un borrado
+  background-color: #ff0000;
+}
+

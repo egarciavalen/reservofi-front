@@ -1,0 +1,23 @@
+<div class="container">
+  
+  <h1>Lista de puestos</h1>
+
+  <div class="puesto-container">
+    @for (puestoDTO of puestoConsultaDTOList(); track puestoDTO.id) {
+      <!-- Creación de cards para la visualización de los puestos-->
+      <mat-card class="reserva-card">
+      <mat-card-header>
+        <mat-card-title>{{puestoDTO.nombreSala}} - {{puestoDTO.nombre}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Imagen de la sala -->
+        <img mat-card-image src="{{puestoDTO.rutaImagen}}" alt="Fotografía de la sala {{puestoDTO.nombreSala}} asociada a la reserva">
+      </mat-card-content>
+      <mat-card-actions>
+        <button matButton class="btn-edit" (click)="borrarReserva(puestoDTO.id)"><mat-icon>delete</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
+    } 
+  </div>
+</div>
+

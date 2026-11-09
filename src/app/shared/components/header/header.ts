@@ -40,6 +40,10 @@ export class Header {
     this.router.navigateByUrl('sala/list');
   }
 
+  puestoList(): void {
+    this.router.navigateByUrl('puesto/list');
+  }
+
   reservaList(): void {
     this.router.navigateByUrl('reserva/list');
   }
