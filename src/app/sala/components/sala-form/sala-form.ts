@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { SalaGuardadoDTO } from '../../models/sala.guardado.dto';
+import { SalaGuardadoDTO } from '../../models/sala-guardado.dto';
 import { SalaService } from '../../services/sala-service';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
 import { MatButtonModule } from '@angular/material/button';

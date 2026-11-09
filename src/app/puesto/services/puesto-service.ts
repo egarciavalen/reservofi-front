@@ -1,24 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, OnInit } from '@angular/core';
-import { PuestoDTO } from '../models/puesto.dto';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PuestoGuardadoDTO } from '../models/puesto-guardado.dto';
+import { PuestoConsultaDTO } from '../models/puesto-consulta.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PuestoService {
-
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(puesto: PuestoDTO): Observable<PuestoDTO> {
-    return this.http.post<PuestoDTO>(this.urlApi + '/puesto', puesto);
+  create(puesto: PuestoGuardadoDTO): Observable<PuestoConsultaDTO> {
+    return this.http.post<PuestoGuardadoDTO>(this.urlApi + '/puesto', puesto);
   }
 
-  findAll(): Observable<PuestoDTO[]> {
-    return this.http.get<PuestoDTO[]>(this.urlApi + "/puesto");
+  findAll(): Observable<PuestoConsultaDTO[]> {
+    return this.http.get<PuestoConsultaDTO[]>(this.urlApi + '/puesto');
   }
-
 }

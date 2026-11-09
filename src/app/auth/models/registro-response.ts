@@ -1,4 +1,4 @@
-export class UsuarioRegistroResponseDTO {
+export class RegistroResponseDTO {
 
   constructor(
     public nombre: string,

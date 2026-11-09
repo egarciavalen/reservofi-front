@@ -1,12 +1,13 @@
-export class UsuarioRegistroRequestDTO {
+export class UsuarioConsultaDTO {
 
   constructor(
+    public id: string,
     public nombre: string,
     public primerApellido: string,
     public segundoApellido: string,
     public correoCorporativo: string,
-    public contrasenia: string,
-    public activo: boolean
+    public activo: boolean,
+    public idsRoles: string[],
   ) {}
 
 }

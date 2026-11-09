@@ -1,4 +1,4 @@
-export class UsuarioPerfilDTO {
+export class UsuarioGuardadoDTO {
 
   constructor(
     public nombre: string,

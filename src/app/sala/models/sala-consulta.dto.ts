@@ -1,4 +1,4 @@
-export class SalaDTO {
+export class SalaConsultaDTO {
 
   constructor(
     public id: string,

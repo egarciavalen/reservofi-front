@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SalaDTO } from '../models/sala.dto';
+import { SalaConsultaDTO } from '../models/sala-consulta.dto';
+import { SalaGuardadoDTO } from '../models/sala-guardado.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +13,12 @@ export class SalaService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(sala: FormData): Observable<SalaDTO> {
-    return this.http.post<SalaDTO>(this.urlApi + '/sala', sala);
+  create(sala: FormData): Observable<SalaGuardadoDTO> {
+    return this.http.post<SalaGuardadoDTO>(this.urlApi + '/sala', sala);
   }
 
-  update(idSala: string, sala: FormData): Observable<SalaDTO> {
-    return this.http.put<SalaDTO>(this.urlApi + '/sala/' + idSala, sala);
+  update(idSala: string, sala: FormData): Observable<SalaGuardadoDTO> {
+    return this.http.put<SalaGuardadoDTO>(this.urlApi + '/sala/' + idSala, sala);
   }
 
   delete(id: string): Observable<void> {
@@ -25,11 +26,11 @@ export class SalaService {
     return this.http.delete<void>(this.urlApi + '/sala/' + id);
   }
 
-  findAll(): Observable<SalaDTO[]> {
-    return this.http.get<SalaDTO[]>(this.urlApi + '/sala');
+  findAll(): Observable<SalaConsultaDTO[]> {
+    return this.http.get<SalaConsultaDTO[]>(this.urlApi + '/sala');
   }
 
-  findById(id: string): Observable<SalaDTO> {
-    return this.http.get<SalaDTO>(this.urlApi + '/sala/' + id);
+  findById(id: string): Observable<SalaConsultaDTO> {
+    return this.http.get<SalaConsultaDTO>(this.urlApi + '/sala/' + id);
   }
 }

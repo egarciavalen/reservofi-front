@@ -1,4 +1,4 @@
-export class PuestoDTO {
+export class PuestoConsultaDTO {
 
   constructor(
     public id: string,

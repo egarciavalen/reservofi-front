@@ -1,16 +1,21 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth-service';
-import { UsuarioRegistroRequestDTO } from '../../models/usuario-registro-request';
 import { CommonModule } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '../../services/local-storage-service';
+import { firstValueFrom } from 'rxjs';
 import { InputEmail } from '../../../shared/components/form-controls/input-email/input-email';
 import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
-import { MatButtonModule } from '@angular/material/button';
-
+import { RegistroRequestDTO } from '../../models/registro-request';
+import { AuthService } from '../../services/auth-service';
+import { LocalStorageService } from '../../services/local-storage-service';
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -22,12 +27,19 @@ type RegisterFormModel = {
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule, InputEmail, InputPassword, InputText, MatButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    InputEmail,
+    InputPassword,
+    InputText,
+    MatButtonModule,
+  ],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class Register {
- // Orden: propiedades -> Constructor -> Métodos públicos -> Métodos privados
+  // Orden: propiedades -> Constructor -> Métodos públicos -> Métodos privados
 
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
@@ -36,7 +48,14 @@ export class Register {
   private readonly localStorageService = inject(LocalStorageService);
 
   // Datos iniciales
-  registerValue: UsuarioRegistroRequestDTO = new UsuarioRegistroRequestDTO('', '', '', '', '', false);
+  registerValue: RegistroRequestDTO = new RegistroRequestDTO(
+    '',
+    '',
+    '',
+    '',
+    '',
+    false,
+  );
   isValidForm: boolean | null = null;
 
   // Propiedades adicionales
@@ -60,19 +79,30 @@ export class Register {
 
   readonly nombre = new FormControl(this.registerValue.nombre, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.nombreMin), Validators.maxLength(this.nombreMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.nombreMin),
+      Validators.maxLength(this.nombreMax),
+    ],
   });
 
   readonly primerApellido = new FormControl(this.registerValue.primerApellido, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.primerApellidoMin), Validators.maxLength(this.primerApellidoMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.primerApellidoMin),
+      Validators.maxLength(this.primerApellidoMax),
+    ],
   });
 
   readonly segundoApellido = new FormControl(this.registerValue.segundoApellido, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.segundoApellidoMin), Validators.maxLength(this.segundoApellidoMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.segundoApellidoMin),
+      Validators.maxLength(this.segundoApellidoMax),
+    ],
   });
-
 
   readonly correoCorporativo = new FormControl(this.registerValue.correoCorporativo, {
     nonNullable: true,
@@ -81,9 +111,12 @@ export class Register {
 
   readonly contrasenia = new FormControl(this.registerValue.contrasenia, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.contraseniaMin), Validators.maxLength(this.contraseniaMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.contraseniaMin),
+      Validators.maxLength(this.contraseniaMax),
+    ],
   });
-
 
   // FormGroup: representa el formulario como una unidad
   // A través de la interfaz declarada asignamos los FormControl indicados previamente
@@ -97,8 +130,6 @@ export class Register {
   });
 
   async register(): Promise<void> {
-
-
     this.isValidForm = false;
 
     // Si el formulario es inválido, no continúa el proceso
@@ -112,32 +143,30 @@ export class Register {
     const formValue = this.registerForm.getRawValue();
 
     // Por defecto, se mandará el usuario marcado como activo
-    this.registerValue = new UsuarioRegistroRequestDTO(
+    this.registerValue = new RegistroRequestDTO(
       formValue.nombre,
       formValue.primerApellido,
       formValue.segundoApellido,
       formValue.correoCorporativo,
       formValue.contrasenia,
-      true
+      true,
     );
 
     try {
-
       // Se elimina el contenido de localStorageService antes de registrar al usuario
       // Esto se hace para evitar casos de tokens antiguos almacenados que puedan provocar errores
       this.localStorageService.remove('idUsuario');
       this.localStorageService.remove('token');
 
-
       const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
-      
+
       // Debug
       console.log(registerResponse);
 
-      // Redirección 
+      // Redirección
       this.router.navigateByUrl('login');
     } catch (error: any) {
       console.log(error);
-    }  
+    }
   }
 }

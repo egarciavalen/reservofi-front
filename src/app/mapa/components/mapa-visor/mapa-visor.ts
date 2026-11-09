@@ -1,16 +1,17 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { SalaDTO } from '../../../sala/models/sala.dto';
-import { SalaService } from '../../../sala/services/sala-service';
-import { firstValueFrom } from 'rxjs';
-import { MapaDTO } from '../../models/mapa.dto';
-import { MapaPuntoDTO } from '../../models/mapa.punto';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { PuestoDTO } from '../../../puesto/models/puesto.dto';
-import { PuestoService } from '../../../puesto/services/puesto-service';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
 import { PuestoForm } from '../../../puesto/components/puesto-form/puesto-form';
+import { PuestoGuardadoDTO } from '../../../puesto/models/puesto-guardado.dto';
+import { PuestoService } from '../../../puesto/services/puesto-service';
 import { ReservaForm } from '../../../reserva/components/reserva-form/reserva-form';
+import { SalaConsultaDTO } from '../../../sala/models/sala-consulta.dto';
+import { SalaService } from '../../../sala/services/sala-service';
+import { MapaPuntoDTO } from '../../models/mapa-punto';
+import { MapaDTO } from '../../models/mapa.dto';
+import { PuestoConsultaDTO } from '../../../puesto/models/puesto-consulta.dto';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -19,7 +20,6 @@ import { ReservaForm } from '../../../reserva/components/reserva-form/reserva-fo
   styleUrl: './mapa-visor.scss',
 })
 export class MapaVisor implements OnInit {
-
   // Recuperación de las salas asociadas
   private readonly salaService = inject(SalaService);
   private readonly puestoService = inject(PuestoService);
@@ -28,12 +28,12 @@ export class MapaVisor implements OnInit {
   // Propiedades
 
   // Listado de salas
-  salaDTOList: WritableSignal<SalaDTO[]> = signal([]);
+  salaDTOList: WritableSignal<SalaConsultaDTO[]> = signal([]);
   // Listado de puestos sobre las salas
-  puestoDTOTotalList: PuestoDTO[] = [];
-  puestoDTOFiltradoList: WritableSignal<PuestoDTO[]> = signal([]);
+  puestoDTOTotalList: PuestoConsultaDTO[] = [];
+  puestoDTOFiltradoList: WritableSignal<PuestoConsultaDTO[]> = signal([]);
   // Puesto actual que se que quiere incluir (signal puesto que se irá actualizando en la pantalla)
-  puestoActualDTO: WritableSignal<PuestoDTO | null> = signal(null);
+  puestoActualDTO: WritableSignal<PuestoGuardadoDTO | null> = signal(null);
   // Mapa sobre el que se va a cargar la sala
   mapaDTO: MapaDTO = new MapaDTO(null, null);
   // Punto de origen sobre el cual empezamos a crear el puesto
@@ -45,7 +45,6 @@ export class MapaVisor implements OnInit {
   // Referente a la gestión de diálogos
   readonly dialog = inject(MatDialog);
 
-
   ngOnInit(): void {
     this.cargarSalas();
     this.cargarPuestos();
@@ -55,26 +54,28 @@ export class MapaVisor implements OnInit {
     try {
       this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
     } catch (error: any) {
-      console.log("No hay salas que cargar");
+      console.log('No hay salas que cargar');
     }
   }
-    private async cargarPuestos(): Promise<void> {
+  private async cargarPuestos(): Promise<void> {
     try {
       this.puestoDTOTotalList = await firstValueFrom(this.puestoService.findAll());
+      // Actualiza los puestos a mostrar
+      this.actualizarPuestosSala();
     } catch (error: any) {
-      console.log("No hay salas que cargar");
+      console.log('No hay salas que cargar');
     }
   }
 
   establecerSala(idSala: string): void {
-    const salaDTO = this.salaDTOList().find(s => s.id === idSala) ?? null;
+    const salaDTO = this.salaDTOList().find((s) => s.id === idSala) ?? null;
     if (salaDTO === null) {
       // Debug
       console.log('HUBO UN PROBLEMA AL SELECCIONAR LA SALA');
     } else {
       this.mapaDTO.idSala = salaDTO.id;
       // Cambiar localhost al actualizar a servidor en producción
-      this.mapaDTO.rutaImagenSala = "http://localhost:3000/" + salaDTO.rutaImagen;
+      this.mapaDTO.rutaImagenSala = 'http://localhost:3000/' + salaDTO.rutaImagen;
       // Actualiza los puestos actuales a mostrar
       this.actualizarPuestosSala();
     }
@@ -82,7 +83,9 @@ export class MapaVisor implements OnInit {
 
   actualizarPuestosSala() {
     // Actualiza los puestos filtrados
-    this.puestoDTOFiltradoList.set(this.puestoDTOTotalList.filter(puesto => puesto.idSala == this.mapaDTO.idSala));
+    this.puestoDTOFiltradoList.set(
+      this.puestoDTOTotalList.filter((puesto) => puesto.idSala == this.mapaDTO.idSala),
+    );
   }
 
   alternarModoEdicion(): void {
@@ -92,19 +95,28 @@ export class MapaVisor implements OnInit {
   // *** EVENTOS ASOCIADOS AL RATÓN ***
 
   pulsarRaton(e: MouseEvent) {
-
     if (this.modoEdicion) {
       // Se activa el modo creación
       this.ratonPulsado = true;
       // Es necesario marcar cual sería la coordenada de origen
       this.origenDTO = this.ubicacionActual(e);
       // Se procede a crear un objeto de tipo MapaPuestoDTO siempre que se haya seleccionado previamente una sala
-      this.puestoActualDTO.set(new PuestoDTO("", this.mapaDTO.idSala !== null ? this.mapaDTO.idSala : "", "", this.origenDTO.coordenadaX, this.origenDTO.coordenadaY, 0, 0));
+      this.puestoActualDTO.set(
+        new PuestoGuardadoDTO(
+          '',
+          this.mapaDTO.idSala !== null ? this.mapaDTO.idSala : '',
+          '',
+          this.origenDTO.coordenadaX,
+          this.origenDTO.coordenadaY,
+          0,
+          0,
+        ),
+      );
     }
   }
 
   moverRaton(e: MouseEvent) {
-    if (this.modoEdicion && this.ratonPulsado){
+    if (this.modoEdicion && this.ratonPulsado) {
       // En este punto lo que hay que hacer es actualizar las coordenadas del puesto creado
       const ubicacionActual = this.ubicacionActual(e);
 
@@ -116,27 +128,35 @@ export class MapaVisor implements OnInit {
       // Uso de Math.abs porque si no, si se arrastra a la derecha toma valores negativos y no lo registra bien
       const nuevoAncho = Math.abs(this.origenDTO.coordenadaX - ubicacionActual.coordenadaX);
       const nuevoAlto = Math.abs(this.origenDTO.coordenadaY - ubicacionActual.coordenadaY);
-      this.puestoActualDTO.update(puesto => ({...puesto, id: "", idSala: puesto !== null && puesto.idSala !== null ? puesto.idSala : "", nombre: puesto !== null ? puesto.nombre: "", coordenadaX: nuevaCoordenadaX, coordenadaY: nuevaCoordenadaY, ancho: nuevoAncho, alto: nuevoAlto}));
+      this.puestoActualDTO.update((puesto) => ({
+        ...puesto,
+        id: '',
+        idSala: puesto !== null && puesto.idSala !== null ? puesto.idSala : '',
+        nombre: puesto !== null ? puesto.nombre : '',
+        coordenadaX: nuevaCoordenadaX,
+        coordenadaY: nuevaCoordenadaY,
+        ancho: nuevoAncho,
+        alto: nuevoAlto,
+      }));
     }
   }
 
   finalizarRaton() {
-
     if (this.modoEdicion) {
       // Se desactiva el modo creación y se deja el elemento creado como está
-      this.ratonPulsado = false;    
+      this.ratonPulsado = false;
       // Se abre el diálogo para crear un puesto
       this.abrirDialogoPuesto();
     }
   }
 
   private ubicacionActual(e: MouseEvent): MapaPuntoDTO {
-    // Búsqueda del punto actual en pantalla 
+    // Búsqueda del punto actual en pantalla
     // Se resta el contenido de la pantalla (viewport) menos el del contenedor sobre el que se está aplicando el event
-    // Esto se hace porque el elementoContenedor cuenta las coordenadas desde el viewport 
+    // Esto se hace porque el elementoContenedor cuenta las coordenadas desde el viewport
     // Adicionalmente, se buscan los PORCENTAJES para que se redimensionen los elementos en función de la pantalla
     const elementoContenedor = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const coordenadaX = ((e.clientX - elementoContenedor.left) / elementoContenedor.width) * 100; 
+    const coordenadaX = ((e.clientX - elementoContenedor.left) / elementoContenedor.width) * 100;
     const coordenadaY = ((e.clientY - elementoContenedor.top) / elementoContenedor.height) * 100;
     return new MapaPuntoDTO(coordenadaX, coordenadaY);
   }
@@ -144,33 +164,27 @@ export class MapaVisor implements OnInit {
   // Código relativo a los diálogos
 
   private abrirDialogoPuesto(): void {
-
     const dialogRef = this.dialog.open(PuestoForm, {
       data: this.puestoActualDTO(),
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-
+    dialogRef.afterClosed().subscribe((result) => {
       // En el caso que se tenga un resultado con éxito
       if (result) {
-        this.puestoDTOTotalList.push(this.puestoActualDTO()!);
-        // Actualiza los puestos a mostrar
-        this.actualizarPuestosSala();
+        this.cargarPuestos();
       }
       // Se reinician los valores de la edición
       this.puestoActualDTO.set(null);
       this.origenDTO = new MapaPuntoDTO(0, 0);
-
     });
   }
 
   abrirDialogoReserva(idPuesto: string): void {
-
     const dialogRef = this.dialog.open(ReservaForm, {
       data: idPuesto,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       // No aplica ninguna acción adicional, se gestiona todo desde las reservas
     });
   }

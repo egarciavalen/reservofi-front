@@ -1,4 +1,4 @@
-export class RolDTO {
+export class RolGuardadoDTO {
 
   constructor(
     public id: string,

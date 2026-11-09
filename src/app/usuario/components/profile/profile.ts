@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
-import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../../../auth/services/auth-service';
-import { Router } from '@angular/router';
-import { LocalStorageService } from '../../../auth/services/local-storage-service';
-import { UsuarioPerfilDTO } from '../../models/usuario-perfil.dto';
-import { firstValueFrom } from 'rxjs';
+import { UsuarioConsultaDTO } from '../../models/usuario-consulta.dto';
+import { UsuarioGuardadoDTO } from '../../models/usuario-guardado.dto';
 import { UsuarioService } from '../../services/usuario-service';
-import { UsuarioDTO } from '../../models/usuario.dto';
-import { HttpErrorResponse } from '@angular/common/http';
 
 type ProfileFormModel = {
   nombre: FormControl<string>;
@@ -20,15 +25,13 @@ type ProfileFormModel = {
   contrasenia: FormControl<string>;
 };
 
-
 @Component({
   selector: 'app-profile',
   imports: [ReactiveFormsModule, CommonModule, InputPassword, InputText, MatButtonModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
-export class Profile implements OnInit{
-
+export class Profile implements OnInit {
   // Orden: propiedades -> Constructor -> Métodos públicos -> Métodos privados
 
   // Inyección de dependencias
@@ -38,7 +41,7 @@ export class Profile implements OnInit{
   private readonly localStorageService = inject(LocalStorageService);
 
   // Datos iniciales
-  profileValue: UsuarioPerfilDTO = new UsuarioPerfilDTO('', '', '', '', '', false);
+  profileValue: UsuarioGuardadoDTO = new UsuarioGuardadoDTO('', '', '', '', '', false);
   isValidForm: boolean | null = null;
 
   // Propiedades adicionales
@@ -62,22 +65,38 @@ export class Profile implements OnInit{
 
   readonly nombre = new FormControl(this.profileValue.nombre, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.nombreMin), Validators.maxLength(this.nombreMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.nombreMin),
+      Validators.maxLength(this.nombreMax),
+    ],
   });
 
   readonly primerApellido = new FormControl(this.profileValue.primerApellido, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.primerApellidoMin), Validators.maxLength(this.primerApellidoMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.primerApellidoMin),
+      Validators.maxLength(this.primerApellidoMax),
+    ],
   });
 
   readonly segundoApellido = new FormControl(this.profileValue.segundoApellido, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.segundoApellidoMin), Validators.maxLength(this.segundoApellidoMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.segundoApellidoMin),
+      Validators.maxLength(this.segundoApellidoMax),
+    ],
   });
 
   readonly contrasenia = new FormControl(this.profileValue.contrasenia, {
     nonNullable: true,
-    validators: [Validators.required, Validators.minLength(this.contraseniaMin), Validators.maxLength(this.contraseniaMax)],
+    validators: [
+      Validators.required,
+      Validators.minLength(this.contraseniaMin),
+      Validators.maxLength(this.contraseniaMax),
+    ],
   });
 
   // Identificador del usuario
@@ -94,18 +113,16 @@ export class Profile implements OnInit{
   });
 
   ngOnInit(): void {
-
     // Recuperación del identificador del usuario
-    this.usuarioId = this.localStorageService.get("idUsuario");
+    this.usuarioId = this.localStorageService.get('idUsuario');
     if (!this.usuarioId) {
       // Debug
-      console.log("ERROR AL RECUPERAR EL USUARIO");
+      console.log('ERROR AL RECUPERAR EL USUARIO');
     }
 
     // OBSERVABLE
     this.userService.findById(this.usuarioId!).subscribe({
-      next: (usuarioData: UsuarioDTO) => {
-
+      next: (usuarioData: UsuarioConsultaDTO) => {
         // NO se rellena la contraseña
         this.profileForm.patchValue({
           nombre: usuarioData.nombre,
@@ -118,15 +135,12 @@ export class Profile implements OnInit{
         this.profileValue.activo = usuarioData.activo;
       },
       error: (error: HttpErrorResponse) => {
-        console.log("Ha ocurrido un error interno al recuperar el usuario");
+        console.log('Ha ocurrido un error interno al recuperar el usuario');
       },
     });
   }
 
-
   async save(): Promise<void> {
-
-
     this.isValidForm = false;
 
     // Si el formulario es inválido, no continúa el proceso
@@ -140,28 +154,27 @@ export class Profile implements OnInit{
     const formValue = this.profileForm.getRawValue();
 
     // Por defecto, se mandará el usuario marcado como activo
-    this.profileValue = new UsuarioPerfilDTO(
+    this.profileValue = new UsuarioGuardadoDTO(
       formValue.nombre,
       formValue.primerApellido,
       formValue.segundoApellido,
       formValue.contrasenia,
       this.profileValue.correoCorporativo,
-      this.profileValue.activo
+      this.profileValue.activo,
     );
 
     try {
+      const profileResponse = await firstValueFrom(
+        this.userService.update(this.usuarioId!, this.profileValue),
+      );
 
-      const profileResponse = await firstValueFrom(this.userService.update(this.usuarioId!, this.profileValue));
-      
       // Debug
       console.log(profileResponse);
 
-      // Redirección 
+      // Redirección
       this.router.navigateByUrl('mapa/visor');
     } catch (error: any) {
       console.log(error);
-    }  
-
+    }
   }
 }
-
