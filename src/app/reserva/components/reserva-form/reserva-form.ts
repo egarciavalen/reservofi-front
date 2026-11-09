@@ -1,15 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReservaService } from '../../services/reserva-service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ReservaDTO } from '../../models/reserva.dto';
-import { firstValueFrom } from 'rxjs';
 import { CommonModule, formatDate } from '@angular/common';
-import { LocalStorageService } from '../../../auth/services/local-storage-service';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputDate } from '../../../shared/components/form-controls/input-date/input-date';
+import { Component, inject, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { LocalStorageService } from '../../../auth/services/local-storage-service';
+import { InputDate } from '../../../shared/components/form-controls/input-date/input-date';
+import { ReservaGuardadoDTO } from '../../models/reserva-guardado.dto';
+import { ReservaService } from '../../services/reserva-service';
 
 type ReservaFormModel = {
   fechaInicio: FormControl<string>;
@@ -22,7 +27,6 @@ type ReservaFormModel = {
   styleUrl: './reserva-form.scss',
 })
 export class ReservaForm implements OnInit {
-
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly reservaService = inject(ReservaService);
@@ -30,45 +34,40 @@ export class ReservaForm implements OnInit {
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
 
-  private readonly reservaDTO: ReservaDTO = new ReservaDTO("", "", "", "", "");
+  private readonly reservaDTO: ReservaGuardadoDTO = new ReservaGuardadoDTO('', '', '', '', '');
   isValidForm: boolean | null = null;
 
   // Referente a los diálogos
   readonly data = inject<string>(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<ReservaForm>);
 
-  fechaInicio = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
+  fechaInicio = new FormControl(formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'en'), {
     nonNullable: true,
-    validators: [
-      Validators.required
-    ],
+    validators: [Validators.required],
   });
 
-  fechaFin = new FormControl(formatDate(new Date(), "yyyy-MM-ddTHH:mm", "en"), {
+  fechaFin = new FormControl(formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'en'), {
     nonNullable: true,
-    validators: [
-      Validators.required
-    ],
+    validators: [Validators.required],
   });
 
   readonly reservaForm: FormGroup<ReservaFormModel> = this.formBuilder.group({
     fechaInicio: this.fechaInicio,
     fechaFin: this.fechaFin,
   });
-  
+
   async ngOnInit(): Promise<void> {
     // Recuperación del identificador de la sala
     this.reservaDTO.idPuesto = this.data;
 
     // Recuperación del identificador del usuario
-    const idUsuario = this.localStorageService.get("idUsuario");
+    const idUsuario = this.localStorageService.get('idUsuario');
     if (idUsuario) {
       this.reservaDTO.idUsuario = idUsuario;
     } else {
       // Debug
-      console.log("ERROR AL RECUPERAR EL USUARIO");
+      console.log('ERROR AL RECUPERAR EL USUARIO');
     }
-
   }
 
   async guardar(): Promise<void> {
@@ -86,7 +85,7 @@ export class ReservaForm implements OnInit {
     console.log(this.reservaDTO);
     try {
       const reservaResponse = await firstValueFrom(this.reservaService.create(this.reservaDTO));
-      // Debug 
+      // Debug
       console.log(reservaResponse);
       // Redirección al mapa
       this.router.navigateByUrl('mapa/visor');

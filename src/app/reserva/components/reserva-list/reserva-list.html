@@ -4,20 +4,19 @@
   <h1>Lista de reservas</h1>
 
   <div class="reserva-container">
-    @for (reservaDTO of reservaDTOList(); track reservaDTO.id) {
+    @for (reservaDTO of reservaConsultaDTOList(); track reservaDTO.id) {
       <!-- Creación de cards para la visualización de las salas-->
       <mat-card class="reserva-card">
       <mat-card-header>
-        <mat-card-title>{{reservaDTO.fechaInicio | formatDate}} - {{reservaDTO.fechaFin | formatDate}}</mat-card-title>
-        <!--
-          <mat-card-subtitle>{{reservaDTO.nombrePuesto}} - {{reservaDTO.nombreSala}}</mat-card-subtitle>
-        -->
+        <mat-card-title>{{reservaDTO.nombreSala}} - {{reservaDTO.nombrePuesto}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <!-- Imagen de la sala -->
-        <!--
         <img mat-card-image src="{{reservaDTO.rutaImagen}}" alt="Fotografía de la sala {{reservaDTO.nombreSala}} asociada a la reserva">
-      -->
+        <p><strong>Fecha de inicio</strong></p>
+        <p>{{reservaDTO.fechaInicio | formatDate}}</p>
+        <p><strong>Fecha de fin</strong></p>
+        <p>{{reservaDTO.fechaFin | formatDate}}</p>
       </mat-card-content>
       <mat-card-actions>
         <button matButton class="btn-edit" (click)="borrarReserva(reservaDTO.id)"><mat-icon>delete</mat-icon></button>

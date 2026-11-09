@@ -1,4 +1,4 @@
-export class ReservaDTO {
+export class ReservaGuardadoDTO {
 
   constructor(
     public id: string,

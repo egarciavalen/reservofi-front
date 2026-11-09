@@ -1,32 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReservaDTO } from '../models/reserva.dto';
+import { ReservaConsultaDTO } from '../models/reserva-consulta.dto';
+import { ReservaGuardadoDTO } from '../models/reserva-guardado.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservaService {
-
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(reserva: ReservaDTO): Observable<ReservaDTO> {
-    return this.http.post<ReservaDTO>(this.urlApi + '/reserva', reserva);
+  create(reserva: ReservaGuardadoDTO): Observable<ReservaGuardadoDTO> {
+    return this.http.post<ReservaGuardadoDTO>(this.urlApi + '/reserva', reserva);
   }
 
-  findById(id: string): Observable<ReservaDTO> {
-    return this.http.get<ReservaDTO>(this.urlApi + '/reserva/' + id);
+  findById(id: string): Observable<ReservaConsultaDTO> {
+    return this.http.get<ReservaConsultaDTO>(this.urlApi + '/reserva/' + id);
   }
 
-  findByUsuarioId(idUsuario: string): Observable<ReservaDTO[]> {
-    return this.http.get<ReservaDTO[]>(this.urlApi + '/reserva/usuario/' + idUsuario);
+  findByUsuarioId(idUsuario: string): Observable<ReservaConsultaDTO[]> {
+    return this.http.get<ReservaConsultaDTO[]>(this.urlApi + '/reserva/usuario/' + idUsuario);
   }
 
-  findAll(): Observable<ReservaDTO[]> {
-    return this.http.get<ReservaDTO[]>(this.urlApi + "/reserva");
+  findAll(): Observable<ReservaConsultaDTO[]> {
+    return this.http.get<ReservaConsultaDTO[]>(this.urlApi + '/reserva');
   }
 
   delete(id: string): Observable<void> {
