@@ -21,7 +21,12 @@ export class UsuarioService {
     return this.http.get<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + id);
   }
 
-  update(idUsuario: string, usuario: UsuarioGuardadoDTO): Observable<UsuarioGuardadoDTO> {
-    return this.http.put<UsuarioGuardadoDTO>(this.urlApi + '/usuario/' + idUsuario, usuario);
+  update(idUsuario: string, usuario: UsuarioGuardadoDTO): Observable<UsuarioConsultaDTO> {
+    return this.http.put<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario, usuario);
+  }
+
+  toggleActivo(idUsuario: string): Observable<UsuarioConsultaDTO> {
+    // Únicamente se modifica un campo: activo
+    return this.http.patch<UsuarioConsultaDTO>(this.urlApi + '/usuario/toggleActivo/', idUsuario);
   }
 }

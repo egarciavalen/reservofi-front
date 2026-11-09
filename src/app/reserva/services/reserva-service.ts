@@ -13,8 +13,8 @@ export class ReservaService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(reserva: ReservaGuardadoDTO): Observable<ReservaGuardadoDTO> {
-    return this.http.post<ReservaGuardadoDTO>(this.urlApi + '/reserva', reserva);
+  create(reserva: ReservaGuardadoDTO): Observable<ReservaConsultaDTO> {
+    return this.http.post<ReservaConsultaDTO>(this.urlApi + '/reserva', reserva);
   }
 
   findById(id: string): Observable<ReservaConsultaDTO> {

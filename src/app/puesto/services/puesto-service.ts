@@ -13,8 +13,8 @@ export class PuestoService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(puesto: PuestoGuardadoDTO): Observable<PuestoGuardadoDTO> {
-    return this.http.post<PuestoGuardadoDTO>(this.urlApi + '/puesto', puesto);
+  create(puesto: PuestoGuardadoDTO): Observable<PuestoConsultaDTO> {
+    return this.http.post<PuestoConsultaDTO>(this.urlApi + '/puesto', puesto);
   }
 
   findAll(): Observable<PuestoConsultaDTO[]> {

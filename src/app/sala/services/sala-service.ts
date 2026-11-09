@@ -13,12 +13,12 @@ export class SalaService {
   private readonly controller = 'api';
   private readonly urlApi = `http://localhost:3000/${this.controller}`;
 
-  create(sala: FormData): Observable<SalaGuardadoDTO> {
-    return this.http.post<SalaGuardadoDTO>(this.urlApi + '/sala', sala);
+  create(sala: FormData): Observable<SalaConsultaDTO> {
+    return this.http.post<SalaConsultaDTO>(this.urlApi + '/sala', sala);
   }
 
-  update(idSala: string, sala: FormData): Observable<SalaGuardadoDTO> {
-    return this.http.put<SalaGuardadoDTO>(this.urlApi + '/sala/' + idSala, sala);
+  update(idSala: string, sala: FormData): Observable<SalaConsultaDTO> {
+    return this.http.put<SalaConsultaDTO>(this.urlApi + '/sala/' + idSala, sala);
   }
 
   delete(id: string): Observable<void> {
