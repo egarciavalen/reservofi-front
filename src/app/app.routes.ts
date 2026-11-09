@@ -11,6 +11,7 @@ import { ReservaForm } from './reserva/components/reserva-form/reserva-form';
 import { ReservaList } from './reserva/components/reserva-list/reserva-list';
 import { Profile } from './usuario/components/profile/profile';
 import { PuestoList } from './puesto/components/puesto-list/puesto-list';
+import { UsuarioList } from './usuario/components/usuario-list/usuario-list';
 
 export const routes: Routes = [
   {
@@ -77,6 +78,11 @@ export const routes: Routes = [
   {
     path: 'usuario/profile',
     component: Profile,
+    canActivate: [authGuard],
+  },  
+  {
+    path: 'usuario/list',
+    component: UsuarioList,
     canActivate: [authGuard],
   },
 ];

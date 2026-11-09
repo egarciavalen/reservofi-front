@@ -48,6 +48,10 @@ export class Header {
     this.router.navigateByUrl('reserva/list');
   }
 
+  usuarioList(): void {
+    this.router.navigateByUrl('usuario/list');
+  }
+
   profile(): void {
     this.router.navigateByUrl('usuario/profile');
   }

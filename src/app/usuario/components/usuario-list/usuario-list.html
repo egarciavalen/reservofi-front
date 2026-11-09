@@ -1,0 +1,35 @@
+<div class="container">
+  <h2>Lista de usuarios</h2>
+
+  <table mat-table [dataSource]="usuarioConsultaDTOList()">
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</td>
+    </ng-container>
+
+    <!-- Primer apellido -->
+    <ng-container matColumnDef="primerApellido">
+      <th mat-header-cell *matHeaderCellDef>Primer apellido</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.primerApellido }}</td>
+    </ng-container>
+
+    <!-- Segundo apellido -->
+    <ng-container matColumnDef="segundoApellido">
+      <th mat-header-cell *matHeaderCellDef>Segundo apellido</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.segundoApellido }}</td>
+    </ng-container>
+
+    <!-- Correo corporativo -->
+    <ng-container matColumnDef="correoCorporativo">
+      <th mat-header-cell *matHeaderCellDef>Correo corporativo</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.correoCorporativo }}</td>
+    </ng-container>
+
+    <!-- COLUMNS TO DISPLAY -->
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+
+</div>
