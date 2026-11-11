@@ -1,3 +1,5 @@
+import { UsuarioRolConsultaDTO } from "./usuario-rol-consulta.dto";
+
 export class UsuarioConsultaDTO {
 
   constructor(
@@ -7,7 +9,7 @@ export class UsuarioConsultaDTO {
     public segundoApellido: string,
     public correoCorporativo: string,
     public activo: boolean,
-    public idsRoles: string[],
+    public roles: UsuarioRolConsultaDTO[],
   ) {}
 
 }

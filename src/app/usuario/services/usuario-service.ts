@@ -29,4 +29,9 @@ export class UsuarioService {
     // Únicamente se modifica un campo: activo
     return this.http.post<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario + '/toggleActivo', null);
   }
+
+  toggleAdmin(idUsuario: string): Observable<UsuarioConsultaDTO> {
+    // Únicamente se modifica un campo: el rol de admin
+    return this.http.post<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario + '/toggleAdmin', null);
+  }
 }

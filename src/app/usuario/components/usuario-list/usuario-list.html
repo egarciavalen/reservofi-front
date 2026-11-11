@@ -27,13 +27,20 @@
       <td mat-cell *matCellDef="let usuario">{{ usuario.correoCorporativo }}</td>
     </ng-container>
 
-
     <!-- Activo -->
     <ng-container matColumnDef="activo">
       <th mat-header-cell *matHeaderCellDef>Activo</th>
       <td mat-cell *matCellDef="let usuario">      
-        <mat-checkbox [checked]="usuario.activo" (change)="update(usuario.id)"></mat-checkbox>
+        <mat-checkbox [checked]="usuario.activo" (change)="toggleActivo(usuario.id)"></mat-checkbox>
       </td>
+    </ng-container>
+
+    <!-- Admin -->
+    <ng-container matColumnDef="button">
+      <th mat-header-cell *matHeaderCellDef>Admin</th>
+      <th mat-header-cell *matCellDef="let usuario">
+        <mat-checkbox [checked]="isAdmin(usuario)" (change)="toggleAdmin(usuario.id)"></mat-checkbox>
+      </th>
     </ng-container>
 
     <!-- Columnas que mostrar -->

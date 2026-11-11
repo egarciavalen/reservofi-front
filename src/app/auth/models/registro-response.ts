@@ -5,6 +5,7 @@ export class RegistroResponseDTO {
     public primer_apellido: string,
     public segundo_apellido: string,
     public correo_corporativo: string,
+    public activo: boolean
   ) {}
 
 }
