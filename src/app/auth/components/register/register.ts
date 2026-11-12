@@ -16,6 +16,8 @@ import { InputText } from '../../../shared/components/form-controls/input-text/i
 import { RegistroRequestDTO } from '../../models/registro-request';
 import { AuthService } from '../../services/auth-service';
 import { LocalStorageService } from '../../services/local-storage-service';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -46,6 +48,10 @@ export class Register {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly localStorageService = inject(LocalStorageService);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
+
 
   // Datos iniciales
   registerValue: RegistroRequestDTO = new RegistroRequestDTO(
@@ -149,7 +155,7 @@ export class Register {
       formValue.segundoApellido,
       formValue.correoCorporativo,
       formValue.contrasenia,
-      true,
+      false,
     );
 
     try {
@@ -159,14 +165,27 @@ export class Register {
       this.localStorageService.remove('token');
 
       const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
-
       // Debug
       console.log(registerResponse);
 
-      // Redirección
-      this.router.navigateByUrl('login');
+      this.abrirDialogo("¡Usuario creado correctamente!", true);
+
     } catch (error: any) {
       console.log(error);
+      this.abrirDialogo("Ha ocurrido un error guardando el usuario.", false);
     }
   }
+
+
+    abrirDialogo(message: string, hayRedireccion: boolean): void {
+      const dialogRef = this.dialog.open(MessageDialog, {
+        data: message,
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (hayRedireccion) {
+          this.router.navigateByUrl('login');
+        }
+      });
+    }
 }
