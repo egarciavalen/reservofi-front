@@ -10,6 +10,8 @@ import { Header } from '../../../shared/components/header/header';
 import { InputEmail } from '../../../shared/components/form-controls/input-email/input-email';
 import { InputPassword } from '../../../shared/components/form-controls/input-password/input-password';
 import {MatButtonModule} from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -30,6 +32,10 @@ export class Login {
   private readonly authService = inject(AuthService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
+
 
   private readonly loginUser: LoginRequestDTO = new LoginRequestDTO('', '');
   isValidForm: boolean | null = null;
@@ -83,15 +89,28 @@ export class Login {
       this.localStorageService.set('idUsuario', loginResponse.idUsuario);
       this.localStorageService.set('token', loginResponse.token);
 
-      // Opciones de menú para el usuario autenticado 
-      Header.usuarioAutenticado.set(true);
+      this.abrirDialogo("¡Inicio de sesión correcto!", true);
 
-      // Redirección
-      this.router.navigateByUrl('home');
 
     } catch (error: any) {
       console.log(error);
+      this.abrirDialogo("Ha ocurrido un error iniciando sesión.", false);
     }
   }
 
+
+  abrirDialogo(message: string, redirection: boolean): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (redirection) {
+        // Opciones de menú para el usuario autenticado 
+        Header.usuarioAutenticado.set(true);
+        // Redirección
+        this.router.navigateByUrl('home');
+      }
+    });
+  }
 }

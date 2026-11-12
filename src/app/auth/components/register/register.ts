@@ -177,13 +177,13 @@ export class Register {
   }
 
 
-    abrirDialogo(message: string, hayRedireccion: boolean): void {
+    abrirDialogo(message: string, redirection: boolean): void {
       const dialogRef = this.dialog.open(MessageDialog, {
         data: message,
       });
   
       dialogRef.afterClosed().subscribe((result) => {
-        if (hayRedireccion) {
+        if (redirection) {
           this.router.navigateByUrl('login');
         }
       });
