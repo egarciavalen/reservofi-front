@@ -1,0 +1,9 @@
+<div class="dialog-container">
+  <mat-dialog-content>
+      {{ data }}
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button class="cancelar" matButton mat-dialog-close>Cancel</button>
+    <button matButton [mat-dialog-close]="true" cdkFocusInitial>Aceptar</button>
+  </mat-dialog-actions>
+</div>
