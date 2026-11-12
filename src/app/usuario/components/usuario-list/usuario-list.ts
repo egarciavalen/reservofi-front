@@ -25,7 +25,8 @@ export class UsuarioList implements OnInit {
   }
 
   private async cargarListaUsuarios() {
-    this.usuarioConsultaDTOList.set(await firstValueFrom(this.usuarioService.findAll())); 
+    const usuarios = await firstValueFrom(this.usuarioService.findAll());
+    this.usuarioConsultaDTOList.set(usuarios.sort((a, b) => a.nombre.localeCompare(b.nombre))); 
   }
 
   async toggleActivo(idUsuario: string) {
@@ -39,9 +40,12 @@ export class UsuarioList implements OnInit {
   }
 
   isAdmin(usuario: UsuarioConsultaDTO): boolean {
-    for (const rol of usuario.roles) {
-      if (rol.nombre === "Administrador") {
-        return true;
+
+    if (usuario.roles != null) {
+      for (const rol of usuario.roles) {
+        if (rol.nombre === "Administrador") {
+          return true;
+        }
       }
     }
     return false;
