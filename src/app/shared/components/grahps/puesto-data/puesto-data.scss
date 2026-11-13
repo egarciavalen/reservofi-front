@@ -1,8 +1,13 @@
 canvas {
   /* Cambio del color para visualizar el gráfico */
   background-color: white;
-  /* Definición de margenes por defecto */
-  margin: auto;
-  /* Borde para definir mejor el gráfico */
-  border: 1px solid black;
+  /* Borde del gráfico */
+  border: 0.3rem solid var(--mat-sys-primary-container);
+  /* Ancho y alto de los gráficos*/
+  width: 30rem;
+  height: auto;
+}
+
+.grafico {
+  margin-bottom: 1rem;
 }
