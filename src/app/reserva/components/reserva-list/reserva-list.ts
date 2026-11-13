@@ -8,6 +8,8 @@ import { LocalStorageService } from '../../../auth/services/local-storage-servic
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { ReservaConsultaDTO } from '../../models/reserva-consulta.dto';
 import { ReservaService } from '../../services/reserva-service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 
 @Component({
   selector: 'app-reserva-list',
@@ -20,6 +22,9 @@ export class ReservaList {
   private readonly router = inject(Router);
   private readonly reservaService = inject(ReservaService);
   private readonly localStorageService = inject(LocalStorageService);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   reservaConsultaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
 
@@ -57,17 +62,26 @@ export class ReservaList {
     }
   }
 
-  crearSala(): void {
-    this.router.navigateByUrl('/reserva/form');
+  async borrarReserva(idReserva: string) {
+    // El resultado del mensaje de aviso determina la acción a realizar
+    this.abrirDialogoAviso("¿Seguro que desea borrar la reserva?", idReserva);
   }
 
-  async borrarReserva(idReserva: string) {
-    await firstValueFrom(this.reservaService.delete(idReserva));
-    // Debug
-    console.log('Reserva borrada!');
-    this.router.navigateByUrl('/reserva/list');  
+  async abrirDialogoAviso(message: string, idReserva: string) {
+    const dialogRef = this.dialog.open(ChooseDialog, {
+      data: message,
+    });
+  
 
-    // Se recarga la lista de reservas
-    this.cargarReservas();
+  dialogRef.afterClosed().subscribe(async (result) => {
+      // En el caso que se tenga un resultado con éxito
+      if (result) {
+        await firstValueFrom(this.reservaService.delete(idReserva));
+        // Debug
+        this.router.navigateByUrl('/reserva/list');  
+        // Se recarga la lista de reservas
+        this.cargarReservas();
+      }  
+    });
   }
 }

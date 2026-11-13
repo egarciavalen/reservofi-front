@@ -8,13 +8,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { InputDate } from '../../../shared/components/form-controls/input-date/input-date';
 import { ReservaGuardadoDTO } from '../../models/reserva-guardado.dto';
 import { ReservaService } from '../../services/reserva-service';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 type ReservaFormModel = {
   fechaInicio: FormControl<string>;
@@ -30,9 +31,11 @@ export class ReservaForm implements OnInit {
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly reservaService = inject(ReservaService);
-  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   private readonly reservaDTO: ReservaGuardadoDTO = new ReservaGuardadoDTO('', '', '', '', '');
   isValidForm: boolean | null = null;
@@ -87,10 +90,11 @@ export class ReservaForm implements OnInit {
       const reservaResponse = await firstValueFrom(this.reservaService.create(this.reservaDTO));
       // Debug
       console.log(reservaResponse);
-      // Redirección al mapa
-      this.router.navigateByUrl('mapa/visor');
+      this.abrirDialogoMensaje("Reserva creada correctamente!");
+
     } catch (error: any) {
       console.log(error);
+      this.abrirDialogoMensaje("Ha ocurrido un error al crear la reserva.");
     }
 
     this.cerrarDialogo();
@@ -98,5 +102,16 @@ export class ReservaForm implements OnInit {
 
   cerrarDialogo(): void {
     this.dialogRef.close();
+  }
+
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.cerrarDialogo();
+    });
   }
 }

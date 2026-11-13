@@ -29,7 +29,6 @@ type PuestoFormModel = {
 export class PuestoForm implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly puestoService = inject(PuestoService);
-  private readonly router = inject(Router);
 
   // Referente a los diálogos
   readonly data = inject<PuestoGuardadoDTO>(MAT_DIALOG_DATA);

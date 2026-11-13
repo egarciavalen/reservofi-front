@@ -12,6 +12,7 @@ import { SalaService } from '../../../sala/services/sala-service';
 import { MapaPuntoDTO } from '../../models/mapa-punto';
 import { MapaDTO } from '../../models/mapa.dto';
 import { PuestoConsultaDTO } from '../../../puesto/models/puesto-consulta.dto';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -23,7 +24,10 @@ export class MapaVisor implements OnInit {
   // Recuperación de las salas asociadas
   private readonly salaService = inject(SalaService);
   private readonly puestoService = inject(PuestoService);
-  private readonly router = inject(Router);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
+
 
   // Propiedades
 
@@ -42,8 +46,6 @@ export class MapaVisor implements OnInit {
   ratonPulsado: boolean = false;
   modoEdicion: boolean = false;
 
-  // Referente a la gestión de diálogos
-  readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.cargarSalas();
@@ -89,7 +91,22 @@ export class MapaVisor implements OnInit {
   }
 
   alternarModoEdicion(): void {
-    this.modoEdicion = !this.modoEdicion;
+
+    let message;
+
+    if (this.modoEdicion) {
+      message = "¡El modo edición está desactivado!"
+    } else {
+      message = "¡El modo edición está activado!"
+    }
+
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.modoEdicion = !this.modoEdicion;
+    });
   }
 
   // *** EVENTOS ASOCIADOS AL RATÓN ***
@@ -164,6 +181,7 @@ export class MapaVisor implements OnInit {
   // Código relativo a los diálogos
 
   private abrirDialogoPuesto(): void {
+
     const dialogRef = this.dialog.open(PuestoForm, {
       data: this.puestoActualDTO(),
     });
@@ -180,12 +198,24 @@ export class MapaVisor implements OnInit {
   }
 
   abrirDialogoReserva(idPuesto: string): void {
-    const dialogRef = this.dialog.open(ReservaForm, {
-      data: idPuesto,
-    });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      // No aplica ninguna acción adicional, se gestiona todo desde las reservas
-    });
+    // Para evitar confusiones, el usuario tendrá que desactivar primero el modo edición
+    if (this.modoEdicion) {
+      const dialogRef = this.dialog.open(MessageDialog, {
+        data: "Es necesario desactivar el modo edición antes de hacer una reserva",
+      });
+    
+      dialogRef.afterClosed().subscribe((result) => {
+        // No se hace nada, es un aviso
+      });
+    } else {
+      const dialogRef = this.dialog.open(ReservaForm, {
+        data: idPuesto,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        // No aplica ninguna acción adicional, se gestiona todo desde las reservas
+      });
+    }
   }
 }
