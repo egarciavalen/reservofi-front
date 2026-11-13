@@ -7,6 +7,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { UsuarioRolConsultaDTO } from '../../models/usuario-rol-consulta.dto';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 @Component({
   selector: 'app-usuario-list',
   imports: [MatTableModule, MatCheckboxModule, MatIconModule, MatButtonModule],
@@ -16,6 +18,9 @@ import { UsuarioRolConsultaDTO } from '../../models/usuario-rol-consulta.dto';
 export class UsuarioList implements OnInit {
 
   private readonly usuarioService = inject(UsuarioService);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   usuarioConsultaDTOList: WritableSignal<UsuarioConsultaDTO[]> = signal([]);
   columnsToDisplay = ['nombre', 'primerApellido', 'segundoApellido', 'correoCorporativo', 'activo', 'button'];
@@ -29,25 +34,62 @@ export class UsuarioList implements OnInit {
     this.usuarioConsultaDTOList.set(usuarios.sort((a, b) => a.nombre.localeCompare(b.nombre))); 
   }
 
-  async toggleActivo(idUsuario: string) {
-    await firstValueFrom(this.usuarioService.toggleActivo(idUsuario));
-    this.cargarListaUsuarios();
+  async toggleActivo(usuario: UsuarioConsultaDTO) {
+    let message = "";
+    if (usuario.activo) {
+      message = "¡Usuario desactivado correctamente!";
+    } else {
+      message = "¡Usuario activado correctamente!";
+    }
+
+    try {
+      await firstValueFrom(this.usuarioService.toggleActivo(usuario.id));
+      this.abrirDialogoMensaje(message);   
+    } catch (error) {
+      // Debug
+      console.log(error);
+      this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+    }
   }
 
-  async toggleAdmin(idUsuario: string) {
-    await firstValueFrom(this.usuarioService.toggleAdmin(idUsuario));
-    this.cargarListaUsuarios();
+  async toggleAdmin(usuario: UsuarioConsultaDTO) {
+    
+    let message = "";
+    if (!this.isAdmin(usuario)) {
+      message = "¡Usuario promovido a administrador!";
+    } else {
+      message = "¡Usuario rebajado a empleado!";
+    }
+
+    try {
+      await firstValueFrom(this.usuarioService.toggleAdmin(usuario.id));
+      this.abrirDialogoMensaje(message);   
+    } catch (error) {
+      // Debug
+      console.log(error);
+      this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+    }
   }
 
   isAdmin(usuario: UsuarioConsultaDTO): boolean {
-
     if (usuario.roles != null) {
       for (const rol of usuario.roles) {
         if (rol.nombre === "Administrador") {
+
           return true;
         }
       }
     }
     return false;
+  }
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.cargarListaUsuarios();
+    });
   }
 }

@@ -17,6 +17,8 @@ import { InputText } from '../../../shared/components/form-controls/input-text/i
 import { UsuarioConsultaDTO } from '../../models/usuario-consulta.dto';
 import { UsuarioGuardadoDTO } from '../../models/usuario-guardado.dto';
 import { UsuarioService } from '../../services/usuario-service';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 type ProfileFormModel = {
   nombre: FormControl<string>;
@@ -39,6 +41,9 @@ export class Profile implements OnInit {
   private readonly userService = inject(UsuarioService);
   private readonly router = inject(Router);
   private readonly localStorageService = inject(LocalStorageService);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   // Datos iniciales
   profileValue: UsuarioGuardadoDTO = new UsuarioGuardadoDTO('', '', '', '', '', false);
@@ -170,11 +175,20 @@ export class Profile implements OnInit {
 
       // Debug
       console.log(profileResponse);
-
-      // Redirección
-      this.router.navigateByUrl('mapa/visor');
+      this.abrirDialogoMensaje("Perfil actualizado correctamente!");
     } catch (error: any) {
       console.log(error);
+      this.abrirDialogoMensaje("Ha ocurrido un error al actualizar el perfil.");
     }
+  }
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.router.navigateByUrl('mapa/visor');
+    });
   }
 }
