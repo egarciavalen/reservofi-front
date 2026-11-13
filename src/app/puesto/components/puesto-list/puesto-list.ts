@@ -6,6 +6,8 @@ import { firstValueFrom } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 
 @Component({
   selector: 'app-puesto-list',
@@ -18,6 +20,10 @@ export class PuestoList {
   private readonly router = inject(Router);
   private readonly puestoService = inject(PuestoService);
   puestoConsultaDTOList: WritableSignal<PuestoConsultaDTO[]> = signal([]);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
+
 
   private readonly urlImages = "http://localhost:3000/";
 
@@ -45,18 +51,25 @@ export class PuestoList {
     }
   }
 
-  crearSala(): void {
-    this.router.navigateByUrl('/reserva/form');
+  async borrarReserva(idPuesto: string) {
+    // El resultado del mensaje de aviso determina la acción a realizar
+    this.abrirDialogoAviso("¿Seguro que desea borrar el puesto? Se eliminarán las reservas asignadas.", idPuesto);
   }
 
-  async borrarReserva(idReserva: string) {
-    await firstValueFrom(this.puestoService.delete(idReserva));
-    // Debug
-    console.log('Puesto borrado!');
-    this.router.navigateByUrl('/puesto/list');  
+  async abrirDialogoAviso(message: string, idPuesto: string) {
+    const dialogRef = this.dialog.open(ChooseDialog, {
+      data: message,
+    });
+  
 
-    // Se recarga la lista de reservas
-    this.cargarPuestos();
+  dialogRef.afterClosed().subscribe(async (result) => {
+      // En el caso que se tenga un resultado con éxito
+      if (result) {
+        await firstValueFrom(this.puestoService.delete(idPuesto));
+        this.router.navigateByUrl('/puesto/list');  
+         // Se recarga la lista de reservas
+        this.cargarPuestos();
+      }  
+    });
   }
-
 }

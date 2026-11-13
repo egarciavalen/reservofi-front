@@ -157,8 +157,6 @@ export class SalaForm implements OnInit {
       // En el caso que se tenga un resultado con éxito y se haya seleccionado un ID
       if (result && this.idSala) {
         await firstValueFrom(this.salaService.delete(this.idSala));
-        // Debug
-        console.log('Sala borrada!');
         this.router.navigateByUrl('/sala/list');
       }  
     });

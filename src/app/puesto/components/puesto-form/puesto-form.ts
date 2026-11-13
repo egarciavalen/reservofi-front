@@ -8,12 +8,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
 import { PuestoGuardadoDTO } from '../../models/puesto-guardado.dto';
 import { PuestoService } from '../../services/puesto-service';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 type PuestoFormModel = {
   nombre: FormControl<string>;
@@ -33,6 +34,9 @@ export class PuestoForm implements OnInit {
   // Referente a los diálogos
   readonly data = inject<PuestoGuardadoDTO>(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<PuestoForm>);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   private puestoDTO: PuestoGuardadoDTO = new PuestoGuardadoDTO('', '', '', 0, 0, 0, 0);
   isValidForm: boolean | null = null;
@@ -73,8 +77,10 @@ export class PuestoForm implements OnInit {
       const puestoResponse = await firstValueFrom(this.puestoService.create(this.puestoDTO));
       // Debug
       console.log(puestoResponse);
+      this.abrirDialogoMensaje("¡Puesto creado correctamente!");
     } catch (error: any) {
       console.log(error);
+      this.abrirDialogoMensaje("Ha ocurrido un error al crear el puesto.");
     }
 
     this.cerrarDialogo();
@@ -89,4 +95,16 @@ export class PuestoForm implements OnInit {
       this.dialogRef.close(false);
     }
   }
+
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.cerrarDialogo();
+    });
+  }
+
 }
