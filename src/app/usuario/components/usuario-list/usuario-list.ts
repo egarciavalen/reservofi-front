@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { LocalStorageService } from '../../../auth/services/local-storage-service';
 @Component({
   selector: 'app-usuario-list',
   imports: [MatTableModule, MatCheckboxModule, MatIconModule, MatButtonModule],
@@ -17,12 +18,17 @@ import { MessageDialog } from '../../../shared/components/dialogs/message-dialog
 export class UsuarioList implements OnInit {
 
   private readonly usuarioService = inject(UsuarioService);
+  private readonly localStorageService = inject(LocalStorageService);
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
 
   usuarioConsultaDTOList: WritableSignal<UsuarioConsultaDTO[]> = signal([]);
   columnsToDisplay = ['nombre', 'primerApellido', 'segundoApellido', 'correoCorporativo', 'activo', 'button'];
+
+  // Para determinar si el usuario es administrador y en función de eso limitar su acceso
+  administrador: WritableSignal<boolean> = signal(false);
+
 
   async ngOnInit() {
     this.cargarListaUsuarios();
@@ -34,39 +40,49 @@ export class UsuarioList implements OnInit {
   }
 
   async toggleActivo(usuario: UsuarioConsultaDTO) {
-    let message = "";
-    if (usuario.activo) {
-      message = "¡Usuario desactivado correctamente!";
-    } else {
-      message = "¡Usuario activado correctamente!";
-    }
 
-    try {
-      await firstValueFrom(this.usuarioService.toggleActivo(usuario.id));
-      this.abrirDialogoMensaje(message);   
-    } catch (error) {
-      // Debug
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+    if (usuario.id == this.localStorageService.get("idUsuario")) {
+      this.abrirDialogoMensaje("El sistema no permite que el administrador autenticado se quite el acceso al sistema a sí mismo. Si es necesario, por favor, entre con otra cuenta de administrador para hacer el cambio.");   
+    } else {
+    
+      let message = "";
+      if (usuario.activo) {
+        message = "¡Usuario desactivado correctamente!";
+      } else {
+        message = "¡Usuario activado correctamente!";
+      }
+
+      try {
+        await firstValueFrom(this.usuarioService.toggleActivo(usuario.id));
+        this.abrirDialogoMensaje(message);   
+      } catch (error) {
+        // Debug
+        console.log(error);
+        this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+      }
     }
   }
 
   async toggleAdmin(usuario: UsuarioConsultaDTO) {
-    
-    let message = "";
-    if (!this.isAdmin(usuario)) {
-      message = "¡Usuario promovido a administrador!";
-    } else {
-      message = "¡Usuario rebajado a empleado!";
-    }
 
-    try {
-      await firstValueFrom(this.usuarioService.toggleAdmin(usuario.id));
-      this.abrirDialogoMensaje(message);   
-    } catch (error) {
-      // Debug
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+    if (usuario.id == this.localStorageService.get("idUsuario")) {
+      this.abrirDialogoMensaje("El sistema no permite que el administrador autenticado se quite privilegios a sí mismo. Si es necesario, por favor, entre con otra cuenta de administrador para hacer el cambio.");   
+    } else {
+      let message = "";
+      if (!this.isAdmin(usuario)) {
+        message = "¡Usuario promovido a administrador!";
+      } else {
+        message = "¡Usuario rebajado a empleado!";
+      }
+
+      try {
+        await firstValueFrom(this.usuarioService.toggleAdmin(usuario.id));
+        this.abrirDialogoMensaje(message);   
+      } catch (error) {
+        // Debug
+        console.log(error);
+        this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+      }
     }
   }
 
