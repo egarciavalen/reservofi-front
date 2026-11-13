@@ -12,6 +12,7 @@ import { InputPassword } from '../../../shared/components/form-controls/input-pa
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { UsuarioService } from '../../../usuario/services/usuario-service';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -30,6 +31,7 @@ export class Login {
   // Inyección de dependencias
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly usuarioService = inject(UsuarioService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
 
@@ -104,10 +106,14 @@ export class Login {
       data: message,
     });
   
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (redirection) {
         // Opciones de menú para el usuario autenticado 
         Header.usuarioAutenticado.set(true);
+        // Opciones de menú para el usuario administrador
+        const admin = await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!))
+        Header.usuarioAdministrador.set(admin);
+
         // Redirección
         this.router.navigateByUrl('home');
       }

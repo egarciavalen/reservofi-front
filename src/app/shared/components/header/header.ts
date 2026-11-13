@@ -18,7 +18,10 @@ export class Header {
   // De forma estática para que puedan cambiarlo otros componentes
   // Esto cambiará con una implementación con Redux
   static usuarioAutenticado: WritableSignal<boolean> = signal(false);
+  static usuarioAdministrador: WritableSignal<boolean> = signal(false);
+
   autenticado = Header.usuarioAutenticado;
+  administrador = Header.usuarioAdministrador;
 
   home(): void {
     this.router.navigateByUrl('home');
