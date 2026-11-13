@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import { UsuarioRolConsultaDTO } from '../../models/usuario-rol-consulta.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 @Component({

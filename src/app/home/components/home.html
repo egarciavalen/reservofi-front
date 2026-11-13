@@ -1,4 +1,31 @@
 <div class="container" >
   <h2>Home</h2>
   <p>Sitio web desarrollado por Efrén García Valencia para la asignatura de Trabajo Fin de Máster del máster universitario en Desarrollo de Sitios y Aplicaciones Web.</p>
+
+  <div class="estadisticas">
+    <h3>Estadísticas del sistema</h3>
+
+    <!-- Uti-->
+    <!-- Número de salas -->
+    @defer {
+      <app-sala-data></app-sala-data>
+    } @placeholder {
+      <p class="statistics-block">Cargando información de las salas...</p>
+    }
+
+    <!-- Número de puestos -->
+    @defer (on viewport) {
+      <app-puesto-data></app-puesto-data>
+    } @placeholder {
+      <p class="statistics-block">Cargando información de los puestos...</p>
+    }
+
+    <!-- Número de reservas -->
+    @defer (on viewport) {
+      <app-reserva-data></app-reserva-data>
+    } @placeholder {
+      <p class="statistics-block">Cargando información de las reservas</p>
+    }
+
+  </div>
 </div>

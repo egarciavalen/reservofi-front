@@ -1,0 +1,76 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { ReservaService } from '../../../../reserva/services/reserva-service';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+
+@Component({
+  selector: 'app-reserva-data',
+  imports: [BaseChartDirective],
+  templateUrl: './reserva-data.html',
+  styleUrl: './reserva-data.scss',
+})
+export class ReservaData implements OnInit {
+
+  // Inyección de servicios
+  private readonly reservaService = inject(ReservaService);
+
+  // Propiedades del gráfico
+  type!: ChartType;
+  chartData!: ChartData;
+  chartOptions!: ChartOptions;
+
+  // Tiempo de espera
+  private waitTime: number = 2000;
+
+  // Información a mostrar
+  numeroReservas: number = 0;
+
+  ngOnInit(): void {
+
+    // Tiempo de espera hasta que se actualice la información del bloque
+    const start = Date.now();
+    while (Date.now() - start < this.waitTime) {}
+
+    // Obtener la información asociada al gráfico
+    this.reservaService.findAll().subscribe((reservas) => {
+      if (reservas != null) {
+        this.numeroReservas = reservas.length;
+      }
+      this.setChartProperties();
+    });
+  }
+
+  private setChartProperties(): void {
+
+    // Tipo de gráfico
+    this.type = 'bar';
+
+    // Datos del gráfico
+    this.chartData = {
+      labels: ['Reservas'],
+      datasets: [
+        {
+          label: 'Reservas de la oficina',
+          data: [this.numeroReservas],
+          backgroundColor: ['#810081'],
+        },
+      ],
+    };
+
+    // Opciones adicionales
+    this.chartOptions = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Número de reservas',
+        },
+      },
+    };
+  }
+
+ 
+}

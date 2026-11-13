@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { PuestoForm } from '../../../puesto/components/puesto-form/puesto-form';
 import { PuestoGuardadoDTO } from '../../../puesto/models/puesto-guardado.dto';
@@ -27,7 +26,6 @@ export class MapaVisor implements OnInit {
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
-
 
   // Propiedades
 
