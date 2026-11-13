@@ -89,17 +89,17 @@ export class Login {
       this.localStorageService.set('idUsuario', loginResponse.idUsuario);
       this.localStorageService.set('token', loginResponse.token);
 
-      this.abrirDialogo("¡Inicio de sesión correcto!", true);
+      this.abrirDialogoMensaje("¡Inicio de sesión correcto!", true);
 
 
     } catch (error: any) {
       console.log(error);
-      this.abrirDialogo("Ha ocurrido un error iniciando sesión.", false);
+      this.abrirDialogoMensaje("Ha ocurrido un error iniciando sesión.", false);
     }
   }
 
 
-  abrirDialogo(message: string, redirection: boolean): void {
+  abrirDialogoMensaje(message: string, redirection: boolean): void {
     const dialogRef = this.dialog.open(MessageDialog, {
       data: message,
     });

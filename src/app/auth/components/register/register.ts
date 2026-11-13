@@ -168,24 +168,24 @@ export class Register {
       // Debug
       console.log(registerResponse);
 
-      this.abrirDialogo("¡Usuario creado correctamente!", true);
+      this.abrirDialogoMensaje("¡Usuario creado correctamente!", true);
 
     } catch (error: any) {
       console.log(error);
-      this.abrirDialogo("Ha ocurrido un error guardando el usuario.", false);
+      this.abrirDialogoMensaje("Ha ocurrido un error guardando el usuario.", false);
     }
   }
 
 
-    abrirDialogo(message: string, redirection: boolean): void {
-      const dialogRef = this.dialog.open(MessageDialog, {
-        data: message,
-      });
+  abrirDialogoMensaje(message: string, redirection: boolean): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
   
-      dialogRef.afterClosed().subscribe((result) => {
-        if (redirection) {
-          this.router.navigateByUrl('login');
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe((result) => {
+      if (redirection) {
+        this.router.navigateByUrl('login');
+      }
+    });
+  }
 }

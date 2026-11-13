@@ -14,6 +14,9 @@ import { SalaService } from '../../services/sala-service';
 import { InputText } from '../../../shared/components/form-controls/input-text/input-text';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 
 type SalaFormModel = {
   nombre: FormControl<string>;
@@ -31,6 +34,9 @@ export class SalaForm implements OnInit {
   private readonly salaService = inject(SalaService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
+
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
 
   private readonly salaGuardadoDTO: SalaGuardadoDTO = new SalaGuardadoDTO('', null);
   isValidForm: boolean | null = null;
@@ -77,6 +83,17 @@ export class SalaForm implements OnInit {
     }
   }
 
+  mostrarNombreFichero(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file: File | undefined = input.files?.[0];
+
+    if (file) {
+      this.nombreImagen = file.name; // Marcar el nombre del fichero para aportar feedback
+      this.imagen.setValue(file); // Desde formControl da problemas; se guarda el fichero en el evento
+    }
+  }
+
+
   async guardar(): Promise<void> {
     // Validación de los campos
     this.isValidForm = false;
@@ -94,8 +111,10 @@ export class SalaForm implements OnInit {
         const salaResponse = await firstValueFrom(this.salaService.update(this.idSala, formData));
         // Debug
         console.log(salaResponse);
+        this.abrirDialogoMensaje("¡Sala actualizada correctamente!", true);
       } catch (error: any) {
         console.log(error);
+        this.abrirDialogoMensaje("Ha ocurrido un error creando la sala.", false);
       }
     } else {
       // Creación
@@ -103,32 +122,46 @@ export class SalaForm implements OnInit {
         const salaResponse = await firstValueFrom(this.salaService.create(formData));
         // Debug
         console.log(salaResponse);
+        this.abrirDialogoMensaje("¡Sala creada correctamente!", true);
       } catch (error: any) {
         console.log(error);
+        this.abrirDialogoMensaje("Ha ocurrido un error actualizando la sala.", false);
       }
-    }
-
-    // Regreso al listado de salas
-    this.router.navigateByUrl('sala/list');
-  }
-
-  mostrarNombreFichero(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file: File | undefined = input.files?.[0];
-
-    if (file) {
-      this.nombreImagen = file.name; // Marcar el nombre del fichero para aportar feedback
-      this.imagen.setValue(file); // Desde formControl da problemas; se guarda el fichero en el evento
     }
   }
 
   async borrarSala(): Promise<void> {
-    if (this.idSala) {
-      await firstValueFrom(this.salaService.delete(this.idSala));
-      // Debug
-      console.log('Sala borrada!');
-      this.router.navigateByUrl('/sala/list');
-    }
+    // El resultado del mensaje de aviso determina la acción a realizar
+    this.abrirDialogoAviso("¿Seguro que desea borrar la sala? Se eliminarán los puestos y reservas asignados.");
+  }
+
+  abrirDialogoMensaje(message: string, redirection: boolean): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (redirection) {
+        this.router.navigateByUrl('sala/list');
+      }
+    });
+  }
+
+  async abrirDialogoAviso(message: string) {
+    const dialogRef = this.dialog.open(ChooseDialog, {
+      data: message,
+    });
+  
+
+  dialogRef.afterClosed().subscribe(async (result) => {
+      // En el caso que se tenga un resultado con éxito y se haya seleccionado un ID
+      if (result && this.idSala) {
+        await firstValueFrom(this.salaService.delete(this.idSala));
+        // Debug
+        console.log('Sala borrada!');
+        this.router.navigateByUrl('/sala/list');
+      }  
+    });
   }
 
   private getFormData(): FormData {
@@ -145,4 +178,5 @@ export class SalaForm implements OnInit {
     }
     return formData;
   }
+
 }
