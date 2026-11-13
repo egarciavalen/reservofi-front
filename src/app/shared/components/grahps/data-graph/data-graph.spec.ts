@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReservaData } from './reserva-data';
+import { DataGraph } from './data-graph';
 
-describe('ReservaData', () => {
-  let component: ReservaData;
-  let fixture: ComponentFixture<ReservaData>;
+describe('DataGraph', () => {
+  let component: DataGraph;
+  let fixture: ComponentFixture<DataGraph>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReservaData],
+      imports: [DataGraph],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReservaData);
+    fixture = TestBed.createComponent(DataGraph);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

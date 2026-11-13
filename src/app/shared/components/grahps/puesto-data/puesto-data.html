@@ -1,9 +1,0 @@
-@defer (on viewport) {
-    @if(graficoActualizado()) {
-      <div class="grafico">
-        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]=type></canvas>
-      </div>
-  }
-} @placeholder {
-  <p>Cargando información de los puestos...</p>
-}

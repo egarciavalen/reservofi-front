@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { SalaData } from '../../shared/components/grahps/sala-data/sala-data';
-import { PuestoData } from '../../shared/components/grahps/puesto-data/puesto-data';
-import { ReservaData } from '../../shared/components/grahps/reserva-data/reserva-data';
+import { Component } from '@angular/core';
+import { DataGraph } from '../../shared/components/grahps/data-graph/data-graph';
 
 @Component({
   selector: 'app-home',
-  imports: [SalaData, PuestoData, ReservaData],
+  imports: [DataGraph],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
