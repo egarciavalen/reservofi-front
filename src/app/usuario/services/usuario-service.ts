@@ -34,4 +34,8 @@ export class UsuarioService {
     // Únicamente se modifica un campo: el rol de admin
     return this.http.post<UsuarioConsultaDTO>(this.urlApi + '/usuario/' + idUsuario + '/toggleAdmin', null);
   }
+
+  checkAdmin(idUsuario: string): Observable<boolean> {
+    return this.http.get<boolean>(this.urlApi + '/usuario/' + idUsuario + '/checkAdmin');
+  }
 }

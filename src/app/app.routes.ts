@@ -12,6 +12,7 @@ import { ReservaList } from './reserva/components/reserva-list/reserva-list';
 import { Profile } from './usuario/components/profile/profile';
 import { PuestoList } from './puesto/components/puesto-list/puesto-list';
 import { UsuarioList } from './usuario/components/usuario-list/usuario-list';
+import { adminGuard } from './shared/guards/admin-guard';
 
 export const routes: Routes = [
   {
@@ -33,17 +34,17 @@ export const routes: Routes = [
   {
     path: 'sala/form',
     component: SalaForm,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'sala/form/:id',
     component: SalaForm,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'sala/list',
     component: SalaList,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'mapa/visor',
@@ -58,7 +59,7 @@ export const routes: Routes = [
   {
     path: 'puesto/list',
     component: PuestoList,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'reserva/form',
@@ -83,6 +84,6 @@ export const routes: Routes = [
   {
     path: 'usuario/list',
     component: UsuarioList,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
 ];
