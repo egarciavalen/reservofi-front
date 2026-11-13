@@ -12,6 +12,8 @@ import { MapaPuntoDTO } from '../../models/mapa-punto';
 import { MapaDTO } from '../../models/mapa.dto';
 import { PuestoConsultaDTO } from '../../../puesto/models/puesto-consulta.dto';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { UsuarioService } from '../../../usuario/services/usuario-service';
+import { LocalStorageService } from '../../../auth/services/local-storage-service';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -20,9 +22,12 @@ import { MessageDialog } from '../../../shared/components/dialogs/message-dialog
   styleUrl: './mapa-visor.scss',
 })
 export class MapaVisor implements OnInit {
-  // Recuperación de las salas asociadas
+
+  // Inyección de servicios
   private readonly salaService = inject(SalaService);
   private readonly puestoService = inject(PuestoService);
+  private readonly usuarioService = inject(UsuarioService);
+  private readonly localStorageService = inject(LocalStorageService);
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
@@ -44,10 +49,23 @@ export class MapaVisor implements OnInit {
   ratonPulsado: boolean = false;
   modoEdicion: boolean = false;
 
+  // Para determinar si el usuario es administrador y en función de eso limitar su acceso
+  administrador: WritableSignal<boolean> = signal(false);
+
 
   ngOnInit(): void {
+    this.cargarAdministrador();
     this.cargarSalas();
     this.cargarPuestos();
+  }
+
+  private async cargarAdministrador() {
+    try {
+      this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
+    } catch (error) {
+      // DEBUG
+     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+    }
   }
 
   private async cargarSalas(): Promise<void> {

@@ -42,14 +42,16 @@
         </div>
 
 
-        <div class="btn-container">
-          <!-- Botón para establecer el modo edición -->
-          @if(!modoEdicion) {
-            <button matButton class="btn-no-edition" (click)="alternarModoEdicion()">Entrar en el modo edición</button>
-          } @else if (modoEdicion) {
-            <button matButton class="btn-edition" (click)="alternarModoEdicion()">Salir del modo edición</button>  
-          }
-        </div>
+        @if(administrador()) {
+          <div class="btn-container">
+            <!-- Botón para establecer el modo edición -->
+            @if(!modoEdicion) {
+              <button matButton class="btn-no-edition" (click)="alternarModoEdicion()">Entrar en el modo edición</button>
+            } @else if (modoEdicion) {
+              <button matButton class="btn-edition" (click)="alternarModoEdicion()">Salir del modo edición</button>  
+            }
+          </div>
+        }
       }
     </div>
   </div>

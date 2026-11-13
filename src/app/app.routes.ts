@@ -54,7 +54,7 @@ export const routes: Routes = [
   {
     path: 'puesto/form',
     component: PuestoForm,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'puesto/list',
