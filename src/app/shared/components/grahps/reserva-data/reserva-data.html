@@ -1,4 +1,10 @@
-<div class="grafico">
-  <p>Número de reservas</p>
-  <canvas baseChart [data]="chartData" [options]="chartOptions" [type]=type></canvas>
-</div>
+@defer (on viewport) {
+    @if(graficoActualizado()) {
+      <div class="grafico">
+        <p>Número de reservas</p>
+        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]=type></canvas>
+      </div>
+  }
+} @placeholder {
+  <p>Cargando información de los puestos...</p>
+}

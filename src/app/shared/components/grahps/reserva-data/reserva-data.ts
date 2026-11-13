@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ReservaService } from '../../../../reserva/services/reserva-service';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -19,24 +19,20 @@ export class ReservaData implements OnInit {
   chartData!: ChartData;
   chartOptions!: ChartOptions;
 
-  // Tiempo de espera
-  private waitTime: number = 2000;
-
   // Información a mostrar
   numeroReservas: number = 0;
 
+  // Para indicarle a defer si la información ha sido procesada
+  graficoActualizado:WritableSignal<boolean> = signal(false);
+
   ngOnInit(): void {
-
-    // Tiempo de espera hasta que se actualice la información del bloque
-    const start = Date.now();
-    while (Date.now() - start < this.waitTime) {}
-
     // Obtener la información asociada al gráfico
     this.reservaService.findAll().subscribe((reservas) => {
       if (reservas != null) {
         this.numeroReservas = reservas.length;
       }
       this.setChartProperties();
+      this.graficoActualizado.set(true);
     });
   }
 

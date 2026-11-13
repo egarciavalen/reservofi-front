@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { SalaService } from '../../../../sala/services/sala-service';
 import { BaseChartDirective } from 'ng2-charts';
@@ -18,18 +18,14 @@ export class SalaData implements OnInit {
   type!: ChartType;
   chartData!: ChartData;
   chartOptions!: ChartOptions;
-
-  // Tiempo de espera
-  private waitTime: number = 2000;
-
+  
   // Información a mostrar
   numeroSalas: number = 0;
 
-  ngOnInit(): void {
+  // Para indicarle a defer si la información ha sido procesada
+  graficoActualizado:WritableSignal<boolean> = signal(false);
 
-    // Tiempo de espera hasta que se actualice la información del bloque
-    const start = Date.now();
-    while (Date.now() - start < this.waitTime) {}
+  ngOnInit(): void {
 
     // Obtener la información asociada al gráfico
     this.salaService.findAll().subscribe((salas) => {
@@ -37,6 +33,7 @@ export class SalaData implements OnInit {
         this.numeroSalas = salas.length;
       }
       this.setChartProperties();
+      this.graficoActualizado.set(true);
     });
   }
 

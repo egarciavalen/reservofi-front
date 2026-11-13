@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { PuestoService } from '../../../../puesto/services/puesto-service';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
@@ -19,17 +19,13 @@ export class PuestoData implements OnInit{
   chartData!: ChartData;
   chartOptions!: ChartOptions;
 
-  // Tiempo de espera
-  private waitTime: number = 2000;
-
   // Información a mostrar
   numeroPuestos: number = 0;
 
-  ngOnInit(): void {
+  // Para indicarle a defer si la información ha sido procesada
+  graficoActualizado:WritableSignal<boolean> = signal(false);
 
-    // Tiempo de espera hasta que se actualice la información del bloque
-    const start = Date.now();
-    while (Date.now() - start < this.waitTime) {}
+  ngOnInit(): void {
 
     // Obtener la información asociada al gráfico
     this.puestoService.findAll().subscribe((puestos) => {
@@ -37,6 +33,7 @@ export class PuestoData implements OnInit{
         this.numeroPuestos = puestos.length;
       }
       this.setChartProperties();
+      this.graficoActualizado.set(true);
     });
   }
 
@@ -47,7 +44,7 @@ export class PuestoData implements OnInit{
 
     // Datos del gráfico
     this.chartData = {
-      labels: ['Reservas'],
+      labels: ['Puestos'],
       datasets: [
         {
           label: 'Puestos de la oficina',
