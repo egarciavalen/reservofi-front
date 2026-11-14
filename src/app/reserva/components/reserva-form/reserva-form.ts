@@ -20,15 +20,18 @@ import { UsuarioService } from '../../../usuario/services/usuario-service';
 import { MatInputModule } from '@angular/material/input';
 import { UsuarioConsultaDTO } from '../../../usuario/models/usuario-consulta.dto';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { InputDateTime } from '../../../shared/components/form-controls/input-date-time/input-date-time';
 
 type ReservaFormModel = {
-  fechaInicio: FormControl<string>;
-  fechaFin: FormControl<string>;
+  fechaInicio: FormControl<Date>;
+  horaInicio: FormControl<Date>;
+  fechaFin: FormControl<Date>;
+  horaFin: FormControl<Date>;
   correoCorporativo: FormControl<string>;
 };
 @Component({
   selector: 'app-reserva-form',
-  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, InputDate, MatButtonModule, MatInputModule, ReactiveFormsModule, MatAutocompleteModule],
+  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, InputDate, MatButtonModule, MatInputModule, ReactiveFormsModule, MatAutocompleteModule, InputDateTime],
   templateUrl: './reserva-form.html',
   styleUrl: './reserva-form.scss',
 })
@@ -55,12 +58,22 @@ export class ReservaForm implements OnInit {
   readonly data = inject<string>(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<ReservaForm>);
 
-  fechaInicio = new FormControl(formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'en'), {
+  fechaInicio = new FormControl(new Date(), {
     nonNullable: true,
     validators: [Validators.required],
   });
 
-  fechaFin = new FormControl(formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'en'), {
+  horaInicio = new FormControl(new Date(), {
+    nonNullable: true,
+    validators: [Validators.required],
+  });
+
+  fechaFin = new FormControl(new Date(), {
+    nonNullable: true,
+    validators: [Validators.required],
+  });
+
+  horaFin = new FormControl(new Date(), {
     nonNullable: true,
     validators: [Validators.required],
   });
@@ -72,7 +85,9 @@ export class ReservaForm implements OnInit {
 
   readonly reservaForm: FormGroup<ReservaFormModel> = this.formBuilder.group({
     fechaInicio: this.fechaInicio,
+    horaInicio: this.horaInicio,
     fechaFin: this.fechaFin,
+    horaFin: this.horaFin,
     correoCorporativo: this.correoCorporativo
   });
 
@@ -100,9 +115,17 @@ export class ReservaForm implements OnInit {
     }
     this.isValidForm = true;
 
-    const { fechaInicio, fechaFin, correoCorporativo } = this.reservaForm.getRawValue();
-    this.reservaDTO.fechaInicio = fechaInicio;
-    this.reservaDTO.fechaFin = fechaFin;
+    const { fechaInicio, horaInicio, fechaFin, horaFin, correoCorporativo } = this.reservaForm.getRawValue();
+
+    // Guardar el formato de las fechas
+    fechaInicio.setHours(horaInicio.getHours());
+    fechaFin.setHours(horaFin.getHours());
+
+    console.log(fechaInicio);
+    console.log(fechaFin);
+
+    this.reservaDTO.fechaInicio = formatDate(fechaInicio, 'yyyy-MM-ddTHH:mm', 'en');
+    this.reservaDTO.fechaFin = formatDate(fechaFin, 'yyyy-MM-ddTHH:mm', 'en');
 
     const usuarioReservado = this.usuarioConsultaDTOList().find(usuario => usuario.correoCorporativo == correoCorporativo);
     this.reservaDTO.idUsuario = usuarioReservado!.id;
@@ -137,7 +160,6 @@ export class ReservaForm implements OnInit {
       this.cerrarDialogo();
     });
   }
-
 
   // Gestión adicional de los usuarios
 

@@ -7,27 +7,47 @@
     <form [formGroup]="reservaForm" (ngSubmit)="guardar()">
 
       <!-- Fecha de inicio -->
-      <section>
-        <app-input-date
-          label="Fecha de inicio"
-          [control]="fechaInicio"
-          errorMessage="La fecha de inicio no es válida"
-        ></app-input-date>
-      </section>
+       <div class="fechas">
+        <section>
+          <app-input-date
+            label="Fecha de inicio"
+            [control]="fechaInicio"
+            errorMessage="La fecha de inicio no es válida"
+          ></app-input-date>
+        </section>
 
-        <!-- Fecha de fin -->
-      <section>
-        <app-input-date
-          label="Fecha de fin"
-          [control]="fechaFin"
-          errorMessage="La fecha de fin no es válida"
-        ></app-input-date>
-      </section>
+        <section>
+          <app-input-date-time
+            label="Hora de inicio"
+            [control]="horaInicio"
+            errorMessage="La hora de inicio no es válida"
+          ></app-input-date-time>
+        </section>
+      </div>
+
+      <!-- Fecha de fin -->
+      <div class="fechas">
+        <section>
+          <app-input-date
+            label="Fecha de fin"
+            [control]="fechaFin"
+            errorMessage="La fecha de fin no es válida"
+          ></app-input-date>
+        </section>
+
+        <section>
+          <app-input-date-time
+            label="Hora de fin"
+            [control]="horaFin"
+            errorMessage="La hora de fin no es válida"
+          ></app-input-date-time>
+        </section>
+      </div>
 
       @if (administrador()) {
         <!-- Los administradores tendrán un campo adicional en el que indicar el usuario que va a reservar -->
         <mat-form-field appearance="fill">
-          <mat-label>Usuario:</mat-label>
+          <mat-label>Usuario: </mat-label>
           <input matInput [formControl]="correoCorporativo" placeholder="ejemplo@gmail.com" aria-label="Usuario" [matAutocomplete]="auto"/>
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               @for (usuario of usuariosFiltrados(); track usuario) {

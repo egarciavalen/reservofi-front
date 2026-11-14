@@ -1,0 +1,20 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{ label }}: </mat-label>
+  <input
+    matInput
+    [matTimepicker]="timepicker"
+    [formControl]="control"
+    [placeholder]="placeholder || ''"
+  />
+
+  <!-- timepicker para las horas -->
+  <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+  <mat-timepicker #timepicker/>
+
+  @if (control.invalid && (control.dirty || control.touched)) {
+    <mat-error>
+        {{ errorMessageToShow || errorMessage }}
+    </mat-error>
+  }
+
+</mat-form-field>

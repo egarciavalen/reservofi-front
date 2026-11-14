@@ -5,7 +5,7 @@ import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-input-date',
-  imports: [MatInputModule, ReactiveFormsModule, MatDatepickerModule],
+  imports: [ReactiveFormsModule, MatInputModule, MatDatepickerModule],
   templateUrl: './input-date.html',
   styleUrl: './input-date.scss',
 })
