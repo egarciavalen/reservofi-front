@@ -96,7 +96,7 @@ export class Login {
 
     } catch (error: any) {
       console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error iniciando sesión.", false);
+      this.abrirDialogoMensaje("Ha ocurrido un error iniciando sesión. Por favor, revise que sus credenciales sean correctas o que su usuario esté activo en el sistema.", false);
     }
   }
 
@@ -115,7 +115,7 @@ export class Login {
         Header.usuarioAdministrador.set(admin);
 
         // Redirección
-        this.router.navigateByUrl('home');
+        this.router.navigateByUrl('mapa');
       }
     });
   }

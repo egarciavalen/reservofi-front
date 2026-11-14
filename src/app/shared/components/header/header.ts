@@ -36,7 +36,7 @@ export class Header {
   }
 
   map(): void {
-    this.router.navigateByUrl('mapa/visor');
+    this.router.navigateByUrl('mapa');
   }
 
   salaList(): void {

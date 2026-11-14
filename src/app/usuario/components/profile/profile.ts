@@ -188,7 +188,7 @@ export class Profile implements OnInit {
     });
   
     dialogRef.afterClosed().subscribe((result) => {
-      this.router.navigateByUrl('mapa/visor');
+      this.router.navigateByUrl('mapa');
     });
   }
 }

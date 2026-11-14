@@ -47,7 +47,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   {
-    path: 'mapa/visor',
+    path: 'mapa',
     component: MapaVisor,
     canActivate: [authGuard],
   },
