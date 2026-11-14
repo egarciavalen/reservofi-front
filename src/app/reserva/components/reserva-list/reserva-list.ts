@@ -15,6 +15,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-reserva-list',
@@ -40,8 +41,6 @@ export class ReservaList {
   reservaConsultaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
   // Lista de reservas a mostrar al usuario
   reservaVistaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
-
-  private readonly urlImages = "http://localhost:3000/";
 
   // Para el filtrado en función del correo corporativo
   readonly searchValue = new FormControl("");
@@ -98,7 +97,7 @@ export class ReservaList {
 
   private actualizarRutasSalas(): void {
     for (const reserva of this.reservaConsultaDTOList()) {
-      reserva.rutaImagen = this.urlImages + reserva.rutaImagen;
+      reserva.rutaImagen = environment.url + reserva.rutaImagen;
     }
   }
 

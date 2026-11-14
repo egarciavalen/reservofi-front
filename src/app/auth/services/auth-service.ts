@@ -5,7 +5,7 @@ import { LoginRequestDTO } from '../models/login-request.dto';
 import { LoginResponseDTO } from '../models/login-response.dto';
 import { RegistroRequestDTO } from '../models/registro-request';
 import { RegistroResponseDTO } from '../models/registro-response';
-
+import { environment } from '../../../environment/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +13,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api/auth';
-  private readonly urlApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = environment.url + `${this.controller}`;
 
   // Registro del usuario
   register(register: RegistroRequestDTO): Observable<RegistroResponseDTO> {

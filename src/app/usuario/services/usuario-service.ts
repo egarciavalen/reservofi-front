@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioConsultaDTO } from '../models/usuario-consulta.dto';
 import { UsuarioGuardadoDTO } from '../models/usuario-guardado.dto';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class UsuarioService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = environment.url + `${this.controller}`;
 
   findAll(): Observable<UsuarioConsultaDTO[]> {
     return this.http.get<UsuarioConsultaDTO[]>(this.urlApi + '/usuario');

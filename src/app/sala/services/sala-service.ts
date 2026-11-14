@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SalaConsultaDTO } from '../models/sala-consulta.dto';
 import { SalaGuardadoDTO } from '../models/sala-guardado.dto';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class SalaService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = environment.url + `${this.controller}`;
 
   create(sala: FormData): Observable<SalaConsultaDTO> {
     return this.http.post<SalaConsultaDTO>(this.urlApi + '/sala', sala);

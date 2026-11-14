@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-puesto-list',
@@ -36,9 +37,6 @@ export class PuestoList {
   // Para el filtrado en función de la sala
   readonly searchValue = new FormControl("");
 
-
-  private readonly urlImages = "http://localhost:3000/";
-
   ngOnInit(): void {
     this.cargarPuestos();
 
@@ -62,7 +60,7 @@ export class PuestoList {
 
   private actualizarRutasSalas(): void {
     for (const puesto of this.puestoConsultaDTOList()) {
-      puesto.rutaImagen = this.urlImages + puesto.rutaImagen;
+      puesto.rutaImagen = environment.url+ puesto.rutaImagen;
     }
   }
 

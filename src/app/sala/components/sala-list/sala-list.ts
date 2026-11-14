@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-sala-list',
@@ -30,8 +31,6 @@ export class SalaList implements OnInit {
 
   // Para el filtrado en función de la sala
   readonly searchValue = new FormControl("");
-
-  private readonly urlImages = 'http://localhost:3000/';
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
@@ -57,7 +56,7 @@ export class SalaList implements OnInit {
 
   private actualizarRutasSalas(): void {
     for (const sala of this.salaConsultaDTOList()) {
-      sala.rutaImagen = this.urlImages + sala.rutaImagen;
+      sala.rutaImagen = environment.url + sala.rutaImagen;
     }
   }
 

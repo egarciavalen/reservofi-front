@@ -15,6 +15,7 @@ import { MessageDialog } from '../../../shared/components/dialogs/message-dialog
 import { UsuarioService } from '../../../usuario/services/usuario-service';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -97,8 +98,7 @@ export class MapaVisor implements OnInit {
       this.abrirDialogoMensaje("Hubo un error interno al seleccionar la sala"); 
     } else {
       this.mapaDTO.idSala = salaDTO.id;
-      // Cambiar localhost al actualizar a servidor en producción
-      this.mapaDTO.rutaImagenSala = 'http://localhost:3000/' + salaDTO.rutaImagen;
+      this.mapaDTO.rutaImagenSala = environment.url + salaDTO.rutaImagen;
       // Actualiza los puestos actuales a mostrar
       this.actualizarPuestosSala();
     }

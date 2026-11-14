@@ -18,6 +18,7 @@ import { MessageDialog } from '../../../shared/components/dialogs/message-dialog
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../../environment/environment';
 
 type SalaFormModel = {
   nombre: FormControl<string>;
@@ -78,7 +79,7 @@ export class SalaForm implements OnInit {
       this.salaForm.controls.nombre.setValue(salaCreada.nombre);
       this.nombreImagen = salaCreada.nombreImagen;
       // TODO: CAMBIAR POR PARÁMETRO CUANDO NO ESTÉS EN LOCAL
-      this.rutaMostrarImagen = "http://localhost:3000/" + salaCreada.rutaImagen;
+      this.rutaMostrarImagen = environment.url + salaCreada.rutaImagen;
     }
   }
 

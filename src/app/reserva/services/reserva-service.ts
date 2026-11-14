@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReservaConsultaDTO } from '../models/reserva-consulta.dto';
 import { ReservaGuardadoDTO } from '../models/reserva-guardado.dto';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class ReservaService {
   private readonly http = inject(HttpClient);
 
   private readonly controller = 'api';
-  private readonly urlApi = `http://localhost:3000/${this.controller}`;
+  private readonly urlApi = environment.url + `${this.controller}`;
 
   create(reserva: ReservaGuardadoDTO): Observable<ReservaConsultaDTO> {
     return this.http.post<ReservaConsultaDTO>(this.urlApi + '/reserva', reserva);
