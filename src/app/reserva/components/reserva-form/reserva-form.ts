@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -16,14 +16,19 @@ import { InputDate } from '../../../shared/components/form-controls/input-date/i
 import { ReservaGuardadoDTO } from '../../models/reserva-guardado.dto';
 import { ReservaService } from '../../services/reserva-service';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { UsuarioService } from '../../../usuario/services/usuario-service';
+import { MatInputModule } from '@angular/material/input';
+import { UsuarioConsultaDTO } from '../../../usuario/models/usuario-consulta.dto';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 type ReservaFormModel = {
   fechaInicio: FormControl<string>;
   fechaFin: FormControl<string>;
+  correoCorporativo: FormControl<string>;
 };
 @Component({
   selector: 'app-reserva-form',
-  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, InputDate, MatButtonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, InputDate, MatButtonModule, MatInputModule, ReactiveFormsModule, MatAutocompleteModule],
   templateUrl: './reserva-form.html',
   styleUrl: './reserva-form.scss',
 })
@@ -32,13 +37,19 @@ export class ReservaForm implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly reservaService = inject(ReservaService);
   private readonly localStorageService = inject(LocalStorageService);
-  private readonly router = inject(Router);
+  private readonly usuarioService = inject(UsuarioService);
+
+  // Determina si el formulario tendrá campos adicionales
+  administrador: WritableSignal<boolean> = signal(false);
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
 
   private readonly reservaDTO: ReservaGuardadoDTO = new ReservaGuardadoDTO('', '', '', '', '');
   isValidForm: boolean | null = null;
+
+  // Lista de usuarios en el sistema
+  usuarioConsultaDTOList: WritableSignal<UsuarioConsultaDTO[]> = signal([]);
 
   // Referente a los diálogos
   readonly data = inject<string>(MAT_DIALOG_DATA);
@@ -54,23 +65,31 @@ export class ReservaForm implements OnInit {
     validators: [Validators.required],
   });
 
+  correoCorporativo = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.email],
+  });
+
   readonly reservaForm: FormGroup<ReservaFormModel> = this.formBuilder.group({
     fechaInicio: this.fechaInicio,
     fechaFin: this.fechaFin,
+    correoCorporativo: this.correoCorporativo
   });
 
   async ngOnInit(): Promise<void> {
+    // Cargar lista de usuarios en el sistema
+    this.cargarListaUsuarios();
+
+    // Gestión del administrador
+    try {
+      this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
+    } catch (error) {
+      // DEBUG
+     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+    }
+
     // Recuperación del identificador de la sala
     this.reservaDTO.idPuesto = this.data;
-
-    // Recuperación del identificador del usuario
-    const idUsuario = this.localStorageService.get('idUsuario');
-    if (idUsuario) {
-      this.reservaDTO.idUsuario = idUsuario;
-    } else {
-      // Debug
-      console.log('ERROR AL RECUPERAR EL USUARIO');
-    }
   }
 
   async guardar(): Promise<void> {
@@ -81,16 +100,21 @@ export class ReservaForm implements OnInit {
     }
     this.isValidForm = true;
 
-    const { fechaInicio, fechaFin } = this.reservaForm.getRawValue();
+    const { fechaInicio, fechaFin, correoCorporativo } = this.reservaForm.getRawValue();
     this.reservaDTO.fechaInicio = fechaInicio;
     this.reservaDTO.fechaFin = fechaFin;
 
+    const usuarioReservado = this.usuarioConsultaDTOList().find(usuario => usuario.correoCorporativo == correoCorporativo);
+    this.reservaDTO.idUsuario = usuarioReservado!.id;
+
+    // DEBUG
     console.log(this.reservaDTO);
+
     try {
       const reservaResponse = await firstValueFrom(this.reservaService.create(this.reservaDTO));
       // Debug
       console.log(reservaResponse);
-      this.abrirDialogoMensaje("Reserva creada correctamente!");
+      this.abrirDialogoMensaje("¡Reserva creada correctamente!");
 
     } catch (error: any) {
       console.log(error);
@@ -104,7 +128,6 @@ export class ReservaForm implements OnInit {
     this.dialogRef.close();
   }
 
-
   abrirDialogoMensaje(message: string): void {
     const dialogRef = this.dialog.open(MessageDialog, {
       data: message,
@@ -114,4 +137,29 @@ export class ReservaForm implements OnInit {
       this.cerrarDialogo();
     });
   }
+
+
+  // Gestión adicional de los usuarios
+
+  private async cargarListaUsuarios() {
+    const usuarios = await firstValueFrom(this.usuarioService.findAll());
+    this.usuarioConsultaDTOList.set(usuarios.sort((a, b) => a.nombre.localeCompare(b.nombre))); 
+
+    // Recuperación y gestión del identificador del usuario
+    const idUsuario = this.localStorageService.get('idUsuario');
+    // Si NO es el administrador y tiene ID de usuario
+    if (idUsuario && !this.administrador()) {
+        const usuario = this.usuarioConsultaDTOList().find(usuario => usuario.id == idUsuario);
+        this.correoCorporativo.setValue(usuario!.correoCorporativo);
+    } else {
+      // Debug
+      console.log('ERROR AL RECUPERAR EL USUARIO');
+    }
+  }
+
+  protected usuariosFiltrados = computed<UsuarioConsultaDTO[]>(() => {
+    const value = this.correoCorporativo.value;
+    return this.usuarioConsultaDTOList().filter(usuario => usuario.correoCorporativo.toLowerCase().includes(value));
+  });
+
 }

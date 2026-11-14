@@ -15,7 +15,6 @@ export class Home implements OnInit {
   private readonly localStorageService = inject(LocalStorageService);
   private readonly usuarioService = inject(UsuarioService);
 
-  // La lógica interna de cada gráfico se gestiona en su propio componente
   administrador: WritableSignal<boolean> = signal(false);
 
   async ngOnInit(): Promise<void> {

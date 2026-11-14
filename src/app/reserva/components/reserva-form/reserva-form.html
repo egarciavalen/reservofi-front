@@ -16,13 +16,31 @@
       </section>
 
         <!-- Fecha de fin -->
-        <section>
+      <section>
         <app-input-date
           label="Fecha de fin"
           [control]="fechaFin"
           errorMessage="La fecha de fin no es válida"
         ></app-input-date>
       </section>
+
+      @if (administrador()) {
+        <!-- Los administradores tendrán un campo adicional en el que indicar el usuario que va a reservar -->
+        <mat-form-field appearance="fill">
+          <mat-label>Usuario:</mat-label>
+          <input matInput [formControl]="correoCorporativo" placeholder="ejemplo@gmail.com" aria-label="Usuario" [matAutocomplete]="auto"/>
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              @for (usuario of usuariosFiltrados(); track usuario) {
+                <mat-option [value]="usuario.correoCorporativo">{{usuario.correoCorporativo}}</mat-option>
+              }
+            </mat-autocomplete>
+          @if (correoCorporativo.invalid && (correoCorporativo.dirty || correoCorporativo.touched) && correoCorporativo.hasError('required')) {
+            <mat-error>
+                Es obligatorio indicar el usuario al que reservar
+            </mat-error>
+          }
+        </mat-form-field>
+      }
 
       <div class="btn-form">
         <button matButton type="submit">Guardar</button>
