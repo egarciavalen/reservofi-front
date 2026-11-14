@@ -10,10 +10,13 @@ import { ReservaConsultaDTO } from '../../models/reserva-consulta.dto';
 import { ReservaService } from '../../services/reserva-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
+import { UsuarioService } from '../../../usuario/services/usuario-service';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-reserva-list',
-  imports: [FormatDatePipe, MatIconModule, MatCardModule, MatButtonModule],
+  imports: [FormatDatePipe, MatIconModule, MatCardModule, MatButtonModule, ReactiveFormsModule, MatInputModule],
   templateUrl: './reserva-list.html',
   styleUrl: './reserva-list.scss',
 })
@@ -22,37 +25,75 @@ export class ReservaList {
   private readonly router = inject(Router);
   private readonly reservaService = inject(ReservaService);
   private readonly localStorageService = inject(LocalStorageService);
+  private readonly usuarioService = inject(UsuarioService);
+  private readonly formBuilder = inject(FormBuilder);
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
 
+  // Determina si sale el buscador para filtrar por el usuario
+  administrador: WritableSignal<boolean> = signal(false);
+
+  // Lista de reservas a cargar
   reservaConsultaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
+  // Lista de reservas a mostrar al usuario
+  reservaVistaDTOList: WritableSignal<ReservaConsultaDTO[]> = signal([]);
 
   private readonly urlImages = "http://localhost:3000/";
 
-  ngOnInit(): void {
-    this.cargarReservas();
+  // Para el filtrado en función del correo corporativo
+  readonly searchValue = new FormControl("");
+
+
+  async ngOnInit(): Promise<void> {
+    try {
+      this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
+      this.cargarReservas();
+    } catch (error) {
+      // DEBUG
+     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+    } 
+
+    // Configuración del searchValue
+    this.searchValue.valueChanges.subscribe(value => this.filter(value))
   }
 
   private async cargarReservas(): Promise<void> {
-    const idUsuario = this.localStorageService.get('idUsuario');
 
-    if (idUsuario != null) {
+    // Si NO es un administrador, recupera la lista entera de reservas
+    if (!this.administrador()) {
+        const idUsuario = this.localStorageService.get('idUsuario');
+        if (idUsuario != null) {
+          try {
+            this.reservaConsultaDTOList.set(
+              await firstValueFrom(this.reservaService.findByUsuarioId(idUsuario)),
+            );
+            this.actualizarRutasSalas();
+
+            // Debug
+            console.log(this.reservaConsultaDTOList);
+            // Asignación de las reservas
+            this.asignarReservasVista(this.reservaConsultaDTOList());
+          } catch (error: any) {
+            console.log('No hay reservas que cargar');
+            this.reservaConsultaDTOList.set([]);
+          }
+        } else {
+          // Debug
+          console.log('HA OCURRIDO UN PROBLEMA AL RECUPERAR AL USUARIO');
+        }
+    } else {
       try {
-        this.reservaConsultaDTOList.set(
-          await firstValueFrom(this.reservaService.findByUsuarioId(idUsuario)),
-        );
+        this.reservaConsultaDTOList.set(await firstValueFrom(this.reservaService.findAll()));
         this.actualizarRutasSalas();
-
         // Debug
         console.log(this.reservaConsultaDTOList);
+        // Asignación de las reservas
+        this.asignarReservasVista(this.reservaConsultaDTOList());
       } catch (error: any) {
         console.log('No hay reservas que cargar');
         this.reservaConsultaDTOList.set([]);
-      }
-    } else {
-      // Debug
-      console.log('HA OCURRIDO UN PROBLEMA AL RECUPERAR AL USUARIO');
+      }  
     }
   }
 
@@ -83,5 +124,18 @@ export class ReservaList {
         this.cargarReservas();
       }  
     });
+  }
+
+  private asignarReservasVista(reservaConsultaDTOList: ReservaConsultaDTO[]): void {
+    this.reservaVistaDTOList.set(reservaConsultaDTOList);
+  }
+
+  // Buscador
+  filter(value: string | null) {
+    if (value != null) {
+      const reservasFiltradas = this.reservaConsultaDTOList().filter(reserva => reserva.correoCorporativo.toLowerCase().includes(value.trim().toLowerCase()))
+      // Se asigna las reservas en la vista
+      this.asignarReservasVista(reservasFiltradas);
+    }
   }
 }

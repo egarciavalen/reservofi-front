@@ -2,8 +2,16 @@
   
   <h1>Lista de reservas</h1>
 
+  @if (administrador()) {
+    <!-- Filtros para las reservas -->
+    <mat-form-field>
+      <mat-label>Correo corporativo</mat-label>
+      <input matInput [formControl]="searchValue" type="text">
+    </mat-form-field>
+  }
+
   <div class="reserva-container">
-    @for (reservaDTO of reservaConsultaDTOList(); track reservaDTO.id) {
+    @for (reservaDTO of reservaVistaDTOList(); track reservaDTO.id) {
       <!-- Creación de cards para la visualización de las reservas-->
       <mat-card class="reserva-card">
       <mat-card-header>
@@ -16,6 +24,10 @@
         <p>{{reservaDTO.fechaInicio | formatDate}}</p>
         <p><strong>Fecha de fin</strong></p>
         <p>{{reservaDTO.fechaFin | formatDate}}</p>
+        @if (administrador()) {
+          <p><strong>Correo</strong></p>
+          <p>{{reservaDTO.correoCorporativo }}</p>      
+        }
       </mat-card-content>
       <mat-card-actions>
         <button matButton class="btn-edit" (click)="borrarReserva(reservaDTO.id)"><mat-icon>delete</mat-icon></button>

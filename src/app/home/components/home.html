@@ -2,7 +2,7 @@
   <h2>Home</h2>
   <p>Sitio web desarrollado por Efrén García Valencia para la asignatura de Trabajo Fin de Máster del máster universitario en Desarrollo de Sitios y Aplicaciones Web.</p>
 
-  @if (autenticado()) {
+  @if (administrador()) {
     <h3>Estadísticas del sistema</h3>
     <app-data-graph></app-data-graph>
   }
