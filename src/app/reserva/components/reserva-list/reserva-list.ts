@@ -13,6 +13,8 @@ import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/c
 import { UsuarioService } from '../../../usuario/services/usuario-service';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 @Component({
   selector: 'app-reserva-list',
@@ -50,8 +52,9 @@ export class ReservaList {
       this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
       this.cargarReservas();
     } catch (error) {
-      // DEBUG
-     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }  
     } 
 
     // Configuración del searchValue
@@ -69,30 +72,26 @@ export class ReservaList {
               await firstValueFrom(this.reservaService.findByUsuarioId(idUsuario)),
             );
             this.actualizarRutasSalas();
-
-            // Debug
-            console.log(this.reservaConsultaDTOList);
             // Asignación de las reservas
             this.reservaVistaDTOList.set(this.reservaConsultaDTOList());
           } catch (error: any) {
-            console.log('No hay reservas que cargar');
-            this.reservaConsultaDTOList.set([]);
+            if (error instanceof HttpErrorResponse) {
+              this.abrirDialogoMensaje(error.error);
+            } 
           }
         } else {
-          // Debug
-          console.log('HA OCURRIDO UN PROBLEMA AL RECUPERAR AL USUARIO');
+          this.abrirDialogoMensaje("Ha ocurrido un error interno al recuperar el usuario.");
         }
     } else {
       try {
         this.reservaConsultaDTOList.set(await firstValueFrom(this.reservaService.findAll()));
         this.actualizarRutasSalas();
-        // Debug
-        console.log(this.reservaConsultaDTOList);
         // Asignación de las reservas
         this.reservaVistaDTOList.set(this.reservaConsultaDTOList());
       } catch (error: any) {
-        console.log('No hay reservas que cargar');
-        this.reservaConsultaDTOList.set([]);
+        if (error instanceof HttpErrorResponse) {
+          this.abrirDialogoMensaje(error.error);
+        } 
       }  
     }
   }
@@ -108,6 +107,17 @@ export class ReservaList {
     this.abrirDialogoAviso("¿Seguro que desea borrar la reserva?", idReserva);
   }
 
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe(async (result) => {
+      // No aplica cambios
+    });
+  }
+
   async abrirDialogoAviso(message: string, idReserva: string) {
     const dialogRef = this.dialog.open(ChooseDialog, {
       data: message,
@@ -118,14 +128,12 @@ export class ReservaList {
       // En el caso que se tenga un resultado con éxito
       if (result) {
         await firstValueFrom(this.reservaService.delete(idReserva));
-        // Debug
         this.router.navigateByUrl('/reserva/list');  
         // Se recarga la lista de reservas
         this.cargarReservas();
       }  
     });
   }
-
 
   // FILTROS
 

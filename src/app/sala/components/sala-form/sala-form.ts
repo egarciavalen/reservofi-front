@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type SalaFormModel = {
   nombre: FormControl<string>;
@@ -74,8 +75,6 @@ export class SalaForm implements OnInit {
     // Si es una actualización, se rellenan los campos correspondientes
     if (this.idSala) {
       const salaCreada = await firstValueFrom(this.salaService.findById(this.idSala));
-      // Debug
-      console.log(salaCreada);
       this.salaForm.controls.nombre.setValue(salaCreada.nombre);
       this.nombreImagen = salaCreada.nombreImagen;
       // TODO: CAMBIAR POR PARÁMETRO CUANDO NO ESTÉS EN LOCAL
@@ -108,24 +107,22 @@ export class SalaForm implements OnInit {
     if (this.idSala) {
       // Actualización
       try {
-        const salaResponse = await firstValueFrom(this.salaService.update(this.idSala, formData));
-        // Debug
-        console.log(salaResponse);
+        await firstValueFrom(this.salaService.update(this.idSala, formData));
         this.abrirDialogoMensaje("¡Sala actualizada correctamente!", true);
       } catch (error: any) {
-        console.log(error);
-        this.abrirDialogoMensaje("Ha ocurrido un error creando la sala.", false);
+        if (error instanceof HttpErrorResponse) {
+          this.abrirDialogoMensaje(error.error, false);
+        }
       }
     } else {
       // Creación
       try {
-        const salaResponse = await firstValueFrom(this.salaService.create(formData));
-        // Debug
-        console.log(salaResponse);
+        await firstValueFrom(this.salaService.create(formData));
         this.abrirDialogoMensaje("¡Sala creada correctamente!", true);
       } catch (error: any) {
-        console.log(error);
-        this.abrirDialogoMensaje("Ha ocurrido un error actualizando la sala.", false);
+        if (error instanceof HttpErrorResponse) {
+          this.abrirDialogoMensaje(error.error, false);
+        }      
       }
     }
   }
@@ -152,14 +149,13 @@ export class SalaForm implements OnInit {
       data: message,
     });
   
-
-  dialogRef.afterClosed().subscribe(async (result) => {
-      // En el caso que se tenga un resultado con éxito y se haya seleccionado un ID
-      if (result && this.idSala) {
-        await firstValueFrom(this.salaService.delete(this.idSala));
-        this.router.navigateByUrl('/sala/list');
-      }  
-    });
+    dialogRef.afterClosed().subscribe(async (result) => {
+        // En el caso que se tenga un resultado con éxito y se haya seleccionado un ID
+        if (result && this.idSala) {
+          await firstValueFrom(this.salaService.delete(this.idSala));
+          this.router.navigateByUrl('/sala/list');
+        }  
+      });
   }
 
   private getFormData(): FormData {

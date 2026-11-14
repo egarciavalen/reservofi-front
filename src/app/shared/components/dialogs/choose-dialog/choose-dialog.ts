@@ -15,8 +15,6 @@ import {
 })
 export class ChooseDialog {
 
-  // El propósito de este componente es tener un diálogo reutilizable para mostrar avisos de confirmación al usuario
-
   // Del componente correspondiente se inyecta el mensaje
     readonly data = inject<string>(MAT_DIALOG_DATA);
 

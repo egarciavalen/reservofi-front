@@ -14,6 +14,7 @@ import { InputText } from '../../../shared/components/form-controls/input-text/i
 import { PuestoGuardadoDTO } from '../../models/puesto-guardado.dto';
 import { PuestoService } from '../../services/puesto-service';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type PuestoFormModel = {
   nombre: FormControl<string>;
@@ -72,13 +73,12 @@ export class PuestoForm implements OnInit {
     this.puestoDTO.nombre = nombre;
 
     try {
-      const puestoResponse = await firstValueFrom(this.puestoService.create(this.puestoDTO));
-      // Debug
-      console.log(puestoResponse);
+      await firstValueFrom(this.puestoService.create(this.puestoDTO));
       this.abrirDialogoMensaje("¡Puesto creado correctamente!");
     } catch (error: any) {
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error al crear el puesto.");
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }    
     }
 
     this.cerrarDialogo();

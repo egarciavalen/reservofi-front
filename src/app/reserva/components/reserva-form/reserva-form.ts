@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { UsuarioConsultaDTO } from '../../../usuario/models/usuario-consulta.dto';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { InputDateTime } from '../../../shared/components/form-controls/input-date-time/input-date-time';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type ReservaFormModel = {
   fechaInicio: FormControl<Date>;
@@ -99,8 +100,9 @@ export class ReservaForm implements OnInit {
     try {
       this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
     } catch (error) {
-      // DEBUG
-     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }     
     }
 
     // Recuperación del identificador de la sala
@@ -121,29 +123,22 @@ export class ReservaForm implements OnInit {
     fechaInicio.setHours(horaInicio.getHours());
     fechaFin.setHours(horaFin.getHours());
 
-    console.log(fechaInicio);
-    console.log(fechaFin);
-
     this.reservaDTO.fechaInicio = formatDate(fechaInicio, 'yyyy-MM-ddTHH:mm', 'en');
     this.reservaDTO.fechaFin = formatDate(fechaFin, 'yyyy-MM-ddTHH:mm', 'en');
 
     const usuarioReservado = this.usuarioConsultaDTOList().find(usuario => usuario.correoCorporativo == correoCorporativo);
     this.reservaDTO.idUsuario = usuarioReservado!.id;
 
-    // DEBUG
-    console.log(this.reservaDTO);
-
+    // Primero, se comprueban las validaciones de backend
     try {
-      const reservaResponse = await firstValueFrom(this.reservaService.create(this.reservaDTO));
-      // Debug
-      console.log(reservaResponse);
+      await firstValueFrom(this.reservaService.create(this.reservaDTO));
       this.abrirDialogoMensaje("¡Reserva creada correctamente!");
 
     } catch (error: any) {
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error al crear la reserva.");
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }   
     }
-
     this.cerrarDialogo();
   }
 
@@ -174,8 +169,7 @@ export class ReservaForm implements OnInit {
         const usuario = this.usuarioConsultaDTOList().find(usuario => usuario.id == idUsuario);
         this.correoCorporativo.setValue(usuario!.correoCorporativo);
     } else {
-      // Debug
-      console.log('ERROR AL RECUPERAR EL USUARIO');
+      this.abrirDialogoMensaje("Ha ocurrido un error interno al recuperar el usuario.");
     }
   }
 

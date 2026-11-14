@@ -120,10 +120,6 @@ export class Profile implements OnInit {
   ngOnInit(): void {
     // Recuperación del identificador del usuario
     this.usuarioId = this.localStorageService.get('idUsuario');
-    if (!this.usuarioId) {
-      // Debug
-      console.log('ERROR AL RECUPERAR EL USUARIO');
-    }
 
     // OBSERVABLE
     this.userService.findById(this.usuarioId!).subscribe({
@@ -140,8 +136,8 @@ export class Profile implements OnInit {
         this.profileValue.activo = usuarioData.activo;
       },
       error: (error: HttpErrorResponse) => {
-        console.log('Ha ocurrido un error interno al recuperar el usuario');
-      },
+        this.abrirDialogoMensaje(error.error);
+      }
     });
   }
 
@@ -169,16 +165,15 @@ export class Profile implements OnInit {
     );
 
     try {
-      const profileResponse = await firstValueFrom(
+      await firstValueFrom(
         this.userService.update(this.usuarioId!, this.profileValue),
       );
 
-      // Debug
-      console.log(profileResponse);
       this.abrirDialogoMensaje("Perfil actualizado correctamente!");
     } catch (error: any) {
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error al actualizar el perfil.");
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }     
     }
   }
 

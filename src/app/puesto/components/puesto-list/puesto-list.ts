@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 @Component({
   selector: 'app-puesto-list',
@@ -49,14 +51,12 @@ export class PuestoList {
       this.puestoConsultaDTOList.set(
       await firstValueFrom(this.puestoService.findAll()));
       this.actualizarRutasSalas();
-
-      // Debug
-      console.log(this.puestoConsultaDTOList);
       // Cargar en la vista
       this.puestoVistaDTOList.set(this.puestoConsultaDTOList());
     } catch (error: any) {
-      console.log('No hay reservas que cargar');
-      this.puestoConsultaDTOList.set([]);
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }  
     }
   }
 
@@ -69,6 +69,17 @@ export class PuestoList {
   async borrarReserva(idPuesto: string) {
     // El resultado del mensaje de aviso determina la acción a realizar
     this.abrirDialogoAviso("¿Seguro que desea borrar el puesto? Se eliminarán las reservas asignadas.", idPuesto);
+  }
+
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe(async (result) => {
+        // No aplican cambios
+    });
   }
 
   async abrirDialogoAviso(message: string, idPuesto: string) {

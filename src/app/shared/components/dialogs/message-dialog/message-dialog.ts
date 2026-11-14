@@ -15,8 +15,6 @@ import {
 })
 export class MessageDialog {
 
-  // El propósito de este componente es tener un diálogo reutilizable para mostrar mensajes al usuario cuando hace alguna acción
-
   // Del componente correspondiente se inyecta el mensaje
   readonly data = inject<string>(MAT_DIALOG_DATA);
 

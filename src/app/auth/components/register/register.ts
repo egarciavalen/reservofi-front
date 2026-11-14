@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+  import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -18,6 +18,7 @@ import { AuthService } from '../../services/auth-service';
 import { LocalStorageService } from '../../services/local-storage-service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type RegisterFormModel = {
   nombre: FormControl<string>;
@@ -164,15 +165,13 @@ export class Register {
       this.localStorageService.remove('idUsuario');
       this.localStorageService.remove('token');
 
-      const registerResponse = await firstValueFrom(this.authService.register(this.registerValue));
-      // Debug
-      console.log(registerResponse);
-
+      await firstValueFrom(this.authService.register(this.registerValue));
       this.abrirDialogoMensaje("¡Usuario creado correctamente!", true);
 
     } catch (error: any) {
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error guardando el usuario.", false);
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error, false);
+      }
     }
   }
 

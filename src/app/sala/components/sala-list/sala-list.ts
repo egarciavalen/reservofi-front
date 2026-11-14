@@ -8,6 +8,9 @@ import { SalaConsultaDTO } from '../../models/sala-consulta.dto';
 import { SalaService } from '../../services/sala-service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 
 @Component({
   selector: 'app-sala-list',
@@ -30,6 +33,9 @@ export class SalaList implements OnInit {
 
   private readonly urlImages = 'http://localhost:3000/';
 
+  // Inyección de los diálogos para mostrar mensajes al usuario
+  readonly dialog = inject(MatDialog);
+
   ngOnInit(): void {
     this.cargarSalas();
     // Configuración del searchValue
@@ -40,12 +46,12 @@ export class SalaList implements OnInit {
     try {
       this.salaConsultaDTOList.set(await firstValueFrom(this.salaService.findAll()));
       this.actualizarRutasSalas();
-      // Debug
-      console.log(this.salaConsultaDTOList);
       // Cargar en la vista
       this.salaVistaDTOList.set(this.salaConsultaDTOList());
     } catch (error: any) {
-      console.log('No hay salas que cargar');
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error, false);
+      }
     }
   }
 
@@ -70,5 +76,20 @@ export class SalaList implements OnInit {
       const salasFiltradas = this.salaConsultaDTOList().filter(sala => sala.nombre.toLowerCase().includes(value.trim().toLowerCase()))
       this.salaVistaDTOList.set(salasFiltradas);
     }
+  }
+
+
+  // DIÁLOGOS
+
+  abrirDialogoMensaje(message: string, redirection: boolean): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (redirection) {
+        this.router.navigateByUrl('sala/list');
+      }
+    });
   }
 }

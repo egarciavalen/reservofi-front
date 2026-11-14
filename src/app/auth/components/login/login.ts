@@ -13,6 +13,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 import { UsuarioService } from '../../../usuario/services/usuario-service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type LoginFormModel = {
   correoCorporativo: FormControl<string>;
@@ -84,9 +85,6 @@ export class Login {
 
       const loginResponse = await firstValueFrom(this.authService.login(this.loginUser));
       
-      // Debug 
-      console.log(loginResponse);
-
       // Se guarda en el local storage el token de autenticación
       this.localStorageService.set('idUsuario', loginResponse.idUsuario);
       this.localStorageService.set('token', loginResponse.token);
@@ -95,8 +93,9 @@ export class Login {
 
 
     } catch (error: any) {
-      console.log(error);
-      this.abrirDialogoMensaje("Ha ocurrido un error iniciando sesión. Por favor, revise que sus credenciales sean correctas o que su usuario esté activo en el sistema.", false);
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error, false);
+      }
     }
   }
 

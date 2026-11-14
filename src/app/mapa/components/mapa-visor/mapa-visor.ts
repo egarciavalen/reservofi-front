@@ -14,6 +14,7 @@ import { PuestoConsultaDTO } from '../../../puesto/models/puesto-consulta.dto';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 import { UsuarioService } from '../../../usuario/services/usuario-service';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-mapa-visor',
@@ -63,8 +64,9 @@ export class MapaVisor implements OnInit {
     try {
       this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
     } catch (error) {
-      // DEBUG
-     console.log('Ha ocurrido un error interno al buscar si el usuario es un administrador');      
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }    
     }
   }
 
@@ -72,7 +74,9 @@ export class MapaVisor implements OnInit {
     try {
       this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
     } catch (error: any) {
-      console.log('No hay salas que cargar');
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }  
     }
   }
   private async cargarPuestos(): Promise<void> {
@@ -81,15 +85,16 @@ export class MapaVisor implements OnInit {
       // Actualiza los puestos a mostrar
       this.actualizarPuestosSala();
     } catch (error: any) {
-      console.log('No hay salas que cargar');
+      if (error instanceof HttpErrorResponse) {
+        this.abrirDialogoMensaje(error.error);
+      }
     }
   }
 
   establecerSala(idSala: string): void {
     const salaDTO = this.salaDTOList().find((s) => s.id === idSala) ?? null;
     if (salaDTO === null) {
-      // Debug
-      console.log('HUBO UN PROBLEMA AL SELECCIONAR LA SALA');
+      this.abrirDialogoMensaje("Hubo un error interno al seleccionar la sala"); 
     } else {
       this.mapaDTO.idSala = salaDTO.id;
       // Cambiar localhost al actualizar a servidor en producción
@@ -233,5 +238,15 @@ export class MapaVisor implements OnInit {
         // No aplica ninguna acción adicional, se gestiona todo desde las reservas
       });
     }
+  }
+
+  abrirDialogoMensaje(message: string,): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe(async (result) => {
+      // No aplican cambios
+    });
   }
 }

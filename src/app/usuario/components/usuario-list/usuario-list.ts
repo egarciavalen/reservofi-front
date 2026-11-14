@@ -9,6 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
 import { LocalStorageService } from '../../../auth/services/local-storage-service';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-usuario-list',
   imports: [MatTableModule, MatCheckboxModule, MatIconModule, MatButtonModule],
@@ -56,9 +57,9 @@ export class UsuarioList implements OnInit {
         await firstValueFrom(this.usuarioService.toggleActivo(usuario.id));
         this.abrirDialogoMensaje(message);   
       } catch (error) {
-        // Debug
-        console.log(error);
-        this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+        if (error instanceof HttpErrorResponse) {
+          this.abrirDialogoMensaje(error.error);
+        } 
       }
     }
   }
@@ -79,9 +80,9 @@ export class UsuarioList implements OnInit {
         await firstValueFrom(this.usuarioService.toggleAdmin(usuario.id));
         this.abrirDialogoMensaje(message);   
       } catch (error) {
-        // Debug
-        console.log(error);
-        this.abrirDialogoMensaje("Ha ocurrido un error al cambiar el estado del usuario.");   
+        if (error instanceof HttpErrorResponse) {
+          this.abrirDialogoMensaje(error.error);
+        } 
       }
     }
   }
