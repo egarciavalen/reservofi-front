@@ -2,8 +2,16 @@
   
   <h1>Lista de salas</h1>
 
+  <!-- Filtros para las salas -->
+  <div>
+    <mat-form-field>
+      <mat-label>Sala</mat-label>
+      <input matInput [formControl]="searchValue" type="text">
+    </mat-form-field>
+  </div>
+
   <div class="sala-container">
-    @for (salaDTO of salaDTOList(); track salaDTO.id) {
+    @for (salaDTO of salaVistaDTOList(); track salaDTO.id) {
 
       <!-- Creación de cards para la visualización de las salas-->
       <mat-card class="sala-card">

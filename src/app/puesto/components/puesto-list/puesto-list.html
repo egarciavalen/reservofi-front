@@ -2,8 +2,16 @@
   
   <h1>Lista de puestos</h1>
 
+  <!-- Filtros para los puestos -->
+  <div>
+    <mat-form-field>
+      <mat-label>Sala</mat-label>
+      <input matInput [formControl]="searchValue" type="text">
+    </mat-form-field>
+  </div>
+
   <div class="puesto-container">
-    @for (puestoDTO of puestoConsultaDTOList(); track puestoDTO.id) {
+    @for (puestoDTO of puestoVistaDTOList(); track puestoDTO.id) {
       <!-- Creación de cards para la visualización de los puestos-->
       <mat-card class="reserva-card">
       <mat-card-header>

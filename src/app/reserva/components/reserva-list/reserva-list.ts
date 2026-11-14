@@ -73,7 +73,7 @@ export class ReservaList {
             // Debug
             console.log(this.reservaConsultaDTOList);
             // Asignación de las reservas
-            this.asignarReservasVista(this.reservaConsultaDTOList());
+            this.reservaVistaDTOList.set(this.reservaConsultaDTOList());
           } catch (error: any) {
             console.log('No hay reservas que cargar');
             this.reservaConsultaDTOList.set([]);
@@ -89,7 +89,7 @@ export class ReservaList {
         // Debug
         console.log(this.reservaConsultaDTOList);
         // Asignación de las reservas
-        this.asignarReservasVista(this.reservaConsultaDTOList());
+        this.reservaVistaDTOList.set(this.reservaConsultaDTOList());
       } catch (error: any) {
         console.log('No hay reservas que cargar');
         this.reservaConsultaDTOList.set([]);
@@ -126,16 +126,13 @@ export class ReservaList {
     });
   }
 
-  private asignarReservasVista(reservaConsultaDTOList: ReservaConsultaDTO[]): void {
-    this.reservaVistaDTOList.set(reservaConsultaDTOList);
-  }
 
-  // Buscador
+  // FILTROS
+
   filter(value: string | null) {
     if (value != null) {
       const reservasFiltradas = this.reservaConsultaDTOList().filter(reserva => reserva.correoCorporativo.toLowerCase().includes(value.trim().toLowerCase()))
-      // Se asigna las reservas en la vista
-      this.asignarReservasVista(reservasFiltradas);
+      this.reservaVistaDTOList.set(reservasFiltradas);
     }
   }
 }

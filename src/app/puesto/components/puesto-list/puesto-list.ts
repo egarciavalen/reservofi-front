@@ -8,10 +8,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
+import { MatInputModule } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-puesto-list',
-  imports: [MatIconModule, MatCardModule, MatButtonModule],
+  imports: [MatIconModule, MatCardModule, MatButtonModule, ReactiveFormsModule, MatInputModule],
   templateUrl: './puesto-list.html',
   styleUrl: './puesto-list.scss',
 })
@@ -19,16 +21,27 @@ export class PuestoList {
  // Inyección de servicios
   private readonly router = inject(Router);
   private readonly puestoService = inject(PuestoService);
+  
+  // Lista de puestos a cargar
   puestoConsultaDTOList: WritableSignal<PuestoConsultaDTO[]> = signal([]);
+  // Lista de puestos a mostrar
+  puestoVistaDTOList: WritableSignal<PuestoConsultaDTO[]> = signal([]);
+
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
+  
+  // Para el filtrado en función de la sala
+  readonly searchValue = new FormControl("");
 
 
   private readonly urlImages = "http://localhost:3000/";
 
   ngOnInit(): void {
     this.cargarPuestos();
+
+    // Configuración del searchValue
+    this.searchValue.valueChanges.subscribe(value => this.filter(value))
   }
 
   private async cargarPuestos(): Promise<void> {
@@ -39,6 +52,8 @@ export class PuestoList {
 
       // Debug
       console.log(this.puestoConsultaDTOList);
+      // Cargar en la vista
+      this.puestoVistaDTOList.set(this.puestoConsultaDTOList());
     } catch (error: any) {
       console.log('No hay reservas que cargar');
       this.puestoConsultaDTOList.set([]);
@@ -71,5 +86,14 @@ export class PuestoList {
         this.cargarPuestos();
       }  
     });
+  }
+
+  // FILTROS
+
+  filter(value: string | null) {
+    if (value != null) {
+      const puestosFiltrados = this.puestoConsultaDTOList().filter(puesto => puesto.nombreSala.toLowerCase().includes(value.trim().toLowerCase()))
+      this.puestoVistaDTOList.set(puestosFiltrados);
+    }
   }
 }

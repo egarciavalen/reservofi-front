@@ -6,10 +6,12 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { SalaConsultaDTO } from '../../models/sala-consulta.dto';
 import { SalaService } from '../../services/sala-service';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-sala-list',
-  imports: [MatCardModule, MatButtonModule, MatIconModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, ReactiveFormsModule, MatInputModule],
   templateUrl: './sala-list.html',
   styleUrl: './sala-list.scss',
 })
@@ -18,27 +20,37 @@ export class SalaList implements OnInit {
   private readonly router = inject(Router);
   private readonly salaService = inject(SalaService);
 
-  salaDTOList: WritableSignal<SalaConsultaDTO[]> = signal([]);
+  // Lista de salas a cargar
+  salaConsultaDTOList: WritableSignal<SalaConsultaDTO[]> = signal([]);
+  // Lista de salas a mostrar
+  salaVistaDTOList: WritableSignal<SalaConsultaDTO[]> = signal([]);
+
+  // Para el filtrado en función de la sala
+  readonly searchValue = new FormControl("");
 
   private readonly urlImages = 'http://localhost:3000/';
 
   ngOnInit(): void {
     this.cargarSalas();
+    // Configuración del searchValue
+    this.searchValue.valueChanges.subscribe(value => this.filter(value))
   }
 
   private async cargarSalas(): Promise<void> {
     try {
-      this.salaDTOList.set(await firstValueFrom(this.salaService.findAll()));
+      this.salaConsultaDTOList.set(await firstValueFrom(this.salaService.findAll()));
       this.actualizarRutasSalas();
       // Debug
-      console.log(this.salaDTOList);
+      console.log(this.salaConsultaDTOList);
+      // Cargar en la vista
+      this.salaVistaDTOList.set(this.salaConsultaDTOList());
     } catch (error: any) {
       console.log('No hay salas que cargar');
     }
   }
 
   private actualizarRutasSalas(): void {
-    for (const sala of this.salaDTOList()) {
+    for (const sala of this.salaConsultaDTOList()) {
       sala.rutaImagen = this.urlImages + sala.rutaImagen;
     }
   }
@@ -49,5 +61,14 @@ export class SalaList implements OnInit {
 
   editarSala(id: string): void {
     this.router.navigateByUrl('/sala/form/' + id);
+  }
+
+  // FILTROS
+
+  filter(value: string | null) {
+    if (value != null) {
+      const salasFiltradas = this.salaConsultaDTOList().filter(sala => sala.nombre.toLowerCase().includes(value.trim().toLowerCase()))
+      this.salaVistaDTOList.set(salasFiltradas);
+    }
   }
 }

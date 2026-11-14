@@ -4,10 +4,12 @@
 
   @if (administrador()) {
     <!-- Filtros para las reservas -->
-    <mat-form-field>
-      <mat-label>Correo corporativo</mat-label>
-      <input matInput [formControl]="searchValue" type="text">
-    </mat-form-field>
+     <div>
+      <mat-form-field>
+        <mat-label>Correo corporativo</mat-label>
+        <input matInput [formControl]="searchValue" type="text">
+      </mat-form-field>
+    </div>
   }
 
   <div class="reserva-container">
