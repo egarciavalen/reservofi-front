@@ -78,7 +78,6 @@ export class SalaForm implements OnInit {
       const salaCreada = await firstValueFrom(this.salaService.findById(this.idSala));
       this.salaForm.controls.nombre.setValue(salaCreada.nombre);
       this.nombreImagen = salaCreada.nombreImagen;
-      // TODO: CAMBIAR POR PARÁMETRO CUANDO NO ESTÉS EN LOCAL
       this.rutaMostrarImagen = environment.url + salaCreada.rutaImagen;
     }
   }

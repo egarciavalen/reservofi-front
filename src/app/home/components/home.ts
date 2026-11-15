@@ -28,7 +28,8 @@ export class Home implements OnInit {
       this.administrador.set(await firstValueFrom(this.usuarioService.checkAdmin(this.localStorageService.get("idUsuario")!)));
     } catch (error) {
         if (error instanceof HttpErrorResponse) {
-          this.abrirDialogoMensaje(error.error);
+          // TODO: queda pendiente hasta refactorización con REDUX
+          //this.abrirDialogoMensaje(error.error);
       }
     }
   }

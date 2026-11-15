@@ -169,7 +169,8 @@ export class ReservaForm implements OnInit {
         const usuario = this.usuarioConsultaDTOList().find(usuario => usuario.id == idUsuario);
         this.correoCorporativo.setValue(usuario!.correoCorporativo);
     } else {
-      this.abrirDialogoMensaje("Ha ocurrido un error interno al recuperar el usuario.");
+      // TODO: refactorizar con REDUX llegado el momento
+      //this.abrirDialogoMensaje("Ha ocurrido un error interno al recuperar el usuario.");
     }
   }
 
