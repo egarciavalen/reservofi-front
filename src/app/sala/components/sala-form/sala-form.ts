@@ -132,6 +132,23 @@ export class SalaForm implements OnInit {
     this.abrirDialogoAviso("¿Seguro que desea borrar la sala? Se eliminarán los puestos y reservas asignados.");
   }
 
+  private getFormData(): FormData {
+    // Obtención de valores y asignación al DTO
+    const { nombre, imagen } = this.salaForm.getRawValue();
+    this.salaGuardadoDTO.nombre = nombre;
+    this.salaGuardadoDTO.imagen = imagen;
+
+    // Creación de un FormData para poder mandar MultipartFile
+    const formData: FormData = new FormData();
+    formData.append('nombre', this.salaGuardadoDTO.nombre);
+    if (this.salaGuardadoDTO.imagen != null) {
+      formData.append('imagen', this.salaGuardadoDTO.imagen);
+    }
+    return formData;
+  }
+
+  // *** GESTIÓN DE DIÁLOGOS ***
+
   abrirDialogoMensaje(message: string, redirection: boolean): void {
     const dialogRef = this.dialog.open(MessageDialog, {
       data: message,
@@ -157,20 +174,4 @@ export class SalaForm implements OnInit {
         }  
       });
   }
-
-  private getFormData(): FormData {
-    // Obtención de valores y asignación al DTO
-    const { nombre, imagen } = this.salaForm.getRawValue();
-    this.salaGuardadoDTO.nombre = nombre;
-    this.salaGuardadoDTO.imagen = imagen;
-
-    // Creación de un FormData para poder mandar MultipartFile
-    const formData: FormData = new FormData();
-    formData.append('nombre', this.salaGuardadoDTO.nombre);
-    if (this.salaGuardadoDTO.imagen != null) {
-      formData.append('imagen', this.salaGuardadoDTO.imagen);
-    }
-    return formData;
-  }
-
 }

@@ -99,6 +99,7 @@ export class Login {
     }
   }
 
+  // *** GESTIÓN DE DIÁLOGOS ***
 
   abrirDialogoMensaje(message: string, redirection: boolean): void {
     const dialogRef = this.dialog.open(MessageDialog, {

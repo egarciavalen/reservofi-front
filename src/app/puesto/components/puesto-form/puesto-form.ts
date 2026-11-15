@@ -84,6 +84,9 @@ export class PuestoForm implements OnInit {
     this.cerrarDialogo();
   }
 
+
+  // *** GESTIÓN DE DIÁLOGOS ***
+
   cerrarDialogo(): void {
     // Si se registra que se guarda el nombre, entonces se entiende que se crea el puesto correctamente
     if (this.puestoDTO.nombre.length > 0) {
@@ -93,7 +96,6 @@ export class PuestoForm implements OnInit {
       this.dialogRef.close(false);
     }
   }
-
 
   abrirDialogoMensaje(message: string): void {
     const dialogRef = this.dialog.open(MessageDialog, {

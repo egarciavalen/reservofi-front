@@ -68,8 +68,6 @@ export class SalaList implements OnInit {
     this.router.navigateByUrl('/sala/form/' + id);
   }
 
-  // FILTROS
-
   filter(value: string | null) {
     if (value != null) {
       const salasFiltradas = this.salaConsultaDTOList().filter(sala => sala.nombre.toLowerCase().includes(value.trim().toLowerCase()))
@@ -78,7 +76,7 @@ export class SalaList implements OnInit {
   }
 
 
-  // DIÁLOGOS
+  // *** GESTIÓN DE DIÁLOGOS ***
 
   abrirDialogoMensaje(message: string, redirection: boolean): void {
     const dialogRef = this.dialog.open(MessageDialog, {

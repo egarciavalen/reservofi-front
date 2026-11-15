@@ -11,7 +11,7 @@ import { ReservaService } from '../../services/reserva-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseDialog } from '../../../shared/components/dialogs/choose-dialog/choose-dialog';
 import { UsuarioService } from '../../../usuario/services/usuario-service';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageDialog } from '../../../shared/components/dialogs/message-dialog/message-dialog';
@@ -29,7 +29,6 @@ export class ReservaList {
   private readonly reservaService = inject(ReservaService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly usuarioService = inject(UsuarioService);
-  private readonly formBuilder = inject(FormBuilder);
 
   // Inyección de los diálogos para mostrar mensajes al usuario
   readonly dialog = inject(MatDialog);
@@ -106,6 +105,14 @@ export class ReservaList {
     this.abrirDialogoAviso("¿Seguro que desea borrar la reserva?", idReserva);
   }
 
+  filter(value: string | null) {
+    if (value != null) {
+      const reservasFiltradas = this.reservaConsultaDTOList().filter(reserva => reserva.correoCorporativo.toLowerCase().includes(value.trim().toLowerCase()))
+      this.reservaVistaDTOList.set(reservasFiltradas);
+    }
+  }
+
+  // *** GESTIÓN DE DIÁLOGOS ***
 
   abrirDialogoMensaje(message: string): void {
     const dialogRef = this.dialog.open(MessageDialog, {
@@ -123,7 +130,7 @@ export class ReservaList {
     });
   
 
-  dialogRef.afterClosed().subscribe(async (result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       // En el caso que se tenga un resultado con éxito
       if (result) {
         await firstValueFrom(this.reservaService.delete(idReserva));
@@ -134,12 +141,4 @@ export class ReservaList {
     });
   }
 
-  // FILTROS
-
-  filter(value: string | null) {
-    if (value != null) {
-      const reservasFiltradas = this.reservaConsultaDTOList().filter(reserva => reserva.correoCorporativo.toLowerCase().includes(value.trim().toLowerCase()))
-      this.reservaVistaDTOList.set(reservasFiltradas);
-    }
-  }
 }

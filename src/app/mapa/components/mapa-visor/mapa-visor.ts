@@ -199,7 +199,7 @@ export class MapaVisor implements OnInit {
     return new MapaPuntoDTO(coordenadaX, coordenadaY);
   }
 
-  // Código relativo a los diálogos
+  // *** GESTIÓN DE DIÁLOGOS ***
 
   private abrirDialogoPuesto(): void {
 

@@ -142,20 +142,6 @@ export class ReservaForm implements OnInit {
     this.cerrarDialogo();
   }
 
-  cerrarDialogo(): void {
-    this.dialogRef.close();
-  }
-
-  abrirDialogoMensaje(message: string): void {
-    const dialogRef = this.dialog.open(MessageDialog, {
-      data: message,
-    });
-  
-    dialogRef.afterClosed().subscribe((result) => {
-      this.cerrarDialogo();
-    });
-  }
-
   // Gestión adicional de los usuarios
 
   private async cargarListaUsuarios() {
@@ -178,5 +164,21 @@ export class ReservaForm implements OnInit {
     const value = this.correoCorporativo.value;
     return this.usuarioConsultaDTOList().filter(usuario => usuario.correoCorporativo.toLowerCase().includes(value));
   });
+
+  // *** GESTIÓN DE DIÁLOGOS ***
+
+  cerrarDialogo(): void {
+    this.dialogRef.close();
+  }
+
+  abrirDialogoMensaje(message: string): void {
+    const dialogRef = this.dialog.open(MessageDialog, {
+      data: message,
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.cerrarDialogo();
+    });
+  }
 
 }

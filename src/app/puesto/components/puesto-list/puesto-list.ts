@@ -69,6 +69,14 @@ export class PuestoList {
     this.abrirDialogoAviso("¿Seguro que desea borrar el puesto? Se eliminarán las reservas asignadas.", idPuesto);
   }
 
+  filter(value: string | null) {
+    if (value != null) {
+      const puestosFiltrados = this.puestoConsultaDTOList().filter(puesto => puesto.nombreSala.toLowerCase().includes(value.trim().toLowerCase()))
+      this.puestoVistaDTOList.set(puestosFiltrados);
+    }
+  }
+
+  // *** GESTIÓN DE DIÁLOGOS ***
 
   abrirDialogoMensaje(message: string): void {
     const dialogRef = this.dialog.open(MessageDialog, {
@@ -95,14 +103,5 @@ export class PuestoList {
         this.cargarPuestos();
       }  
     });
-  }
-
-  // FILTROS
-
-  filter(value: string | null) {
-    if (value != null) {
-      const puestosFiltrados = this.puestoConsultaDTOList().filter(puesto => puesto.nombreSala.toLowerCase().includes(value.trim().toLowerCase()))
-      this.puestoVistaDTOList.set(puestosFiltrados);
-    }
   }
 }

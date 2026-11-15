@@ -177,6 +177,8 @@ export class Profile implements OnInit {
     }
   }
 
+  // *** GESTIÓN DE DIÁLOGOS ***
+  
   abrirDialogoMensaje(message: string): void {
     const dialogRef = this.dialog.open(MessageDialog, {
       data: message,
