@@ -6,7 +6,7 @@
   <div>
     <mat-form-field>
       <mat-label>Sala</mat-label>
-      <input matInput [formControl]="searchValue" type="text">
+      <input aria-label="Buscador de salas" matInput [formControl]="searchValue" type="text">
     </mat-form-field>
   </div>
 
@@ -30,7 +30,7 @@
   </div>
 
    <!-- Crear una sala nueva -->
-  <button matButton class="btn-create" (click)="crearSala()">Crear sala</button>
+  <button matButton class="btn-create" aria-label="Crear sala" (click)="crearSala()">Crear sala</button>
 
 </div>
 

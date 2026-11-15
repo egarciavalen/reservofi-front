@@ -48,7 +48,7 @@
         <!-- Los administradores tendrán un campo adicional en el que indicar el usuario que va a reservar -->
         <mat-form-field appearance="fill">
           <mat-label>Usuario: </mat-label>
-          <input matInput [formControl]="correoCorporativo" placeholder="ejemplo@gmail.com" aria-label="Usuario" [matAutocomplete]="auto"/>
+          <input aria-label="Buscador de usuarios" matInput [formControl]="correoCorporativo" placeholder="ejemplo@gmail.com" aria-label="Usuario" [matAutocomplete]="auto"/>
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               @for (usuario of usuariosFiltrados(); track usuario) {
                 <mat-option [value]="usuario.correoCorporativo">{{usuario.correoCorporativo}}</mat-option>

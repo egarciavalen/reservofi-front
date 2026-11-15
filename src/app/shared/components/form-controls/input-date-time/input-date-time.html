@@ -2,6 +2,7 @@
   <mat-label>{{ label }}: </mat-label>
   <input
     matInput
+    aria-label="{{ label }}"
     [matTimepicker]="timepicker"
     [formControl]="control"
     [placeholder]="placeholder || ''"

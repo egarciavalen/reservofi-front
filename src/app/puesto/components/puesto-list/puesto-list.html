@@ -6,7 +6,7 @@
   <div>
     <mat-form-field>
       <mat-label>Sala</mat-label>
-      <input matInput [formControl]="searchValue" type="text">
+      <input aria-label="Buscador de puestos" matInput [formControl]="searchValue" type="text">
     </mat-form-field>
   </div>
 
@@ -22,7 +22,7 @@
         <img mat-card-image src="{{puestoDTO.rutaImagen}}" alt="Fotografía de la sala {{puestoDTO.nombreSala}} asociada a la reserva">
       </mat-card-content>
       <mat-card-actions>
-        <button matButton class="btn-edit" (click)="borrarReserva(puestoDTO.id)"><mat-icon>delete</mat-icon></button>
+        <button matButton class="btn-edit" aria-label="Borrar puesto" (click)="borrarReserva(puestoDTO.id)"><mat-icon>delete</mat-icon></button>
       </mat-card-actions>
     </mat-card>
     } 
